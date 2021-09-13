@@ -24,11 +24,9 @@ func (p logEventApi) Save(context echo.Context) error {
 		log.Println("Input Error:", err.Error())
 		return common.GenerateErrorResponse(context,nil,err.Error())
 	}
-
 	if err := json.Unmarshal(body, &data); err != nil {
 		return common.GenerateErrorResponse(context,nil,err.Error())
 	}
-
 	p.logEventService.Store(data)
 	return common.GenerateSuccessResponse(context,"",nil,"Operation Successful!")
 }

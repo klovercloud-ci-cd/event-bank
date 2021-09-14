@@ -7,10 +7,22 @@ import (
 
 func Router(g *echo.Group) {
 	LogEventRouter(g.Group("/logs"))
+	PipelineRouter(g.Group("/pipelines"))
+	ProcessEventRouter(g.Group("/processes"))
 }
 
 func LogEventRouter(g *echo.Group) {
-	logEventRouter := NewLogEventApi(dependency.GetPipelineService())
+	logEventRouter := NewLogEventApi(dependency.GetLogEventService())
 	g.POST("", logEventRouter.Save, AuthenticationAndAuthorizationHandler)
-	g.GET("/:processId", logEventRouter.GetByProcessId,AuthenticationAndAuthorizationHandler)
+}
+
+func ProcessEventRouter(g *echo.Group) {
+	processEventRouter := NewProcessEventApi(dependency.GetProcessEventService())
+	g.POST("", processEventRouter.Save, AuthenticationAndAuthorizationHandler)
+}
+
+func PipelineRouter(g *echo.Group) {
+	pipelineRouter := NewPipelineApi(dependency.GetLogEventService(),dependency.GetProcessEventService())
+	g.GET("/:processId",pipelineRouter.GetLogs,AuthenticationAndAuthorizationHandler)
+	g.GET("/ws",pipelineRouter.GetEvents,AuthenticationAndAuthorizationHandler)
 }

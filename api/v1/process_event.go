@@ -11,12 +11,12 @@ import (
 	"log"
 )
 
-type logEventApi struct {
-	logEventService service.LogEvent
+type processEventApi struct {
+	processEventService service.ProcessEvent
 }
 
-func (p logEventApi) Save(context echo.Context) error {
-	var data v1.LogEvent
+func (p processEventApi) Save(context echo.Context) error {
+	var data v1.PipelineProcessEvent
 	body, err := ioutil.ReadAll(context.Request().Body)
 	if  err != nil{
 		log.Println("Input Error:", err.Error())
@@ -25,13 +25,13 @@ func (p logEventApi) Save(context echo.Context) error {
 	if err := json.Unmarshal(body, &data); err != nil {
 		return common.GenerateErrorResponse(context,nil,err.Error())
 	}
-	p.logEventService.Store(data)
+	p.processEventService.Store(data)
 	return common.GenerateSuccessResponse(context,"",nil,"Operation Successful!")
 }
 
 
-func NewLogEventApi(logEventService service.LogEvent) api.LogEvent {
-	return &logEventApi{
-		logEventService: logEventService,
+func NewProcessEventApi(processEventService service.ProcessEvent) api.ProcessEvent {
+	return &processEventApi{
+		processEventService: processEventService,
 	}
 }

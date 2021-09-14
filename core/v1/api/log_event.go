@@ -6,5 +6,4 @@ import (
 
 type LogEvent interface {
 	Save(context echo.Context) error
-	GetByProcessId(context echo.Context) error
 }

@@ -9,7 +9,7 @@ import (
 	"github.com/klovercloud-ci/repository/v1/mongo"
 )
 
-func GetPipelineService() service.LogEvent{
+func GetLogEventService() service.LogEvent{
 
 	var logEventService service.LogEvent
 	if config.Database==enums.Mongo{
@@ -20,4 +20,15 @@ func GetPipelineService() service.LogEvent{
 		logEventService=logic.NewLogEventService(in_memory.NewLogEventRepository())
 	}
 	return logic.NewLogEventService(logEventService)
+}
+
+func GetProcessEventService() service.ProcessEvent{
+	var processEventService service.ProcessEvent
+	if config.Database==enums.Mongo{
+		processEventService=logic.NewProcessEventService(in_memory.NewProcessEventRepository())
+	}
+	if config.Database == enums.Inmemory{
+		processEventService=logic.NewProcessEventService(in_memory.NewProcessEventRepository())
+	}
+	return logic.NewProcessEventService(processEventService)
 }

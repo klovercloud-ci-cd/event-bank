@@ -7,3 +7,10 @@ type LogEventQueryOption struct {
 	}
 	Step string
 }
+
+type Subject struct {
+	Step,Log string
+	EventData map[string]interface{}
+	ProcessLabel map[string]string
+	ProcessId string
+}

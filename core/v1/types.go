@@ -7,6 +7,9 @@ type LogEventQueryOption struct {
 	}
 	Step string
 }
+type ProcessQueryOption struct {
+
+}
 
 type Subject struct {
 	Step,Log string

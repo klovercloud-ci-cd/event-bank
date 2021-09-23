@@ -8,7 +8,9 @@ import (
 func Router(g *echo.Group) {
 	LogEventRouter(g.Group("/logs"))
 	PipelineRouter(g.Group("/pipelines"))
-	ProcessEventRouter(g.Group("/processes"))
+	ProcessEventRouter(g.Group("/processes_events"))
+	ProcessRouter(g.Group("/processes"))
+
 }
 
 func LogEventRouter(g *echo.Group) {
@@ -19,6 +21,11 @@ func LogEventRouter(g *echo.Group) {
 func ProcessEventRouter(g *echo.Group) {
 	processEventRouter := NewProcessEventApi(dependency.GetProcessEventService())
 	g.POST("", processEventRouter.Save, AuthenticationAndAuthorizationHandler)
+}
+func ProcessRouter(g *echo.Group) {
+	processRouter := NewProcessApi(dependency.GetProcessService())
+	g.POST("", processRouter.Save, AuthenticationAndAuthorizationHandler)
+	g.GET("",processRouter.GetByCompanyIdAndRepositoryIdAndAppName,AuthenticationAndAuthorizationHandler)
 }
 
 func PipelineRouter(g *echo.Group) {

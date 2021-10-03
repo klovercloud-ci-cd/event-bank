@@ -43,3 +43,14 @@ func GetProcessService()service.Process{
 	}
 	return logic.NewProcessService(processService)
 }
+
+func GetProcessLifeCycleEventService()service.ProcessLifeCycleEvent{
+	var processLifeCycleEventService service.ProcessLifeCycleEvent
+	if config.Database==enums.Mongo{
+		processLifeCycleEventService=logic.NewProcessLifeCycleEventService(mongo.NewProcessLifeCycleRepository(3000))
+	}
+	if config.Database == enums.Inmemory{
+		processLifeCycleEventService=logic.NewProcessLifeCycleEventService(mongo.NewProcessLifeCycleRepository(3000))
+	}
+	return processLifeCycleEventService
+}

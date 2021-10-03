@@ -34,8 +34,6 @@ func (p processRepository) GetByCompanyIdAndRepositoryIdAndAppName(companyId, re
 			{"repository_id": repositoryId},
 		},
 	}
-	log.Println(query)
-
 	coll := p.manager.Db.Collection(ProcessCollection)
 
 	curser, err := coll.Find(p.manager.Ctx, query)

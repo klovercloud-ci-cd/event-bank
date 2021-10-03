@@ -10,6 +10,7 @@ func Router(g *echo.Group) {
 	PipelineRouter(g.Group("/pipelines"))
 	ProcessEventRouter(g.Group("/processes_events"))
 	ProcessRouter(g.Group("/processes"))
+	ProcessLifeCycleRouter(g.Group("/process_life_cycle_events"))
 
 }
 
@@ -32,4 +33,10 @@ func PipelineRouter(g *echo.Group) {
 	pipelineRouter := NewPipelineApi(dependency.GetLogEventService(),dependency.GetProcessEventService())
 	g.GET("/:processId",pipelineRouter.GetLogs,AuthenticationAndAuthorizationHandler)
 	g.GET("/ws",pipelineRouter.GetEvents,AuthenticationAndAuthorizationHandler)
+}
+
+func ProcessLifeCycleRouter(g *echo.Group) {
+	processLifeCycleEventRouter := NewProcessLifeCycleEventApi(dependency.GetProcessLifeCycleEventService())
+	g.POST("", processLifeCycleEventRouter.Save, AuthenticationAndAuthorizationHandler)
+	g.GET("",processLifeCycleEventRouter.Pull,AuthenticationAndAuthorizationHandler)
 }

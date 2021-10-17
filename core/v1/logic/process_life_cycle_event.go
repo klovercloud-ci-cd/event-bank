@@ -13,9 +13,13 @@ type processLifeCycleEventService struct {
 	repo repository.ProcessLifeCycleEventRepository
 }
 
+func (p processLifeCycleEventService) PullNonInitializedAndAutoTriggerEnabledEventsByStepType(count int64, stepType string) []v1.ProcessLifeCycleEvent {
+	return p.repo.PullNonInitializedAndAutoTriggerEnabledEventsByStepType(count,stepType)
+}
+
 func (p processLifeCycleEventService) PullPausedAndAutoTriggerEnabledResourcesByAgentName(count int64, agent string) []v1.Resource {
 	resources:=[]v1.Resource{}
-	events:=p.repo.PullPausedAndAutoTriggerEnabledDeployEventsByAgentName(count,agent)
+	events:=p.repo.PullPausedAndAutoTriggerEnabledResourcesByAgentName(count,agent)
 	for _,event:=range events{
 
 		var step *v1.Step

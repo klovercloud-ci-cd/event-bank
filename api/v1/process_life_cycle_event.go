@@ -18,8 +18,11 @@ type processLifeCycleEventApi struct {
 func (p processLifeCycleEventApi) Pull(context echo.Context) error {
 	agentName:=context.QueryParam("agent")
 	count,_:=strconv.ParseInt(context.QueryParam("count"), 10, 64)
-	data:=p.processLifeCycleEventService.PullPausedAndAutoTriggerEnabledResourcesByAgentName(count,agentName)
-	return common.GenerateSuccessResponse(context,data,nil,"")
+	steptype:=context.QueryParam("step_type")
+	if steptype!=""{
+		return common.GenerateSuccessResponse(context,p.processLifeCycleEventService.PullNonInitializedAndAutoTriggerEnabledEventsByStepType(count,steptype),nil,"")
+	}
+	return common.GenerateSuccessResponse(context,p.processLifeCycleEventService.PullPausedAndAutoTriggerEnabledResourcesByAgentName(count,agentName),nil,"")
 }
 
 func (p processLifeCycleEventApi) Save(context echo.Context) error {

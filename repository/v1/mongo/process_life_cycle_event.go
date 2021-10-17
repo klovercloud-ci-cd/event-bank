@@ -5,8 +5,8 @@ import (
 	v1 "github.com/klovercloud-ci/core/v1"
 	"github.com/klovercloud-ci/core/v1/repository"
 	"github.com/klovercloud-ci/enums"
-	"go.mongodb.org/mongo-driver/mongo/options"
 	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/mongo/options"
 	"log"
 	"time"
 )
@@ -21,7 +21,39 @@ type processLifeCycleRepository struct {
 	timeout  time.Duration
 }
 
-func (p processLifeCycleRepository) PullPausedAndAutoTriggerEnabledDeployEventsByAgentName(count int64,agent string) []v1.ProcessLifeCycleEvent {
+func (p processLifeCycleRepository) PullNonInitializedAndAutoTriggerEnabledEventsByStepType(count int64, stepType string) []v1.ProcessLifeCycleEvent {
+	var data []v1.ProcessLifeCycleEvent
+	query:=bson.M{
+		"$and": []bson.M{
+			{"status":enums.NON_INITIALIZED},
+			{"trigger":enums.AUTO},
+			{"step_type":stepType},
+
+		},
+	}
+	coll := p.manager.Db.Collection(ProcessLifeCycleCollection)
+	result, err := coll.Find(p.manager.Ctx, query,&options.FindOptions{
+		Limit: &count,
+	})
+	if err!=nil{
+		log.Println(err.Error())
+	}
+	for result.Next(context.TODO()) {
+		elemValue := new(v1.ProcessLifeCycleEvent)
+		err := result.Decode(elemValue)
+		if err != nil {
+			log.Println("[ERROR]", err)
+			break
+		}
+		data= append(data, *elemValue)
+	}
+	for _,each:=range data{
+		go p.updateStatus(each,string(enums.ACTIVE))
+	}
+	return data
+}
+
+func (p processLifeCycleRepository) PullPausedAndAutoTriggerEnabledResourcesByAgentName(count int64,agent string) []v1.ProcessLifeCycleEvent {
 	var data []v1.ProcessLifeCycleEvent
 	query:=bson.M{
 		"$and": []bson.M{

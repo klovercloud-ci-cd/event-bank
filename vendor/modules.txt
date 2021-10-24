@@ -1,5 +1,8 @@
 # github.com/davecgh/go-spew v1.1.1
 github.com/davecgh/go-spew/spew
+# github.com/dgrijalva/jwt-go v3.2.0+incompatible
+## explicit
+github.com/dgrijalva/jwt-go
 # github.com/go-logr/logr v0.4.0
 github.com/go-logr/logr
 # github.com/go-stack/stack v1.8.0

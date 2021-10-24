@@ -4,6 +4,7 @@ import (
 	"github.com/joho/godotenv"
 	"log"
 	"os"
+	"strings"
 )
 
 var ServerPort string
@@ -15,6 +16,9 @@ var DatabaseConnectionString string
 var DatabaseName string
 var Database string
 type DATABASE string
+var Publickey string
+var EnableAuthentication bool
+var Token string
 const (
 	MONGO DATABASE= "MONGO"
 	IN_MEMORY DATABASE= "IN_MEMORY"
@@ -36,4 +40,17 @@ func InitEnvironmentVariables(){
 	if Database==string(MONGO){
 		DatabaseConnectionString = "mongodb://" + DbUsername + ":" + DbPassword + "@" + DbServer + ":" + DbPort
 	}
+
+	Publickey=os.Getenv("PUBLIC_KEY")
+
+	if os.Getenv("ENABLE_AUTHENTICATION")==""{
+		EnableAuthentication=false
+	}else{
+		if strings.ToLower(os.Getenv("ENABLE_AUTHENTICATION"))=="true"{
+			EnableAuthentication=true
+		}else{
+			EnableAuthentication=false
+		}
+	}
+	Token=os.Getenv("TOKEN")
 }

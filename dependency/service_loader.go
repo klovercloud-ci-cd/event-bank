@@ -54,3 +54,7 @@ func GetProcessLifeCycleEventService()service.ProcessLifeCycleEvent{
 	}
 	return processLifeCycleEventService
 }
+
+func GetJwtService()service.JwtService{
+	return logic.NewJwtService()
+}

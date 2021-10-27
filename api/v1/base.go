@@ -26,7 +26,7 @@ func ProcessEventRouter(g *echo.Group) {
 func ProcessRouter(g *echo.Group) {
 	processRouter := NewProcessApi(dependency.GetProcessService())
 	g.POST("", processRouter.Save, AuthenticationAndAuthorizationHandler)
-	g.GET("",processRouter.GetByCompanyIdAndRepositoryIdAndAppName,AuthenticationAndAuthorizationHandler)
+	g.GET("",processRouter.Get,AuthenticationAndAuthorizationHandler)
 }
 
 func PipelineRouter(g *echo.Group) {

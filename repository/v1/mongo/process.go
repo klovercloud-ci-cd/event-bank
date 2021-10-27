@@ -2,8 +2,8 @@ package mongo
 
 import (
 	"context"
-	"github.com/klovercloud-ci/core/v1/repository"
 	v1 "github.com/klovercloud-ci/core/v1"
+	"github.com/klovercloud-ci/core/v1/repository"
 	"go.mongodb.org/mongo-driver/bson"
 	"log"
 	"time"
@@ -16,6 +16,29 @@ var (
 type processRepository struct {
 	manager  *dmManager
 	timeout  time.Duration
+}
+
+func (p processRepository) CountTodaysRanProcessByCompanyId(companyId string) int64 {
+	time.Local = time.UTC
+	t := time.Now()
+	fromDate := time.Date(t.Year(), t.Month(), t.Day(), 0, 0, 0, 0, time.UTC)
+	toDate := fromDate.AddDate(0, 0, 0).Add(time.Hour * 23).Add(time.Minute * 59).Add(time.Second * 59)
+	query := bson.M{
+		"$and": []bson.M{
+			{"company_id": companyId},
+			{
+				"created_at": bson.M{
+					"$gte": fromDate,
+					"$lte": toDate,
+				},
+			},
+		},
+	}
+	total,err := p.manager.Db.Collection(ProcessCollection).CountDocuments(p.manager.Ctx,query)
+	if err!=nil{
+		log.Println(err.Error())
+	}
+	return total
 }
 
 func (p processRepository) Store(process v1.Process) {

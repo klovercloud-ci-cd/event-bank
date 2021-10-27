@@ -1,14 +1,18 @@
 package logic
 
 import (
+	v1 "github.com/klovercloud-ci/core/v1"
 	"github.com/klovercloud-ci/core/v1/repository"
 	"github.com/klovercloud-ci/core/v1/service"
-	v1 "github.com/klovercloud-ci/core/v1"
 	"time"
 )
 
 type processService struct {
 	repo repository.ProcessRepository
+}
+
+func (p processService) CountTodaysRanProcessByCompanyId(companyId string) int64 {
+	return p.repo.CountTodaysRanProcessByCompanyId(companyId)
 }
 
 func (p processService) Store(process v1.Process) {

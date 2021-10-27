@@ -7,6 +7,10 @@ type processRepository struct {
 
 }
 
+func (p processRepository) CountTodaysRanProcessByCompanyId(companyId string) int64 {
+	panic("implement me")
+}
+
 func (p processRepository) Store(process v1.Process) {
 	panic("implement me")
 }

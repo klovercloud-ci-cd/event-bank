@@ -34,3 +34,12 @@ type Resource struct {
 	Namespace string             `json:"namespace"`
 	Images [] string`json:"images"`
 }
+type CompanyMetadata struct {
+	Labels                    map[string]string `bson:"labels" json:"labels" yaml:"labels"`
+	NumberOfConcurrentProcess int64 `bson:"number_of_concurrent_process" json:"number_of_concurrent_process" yaml:"number_of_concurrent_process"`
+	TotalProcessPerDay        int64 `bson:"total_process_per_day" json:"total_process_per_day" yaml:"total_process_per_day"`
+}
+type PipelineMetadata struct {
+	CompanyId string `json:"company_id" yaml:"company_id"`
+	CompanyMetadata CompanyMetadata `json:"company_metadata" yaml:"company_metadata"`
+}

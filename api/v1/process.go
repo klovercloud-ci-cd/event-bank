@@ -14,6 +14,8 @@ type processApi struct {
 	processService service.Process
 }
 
+
+
 func (p processApi) Save(context echo.Context) error {
 	var data v1.Process
 	body, err := ioutil.ReadAll(context.Request().Body)
@@ -28,10 +30,14 @@ func (p processApi) Save(context echo.Context) error {
 	return common.GenerateSuccessResponse(context,"",nil,"Operation Successful!")
 }
 
-func (p processApi) GetByCompanyIdAndRepositoryIdAndAppName(context echo.Context) error {
+func (p processApi) Get(context echo.Context) error {
 	companyId := context.QueryParam("companyId")
 	repositoryId := context.QueryParam("repositoryId")
 	appId:=context.QueryParam("appId")
+	operation:=context.QueryParam("operation")
+	if operation=="countTodaysProcessByCompanyId"{
+		return common.GenerateSuccessResponse(context,p.processService.CountTodaysRanProcessByCompanyId(companyId),nil,"")
+	}
 	return common.GenerateSuccessResponse(context,p.processService.GetByCompanyIdAndRepositoryIdAndAppName(companyId,repositoryId,appId,v1.ProcessQueryOption{}),nil,"")
 }
 

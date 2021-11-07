@@ -17,8 +17,8 @@ func (p processLifeCycleEventService) PullNonInitializedAndAutoTriggerEnabledEve
 	return p.repo.PullNonInitializedAndAutoTriggerEnabledEventsByStepType(count,stepType)
 }
 
-func (p processLifeCycleEventService) PullPausedAndAutoTriggerEnabledResourcesByAgentName(count int64, agent string) []v1.Resource {
-	resources:=[]v1.Resource{}
+func (p processLifeCycleEventService) PullPausedAndAutoTriggerEnabledResourcesByAgentName(count int64, agent string) []v1.DeployableResource {
+	resources:=[]v1.DeployableResource{}
 	events:=p.repo.PullPausedAndAutoTriggerEnabledResourcesByAgentName(count,agent)
 	for _,event:=range events{
 
@@ -30,7 +30,7 @@ func (p processLifeCycleEventService) PullPausedAndAutoTriggerEnabledResourcesBy
 			}
 		}
 		if step!=nil{
-			resources=append(resources,v1.Resource{
+			resources=append(resources,v1.DeployableResource{
 				Step:        step.Name,
 				ProcessId:   event.ProcessId,
 				Descriptors: step.Descriptors,

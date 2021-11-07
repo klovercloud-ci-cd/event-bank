@@ -25,7 +25,7 @@ type Subject struct {
 	ProcessId string
 }
 
-type Resource struct {
+type DeployableResource struct {
 	Step string `json:"step"`
 	ProcessId string `json:"process_id"`
 	Descriptors *[]unstructured.Unstructured  `json:"descriptors" yaml:"descriptors"`

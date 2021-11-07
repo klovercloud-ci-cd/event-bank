@@ -70,15 +70,17 @@ func (p pipelineApi) GetEvents(context echo.Context) error {
 		go p.processEventService.ReadEventByProcessId(status,processId)
 		jsonStr, err := json.Marshal(<-status)
 		if err!=nil{
-			log.Println(err.Error())
+			log.Println("[ERROR]: Failed to marshal",err.Error())
 		}
 		err = ws.WriteMessage(websocket.TextMessage, []byte(jsonStr))
 		if err != nil {
-			context.Logger().Error(err)
+			log.Println("[ERROR]: Failed to write",err.Error())
+			ws.Close()
 		}
 		_, _, err = ws.ReadMessage()
 		if err != nil {
-			context.Logger().Error(err)
+			log.Println("[ERROR]: Failed to read",err.Error())
+			ws.Close()
 		}
 
 	}

@@ -2,6 +2,7 @@ package v1
 
 import (
 	"github.com/klovercloud-ci/dependency"
+	_ "github.com/klovercloud-ci/docs"
 	"github.com/labstack/echo/v4"
 )
 
@@ -23,6 +24,8 @@ func ProcessEventRouter(g *echo.Group) {
 	processEventRouter := NewProcessEventApi(dependency.GetProcessEventService())
 	g.POST("", processEventRouter.Save, AuthenticationAndAuthorizationHandler)
 }
+
+
 func ProcessRouter(g *echo.Group) {
 	processRouter := NewProcessApi(dependency.GetProcessService())
 	g.POST("", processRouter.Save, AuthenticationAndAuthorizationHandler)

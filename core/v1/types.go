@@ -43,3 +43,6 @@ type PipelineMetadata struct {
 	CompanyId string `json:"company_id" yaml:"company_id"`
 	CompanyMetadata CompanyMetadata `json:"company_metadata" yaml:"company_metadata"`
 }
+type ProcessLifeCycleEventList struct {
+	Events [] ProcessLifeCycleEvent `bson:"events" json:"events" yaml:"events"`
+}

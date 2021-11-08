@@ -24,6 +24,17 @@ type pipelineApi struct {
 var (
 	upgrader = websocket.Upgrader{}
 )
+
+// Get... Get logs
+// @Summary Get Logs
+// @Description Gets logs by pipeline processId
+// @Tags Pipeline
+// @Produce json
+// @Param processId path string true "Pipeline ProcessId"
+// @Param page query int64 false "Page number"
+// @Param limit query int64 false "Record count"
+// @Success 200 {object} common.ResponseDTO
+// @Router /api/v1/pipelines/{processId} [GET]
 func (p pipelineApi) GetLogs(context echo.Context)error {
 	processId:=context.Param("processId")
 	option := getQueryOption(context)

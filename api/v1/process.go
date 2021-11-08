@@ -16,6 +16,16 @@ type processApi struct {
 
 
 
+// Save ... Save process
+// @Summary Save process
+// @Description Stores process
+// @Tags Process
+// @Accept json
+// @Produce json
+// @Param data body v1.Process true "Process Data"
+// @Success 200 {object} common.ResponseDTO
+// @Failure 404 {object} common.ResponseDTO
+// @Router /api/v1/processes [POST]
 func (p processApi) Save(context echo.Context) error {
 	var data v1.Process
 	body, err := ioutil.ReadAll(context.Request().Body)
@@ -30,6 +40,18 @@ func (p processApi) Save(context echo.Context) error {
 	return common.GenerateSuccessResponse(context,"",nil,"Operation Successful!")
 }
 
+
+// Get... Get Process List or count process
+// @Summary Get Process List or count process
+// @Description Get Process List or count process
+// @Tags Process
+// @Produce json
+// @Param companyId query string true "Company Id"
+// @Param repositoryId query string false "Repository Id"
+// @Param appId query string true "App Id"
+// @Param operation query string false "Operation[countTodaysProcessByCompanyId]"
+// @Success 200 {object} common.ResponseDTO
+// @Router /api/v1/processes [GET]
 func (p processApi) Get(context echo.Context) error {
 	companyId := context.QueryParam("companyId")
 	repositoryId := context.QueryParam("repositoryId")

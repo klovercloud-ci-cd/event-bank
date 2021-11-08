@@ -14,7 +14,7 @@ type Step struct {
 	Next        []string                     `json:"next" yaml:"next"`
 	ArgData     map[string]string            `json:"arg_data"  yaml:"arg_data"`
 	EnvData     map[string]string            `json:"env_data"  yaml:"env_data"`
-	Descriptors *[]unstructured.Unstructured `json:"descriptors" yaml:"descriptors"`
+	Descriptors *[]unstructured.Unstructured `json:"descriptors,omitempty" yaml:"descriptors,omitempty"`
 }
 
 func (step Step) Validate() error {

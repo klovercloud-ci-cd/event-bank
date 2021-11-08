@@ -15,6 +15,16 @@ type logEventApi struct {
 	logEventService service.LogEvent
 }
 
+// Save ... Save log
+// @Summary Save log
+// @Description Stores logs
+// @Tags Log
+// @Accept json
+// @Produce json
+// @Param data body v1.LogEvent true "LogEvent Data"
+// @Success 200 {object} common.ResponseDTO
+// @Failure 404 {object} common.ResponseDTO
+// @Router /api/v1/logs [POST]
 func (p logEventApi) Save(context echo.Context) error {
 	var data v1.LogEvent
 	body, err := ioutil.ReadAll(context.Request().Body)

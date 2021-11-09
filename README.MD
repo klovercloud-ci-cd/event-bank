@@ -1,4 +1,4 @@
-[![Go Report](https://goreportcard.com/badge/github.com/klovercloud-ci-cd/klovercloud-ci-event-store)](https://goreportcard.com/report/github.com/klovercloud-ci-cd/klovercloud-ci-event-store)
+[![Go Report](https://img.shields.io/badge/go%20report-A+-brightgreen.svg?style=flat)](https://goreportcard.com/report/github.com/klovercloud-ci-cd/klovercloud-ci-event-store)
 ```
 ,--. ,--. ,--.     ,-----.  ,--.   ,--. ,------. ,------.   ,-----. ,--.     ,-----.  ,--. ,--. ,------.            ,-----. ,--.         ,------. ,--.   ,--. ,------. ,--.  ,--. ,--------.          ,---.   ,--------.  ,-----.  ,------.  ,------. 
 |  .'   / |  |    '  .-.  '  \  `.'  /  |  .---' |  .--. ' '  .--./ |  |    '  .-.  ' |  | |  | |  .-.  \  ,-----. '  .--./ |  | ,-----. |  .---'  \  `.'  /  |  .---' |  ,'.|  | '--.  .--' ,-----. '   .-'  '--.  .--' '  .-.  ' |  .--. ' |  .---' 

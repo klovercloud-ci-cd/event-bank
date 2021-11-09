@@ -2,10 +2,10 @@ package v1
 
 import (
 	"github.com/klovercloud-ci/dependency"
-	_ "github.com/klovercloud-ci/docs"
 	"github.com/labstack/echo/v4"
 )
 
+// Router api/v1 base router
 func Router(g *echo.Group) {
 	LogEventRouter(g.Group("/logs"))
 	PipelineRouter(g.Group("/pipelines"))
@@ -15,31 +15,35 @@ func Router(g *echo.Group) {
 
 }
 
+// LogEventRouter api/v1/logs/* router
 func LogEventRouter(g *echo.Group) {
-	logEventRouter := NewLogEventApi(dependency.GetLogEventService())
+	logEventRouter := NewLogEventApi(dependency.GetV1LogEventService())
 	g.POST("", logEventRouter.Save, AuthenticationAndAuthorizationHandler)
 }
 
+// ProcessEventRouter api/v1/processes_events router/*
 func ProcessEventRouter(g *echo.Group) {
-	processEventRouter := NewProcessEventApi(dependency.GetProcessEventService())
+	processEventRouter := NewProcessEventApi(dependency.GetV1ProcessEventService())
 	g.POST("", processEventRouter.Save, AuthenticationAndAuthorizationHandler)
 }
 
-
+// ProcessRouter api/v1/processes router/*
 func ProcessRouter(g *echo.Group) {
-	processRouter := NewProcessApi(dependency.GetProcessService())
+	processRouter := NewProcessApi(dependency.GetV1ProcessService())
 	g.POST("", processRouter.Save, AuthenticationAndAuthorizationHandler)
-	g.GET("",processRouter.Get,AuthenticationAndAuthorizationHandler)
+	g.GET("", processRouter.Get, AuthenticationAndAuthorizationHandler)
 }
 
+// PipelineRouter api/v1/pipelines router/*
 func PipelineRouter(g *echo.Group) {
-	pipelineRouter := NewPipelineApi(dependency.GetLogEventService(),dependency.GetProcessEventService())
-	g.GET("/:processId",pipelineRouter.GetLogs,AuthenticationAndAuthorizationHandler)
-	g.GET("/ws",pipelineRouter.GetEvents,AuthenticationAndAuthorizationHandler)
+	pipelineRouter := NewPipelineApi(dependency.GetV1LogEventService(), dependency.GetV1ProcessEventService())
+	g.GET("/:processId", pipelineRouter.GetLogs, AuthenticationAndAuthorizationHandler)
+	g.GET("/ws", pipelineRouter.GetEvents, AuthenticationAndAuthorizationHandler)
 }
 
+// ProcessLifeCycleRouter api/v1/process_life_cycle_events/* router
 func ProcessLifeCycleRouter(g *echo.Group) {
-	processLifeCycleEventRouter := NewProcessLifeCycleEventApi(dependency.GetProcessLifeCycleEventService())
+	processLifeCycleEventRouter := NewProcessLifeCycleEventApi(dependency.GetV1ProcessLifeCycleEventService())
 	g.POST("", processLifeCycleEventRouter.Save, AuthenticationAndAuthorizationHandler)
-	g.GET("",processLifeCycleEventRouter.Pull,AuthenticationAndAuthorizationHandler)
+	g.GET("", processLifeCycleEventRouter.Pull, AuthenticationAndAuthorizationHandler)
 }

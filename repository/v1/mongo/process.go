@@ -9,13 +9,14 @@ import (
 	"time"
 )
 
+// ProcessCollection process collection name
 var (
-	ProcessCollection="processCollection"
+	ProcessCollection = "processCollection"
 )
 
 type processRepository struct {
-	manager  *dmManager
-	timeout  time.Duration
+	manager *dmManager
+	timeout time.Duration
 }
 
 func (p processRepository) CountTodaysRanProcessByCompanyId(companyId string) int64 {
@@ -34,8 +35,8 @@ func (p processRepository) CountTodaysRanProcessByCompanyId(companyId string) in
 			},
 		},
 	}
-	total,err := p.manager.Db.Collection(ProcessCollection).CountDocuments(p.manager.Ctx,query)
-	if err!=nil{
+	total, err := p.manager.Db.Collection(ProcessCollection).CountDocuments(p.manager.Ctx, query)
+	if err != nil {
 		log.Println(err.Error())
 	}
 	return total
@@ -49,7 +50,7 @@ func (p processRepository) Store(process v1.Process) {
 	}
 }
 
-func (p processRepository) GetByCompanyIdAndRepositoryIdAndAppName(companyId, repositoryId, appId string,option v1.ProcessQueryOption) []v1.Process {
+func (p processRepository) GetByCompanyIdAndRepositoryIdAndAppName(companyId, repositoryId, appId string, option v1.ProcessQueryOption) []v1.Process {
 	query := bson.M{
 		"$and": []bson.M{
 			{"company_id": companyId},
@@ -60,7 +61,7 @@ func (p processRepository) GetByCompanyIdAndRepositoryIdAndAppName(companyId, re
 	coll := p.manager.Db.Collection(ProcessCollection)
 
 	curser, err := coll.Find(p.manager.Ctx, query)
-	if err!=nil{
+	if err != nil {
 		log.Println(err.Error())
 	}
 	var results []v1.Process
@@ -71,11 +72,12 @@ func (p processRepository) GetByCompanyIdAndRepositoryIdAndAppName(companyId, re
 			log.Println("[ERROR]", err)
 			break
 		}
-		results= append(results, *elemValue)
+		results = append(results, *elemValue)
 	}
 	return results
 }
 
+// NewProcessRepository returns ProcessRepository type object
 func NewProcessRepository(timeout int) repository.ProcessRepository {
 	return &processRepository{
 		manager: GetDmManager(),

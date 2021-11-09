@@ -10,8 +10,8 @@ type processEventService struct {
 	repo repository.ProcessEventRepository
 }
 
-func (p *processEventService) ReadEventByProcessId(c chan map[string]interface{},processId string)  {
-	c<- p.DequeueByProcessId(processId)
+func (p *processEventService) ReadEventByProcessId(c chan map[string]interface{}, processId string) {
+	c <- p.DequeueByProcessId(processId)
 }
 
 func (p processEventService) Store(data v1.PipelineProcessEvent) {
@@ -26,6 +26,7 @@ func (p processEventService) DequeueByProcessId(processId string) map[string]int
 	return p.repo.DequeueByProcessId(processId)
 }
 
+// NewProcessEventService returns ProcessEvent type service
 func NewProcessEventService(repo repository.ProcessEventRepository) service.ProcessEvent {
 	return &processEventService{
 		repo: repo,

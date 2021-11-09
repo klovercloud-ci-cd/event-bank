@@ -5,56 +5,61 @@ import (
 	"github.com/klovercloud-ci/core/v1/logic"
 	"github.com/klovercloud-ci/core/v1/service"
 	"github.com/klovercloud-ci/enums"
-	in_memory "github.com/klovercloud-ci/repository/v1/in-memory"
+	in_memory "github.com/klovercloud-ci/repository/v1/inmemory"
 	"github.com/klovercloud-ci/repository/v1/mongo"
 )
 
-func GetLogEventService() service.LogEvent{
+// GetV1LogEventService returns LogEvent service
+func GetV1LogEventService() service.LogEvent {
 
 	var logEventService service.LogEvent
-	if config.Database==enums.Mongo{
-		logEventService=logic.NewLogEventService(mongo.NewLogEventRepository(3000))
+	if config.Database == enums.MONGO {
+		logEventService = logic.NewLogEventService(mongo.NewLogEventRepository(3000))
 
 	}
-	if config.Database == enums.Inmemory{
-		logEventService=logic.NewLogEventService(in_memory.NewLogEventRepository())
+	if config.Database == enums.INMEMORY {
+		logEventService = logic.NewLogEventService(in_memory.NewLogEventRepository())
 	}
 	return logic.NewLogEventService(logEventService)
 }
 
-func GetProcessEventService() service.ProcessEvent{
+// GetV1ProcessEventService returns ProcessEvent service
+func GetV1ProcessEventService() service.ProcessEvent {
 	var processEventService service.ProcessEvent
-	if config.Database==enums.Mongo{
-		processEventService=logic.NewProcessEventService(in_memory.NewProcessEventRepository())
+	if config.Database == enums.MONGO {
+		processEventService = logic.NewProcessEventService(in_memory.NewProcessEventRepository())
 	}
-	if config.Database == enums.Inmemory{
-		processEventService=logic.NewProcessEventService(in_memory.NewProcessEventRepository())
+	if config.Database == enums.INMEMORY {
+		processEventService = logic.NewProcessEventService(in_memory.NewProcessEventRepository())
 	}
 	return logic.NewProcessEventService(processEventService)
 }
 
-func GetProcessService()service.Process{
+// GetV1ProcessService returns Process service
+func GetV1ProcessService() service.Process {
 	var processService service.Process
-	if config.Database==enums.Mongo{
-		processService=logic.NewProcessService(mongo.NewProcessRepository(3000))
+	if config.Database == enums.MONGO {
+		processService = logic.NewProcessService(mongo.NewProcessRepository(3000))
 	}
-	if config.Database == enums.Inmemory{
-		processService=logic.NewProcessService(in_memory.NewProcessRepository())
+	if config.Database == enums.INMEMORY {
+		processService = logic.NewProcessService(in_memory.NewProcessRepository())
 	}
 	return logic.NewProcessService(processService)
 }
 
-func GetProcessLifeCycleEventService()service.ProcessLifeCycleEvent{
+// GetV1ProcessLifeCycleEventService returns ProcessLifeCycleEvent service
+func GetV1ProcessLifeCycleEventService() service.ProcessLifeCycleEvent {
 	var processLifeCycleEventService service.ProcessLifeCycleEvent
-	if config.Database==enums.Mongo{
-		processLifeCycleEventService=logic.NewProcessLifeCycleEventService(mongo.NewProcessLifeCycleRepository(3000))
+	if config.Database == enums.MONGO {
+		processLifeCycleEventService = logic.NewProcessLifeCycleEventService(mongo.NewProcessLifeCycleRepository(3000))
 	}
-	if config.Database == enums.Inmemory{
-		processLifeCycleEventService=logic.NewProcessLifeCycleEventService(mongo.NewProcessLifeCycleRepository(3000))
+	if config.Database == enums.INMEMORY {
+		processLifeCycleEventService = logic.NewProcessLifeCycleEventService(mongo.NewProcessLifeCycleRepository(3000))
 	}
 	return processLifeCycleEventService
 }
 
-func GetJwtService()service.JwtService{
+// GetV1JwtService returns Jwt service
+func GetV1JwtService() service.Jwt {
 	return logic.NewJwtService()
 }

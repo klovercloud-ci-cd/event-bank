@@ -16,14 +16,15 @@ func (p processService) CountTodaysRanProcessByCompanyId(companyId string) int64
 }
 
 func (p processService) Store(process v1.Process) {
-	process.CreatedAt=time.Now().UTC()
+	process.CreatedAt = time.Now().UTC()
 	p.repo.Store(process)
 }
 
 func (p processService) GetByCompanyIdAndRepositoryIdAndAppName(companyId, repositoryId, appId string, option v1.ProcessQueryOption) []v1.Process {
-	return p.repo.GetByCompanyIdAndRepositoryIdAndAppName(companyId,repositoryId,appId,option)
+	return p.repo.GetByCompanyIdAndRepositoryIdAndAppName(companyId, repositoryId, appId, option)
 }
 
+// NewProcessService returns Process type service
 func NewProcessService(repo repository.ProcessRepository) service.Process {
 	return &processService{
 		repo: repo,

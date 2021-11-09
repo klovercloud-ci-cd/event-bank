@@ -28,18 +28,18 @@ type logEventApi struct {
 func (p logEventApi) Save(context echo.Context) error {
 	var data v1.LogEvent
 	body, err := ioutil.ReadAll(context.Request().Body)
-	if  err != nil{
+	if err != nil {
 		log.Println("Input Error:", err.Error())
-		return common.GenerateErrorResponse(context,nil,err.Error())
+		return common.GenerateErrorResponse(context, nil, err.Error())
 	}
 	if err := json.Unmarshal(body, &data); err != nil {
-		return common.GenerateErrorResponse(context,nil,err.Error())
+		return common.GenerateErrorResponse(context, nil, err.Error())
 	}
 	p.logEventService.Store(data)
-	return common.GenerateSuccessResponse(context,"",nil,"Operation Successful!")
+	return common.GenerateSuccessResponse(context, "", nil, "Operation Successful!")
 }
 
-
+// NewLogEventApi returns LogEvent type api
 func NewLogEventApi(logEventService service.LogEvent) api.LogEvent {
 	return &logEventApi{
 		logEventService: logEventService,

@@ -1,10 +1,11 @@
-package in_memory
+package inmemory
+
 import (
 	v1 "github.com/klovercloud-ci/core/v1"
 	"github.com/klovercloud-ci/core/v1/repository"
 )
-type processRepository struct {
 
+type processRepository struct {
 }
 
 func (p processRepository) CountTodaysRanProcessByCompanyId(companyId string) int64 {
@@ -15,12 +16,12 @@ func (p processRepository) Store(process v1.Process) {
 	panic("implement me")
 }
 
-func (p processRepository) GetByCompanyIdAndRepositoryIdAndAppName(companyId, repositoryId, appId string,option v1.ProcessQueryOption) []v1.Process {
+func (p processRepository) GetByCompanyIdAndRepositoryIdAndAppName(companyId, repositoryId, appId string, option v1.ProcessQueryOption) []v1.Process {
 	panic("implement me")
 }
 
+// NewProcessRepository returns ProcessRepository type object
 func NewProcessRepository() repository.ProcessRepository {
-	return &processRepository{
-	}
+	return &processRepository{}
 
 }

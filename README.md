@@ -1,4 +1,4 @@
-[![Go Report Card](https://goreportcard.com/badge/github.com/klovercloud-ci-cd/klovercloud-ci-event-store)](https://goreportcard.com/report/github.com/klovercloud-ci-cd/klovercloud-ci-event-store)
+
 ```
 ,--. ,--. ,--.     ,-----.  ,--.   ,--. ,------. ,------.   ,-----. ,--.     ,-----.  ,--. ,--. ,------.            ,-----. ,--.         ,------. ,--.   ,--. ,------. ,--.  ,--. ,--------.          ,---.   ,--------.  ,-----.  ,------.  ,------. 
 |  .'   / |  |    '  .-.  '  \  `.'  /  |  .---' |  .--. ' '  .--./ |  |    '  .-.  ' |  | |  | |  .-.  \  ,-----. '  .--./ |  | ,-----. |  .---'  \  `.'  /  |  .---' |  ,'.|  | '--.  .--' ,-----. '   .-'  '--.  .--' '  .-.  ' |  .--. ' |  .---' 

@@ -31,7 +31,7 @@ type Subject struct {
 	ProcessId    string
 }
 
-// DeployableResource klovercloud-ci-agent applicable workload info.
+// DeployableResource agent applicable workload info.
 type DeployableResource struct {
 	Step        string                       `json:"step"`
 	ProcessId   string                       `json:"process_id"`

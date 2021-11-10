@@ -1,0 +1,429 @@
+@startuml
+namespace api {
+    interface LogEvent  {
+        + Save(context echo.Context) error
+
+    }
+    interface Pipeline  {
+        + GetLogs(context echo.Context) error
+        + GetEvents(context echo.Context) error
+
+    }
+    interface Process  {
+        + Save(context echo.Context) error
+        + Get(context echo.Context) error
+
+    }
+    interface ProcessEvent  {
+        + Save(context echo.Context) error
+
+    }
+    interface ProcessLifeCycleEvent  {
+        + Save(context echo.Context) error
+        + Pull(context echo.Context) error
+
+    }
+}
+
+
+namespace common {
+    class MetaData << (S,Aquamarine) >> {
+        + Page int64
+        + PerPage int64
+        + PageCount int64
+        + TotalCount int64
+        + Links []<font color=blue>map</font>[string]string
+
+    }
+    class ResponseDTO << (S,Aquamarine) >> {
+        + Metadata *MetaData
+        + Data <font color=blue>interface</font>{}
+        + Status string
+        + Message string
+
+    }
+}
+
+
+namespace docs {
+    class s << (S,Aquamarine) >> {
+        + ReadDoc() string
+
+    }
+    class swaggerInfo << (S,Aquamarine) >> {
+        + Version string
+        + Host string
+        + BasePath string
+        + Schemes []string
+        + Title string
+        + Description string
+
+    }
+}
+
+
+namespace enums {
+    class enums.PARAMS << (T, #FF7700) >>  {
+    }
+    class enums.PIPELINE_PURGING << (T, #FF7700) >>  {
+    }
+    class enums.PIPELINE_RESOURCE_TYPE << (T, #FF7700) >>  {
+    }
+    class enums.PROCESS_STATUS << (T, #FF7700) >>  {
+    }
+    class enums.STEP_TYPE << (T, #FF7700) >>  {
+    }
+    class enums.TRIGGER << (T, #FF7700) >>  {
+    }
+}
+
+
+namespace inmemory {
+    class logEventRepository << (S,Aquamarine) >> {
+        + Store(log v1.LogEvent) 
+        + GetByProcessId(processId string, option v1.LogEventQueryOption) ([]string, int64)
+
+    }
+    class processEventRepository << (S,Aquamarine) >> {
+        + Store(data v1.PipelineProcessEvent) 
+        + GetByProcessId(processId string) <font color=blue>map</font>[string]<font color=blue>interface</font>{}
+        + DequeueByProcessId(processId string) <font color=blue>map</font>[string]<font color=blue>interface</font>{}
+
+    }
+    class processRepository << (S,Aquamarine) >> {
+        + CountTodaysRanProcessByCompanyId(companyId string) int64
+        + Store(process v1.Process) 
+        + GetByCompanyIdAndRepositoryIdAndAppName(companyId string, repositoryId string, appId string, option v1.ProcessQueryOption) []v1.Process
+
+    }
+}
+
+"repository.LogEventRepository" <|-- "inmemory.logEventRepository"
+"service.LogEvent" <|-- "inmemory.logEventRepository"
+"repository.ProcessEventRepository" <|-- "inmemory.processEventRepository"
+"repository.ProcessRepository" <|-- "inmemory.processRepository"
+"service.Process" <|-- "inmemory.processRepository"
+
+namespace logic {
+    class jwtService << (S,Aquamarine) >> {
+        + Jwt v1.Jwt
+
+        + ValidateToken(tokenString string) (bool, *jwt.Token)
+
+    }
+    class logEventService << (S,Aquamarine) >> {
+        - repo repository.LogEventRepository
+
+        + Store(log v1.LogEvent) 
+        + GetByProcessId(processId string, option v1.LogEventQueryOption) ([]string, int64)
+
+    }
+    class processEventService << (S,Aquamarine) >> {
+        - repo repository.ProcessEventRepository
+
+        + ReadEventByProcessId(c <font color=blue>chan</font> <font color=blue>map</font>[string]<font color=blue>interface</font>{}, processId string) 
+        + Store(data v1.PipelineProcessEvent) 
+        + GetByProcessId(processId string) <font color=blue>map</font>[string]<font color=blue>interface</font>{}
+        + DequeueByProcessId(processId string) <font color=blue>map</font>[string]<font color=blue>interface</font>{}
+
+    }
+    class processLifeCycleEventService << (S,Aquamarine) >> {
+        - repo repository.ProcessLifeCycleEventRepository
+
+        + PullNonInitializedAndAutoTriggerEnabledEventsByStepType(count int64, stepType string) []v1.ProcessLifeCycleEvent
+        + PullPausedAndAutoTriggerEnabledResourcesByAgentName(count int64, agent string) []v1.DeployableResource
+        + Store(events []v1.ProcessLifeCycleEvent) 
+
+    }
+    class processService << (S,Aquamarine) >> {
+        - repo repository.ProcessRepository
+
+        + CountTodaysRanProcessByCompanyId(companyId string) int64
+        + Store(process v1.Process) 
+        + GetByCompanyIdAndRepositoryIdAndAppName(companyId string, repositoryId string, appId string, option v1.ProcessQueryOption) []v1.Process
+
+    }
+}
+
+"service.Jwt" <|-- "logic.jwtService"
+"repository.LogEventRepository" <|-- "logic.logEventService"
+"service.LogEvent" <|-- "logic.logEventService"
+"repository.ProcessEventRepository" <|-- "logic.processEventService"
+"service.ProcessEvent" <|-- "logic.processEventService"
+"service.ProcessLifeCycleEvent" <|-- "logic.processLifeCycleEventService"
+"repository.ProcessRepository" <|-- "logic.processService"
+"service.Process" <|-- "logic.processService"
+
+namespace mongo {
+    class dmManager << (S,Aquamarine) >> {
+        + Ctx context.Context
+        + Db *mongo.Database
+
+        - initConnection() 
+        - initMockMongoConnection() 
+
+    }
+    class logEventRepository << (S,Aquamarine) >> {
+        - manager *dmManager
+        - timeout time.Duration
+
+        + Store(event v1.LogEvent) 
+        + GetByProcessId(processId string, option v1.LogEventQueryOption) ([]string, int64)
+
+    }
+    class processLifeCycleRepository << (S,Aquamarine) >> {
+        - manager *dmManager
+        - timeout time.Duration
+
+        - updateStatus(data v1.ProcessLifeCycleEvent, status string) error
+        - update(data v1.ProcessLifeCycleEvent) error
+
+        + PullNonInitializedAndAutoTriggerEnabledEventsByStepType(count int64, stepType string) []v1.ProcessLifeCycleEvent
+        + PullPausedAndAutoTriggerEnabledResourcesByAgentName(count int64, agent string) []v1.ProcessLifeCycleEvent
+        + Get(count int64) []v1.ProcessLifeCycleEvent
+        + Store(events []v1.ProcessLifeCycleEvent) 
+        + GetByProcessIdAndStep(processId string, step string) *v1.ProcessLifeCycleEvent
+        + GetByProcessId(processId string) []v1.ProcessLifeCycleEvent
+
+    }
+    class processRepository << (S,Aquamarine) >> {
+        - manager *dmManager
+        - timeout time.Duration
+
+        + CountTodaysRanProcessByCompanyId(companyId string) int64
+        + Store(process v1.Process) 
+        + GetByCompanyIdAndRepositoryIdAndAppName(companyId string, repositoryId string, appId string, option v1.ProcessQueryOption) []v1.Process
+
+    }
+}
+
+"repository.LogEventRepository" <|-- "mongo.logEventRepository"
+"service.LogEvent" <|-- "mongo.logEventRepository"
+"repository.ProcessLifeCycleEventRepository" <|-- "mongo.processLifeCycleRepository"
+"repository.ProcessRepository" <|-- "mongo.processRepository"
+"service.Process" <|-- "mongo.processRepository"
+
+namespace repository {
+    interface LogEventRepository  {
+        + Store(log v1.LogEvent) 
+        + GetByProcessId(processId string, option v1.LogEventQueryOption) ([]string, int64)
+
+    }
+    interface ProcessEventRepository  {
+        + Store(data v1.PipelineProcessEvent) 
+        + GetByProcessId(processId string) <font color=blue>map</font>[string]<font color=blue>interface</font>{}
+        + DequeueByProcessId(processId string) <font color=blue>map</font>[string]<font color=blue>interface</font>{}
+
+    }
+    interface ProcessLifeCycleEventRepository  {
+        + Store(data []v1.ProcessLifeCycleEvent) 
+        + Get(count int64) []v1.ProcessLifeCycleEvent
+        + PullPausedAndAutoTriggerEnabledResourcesByAgentName(count int64, agent string) []v1.ProcessLifeCycleEvent
+        + PullNonInitializedAndAutoTriggerEnabledEventsByStepType(count int64, stepType string) []v1.ProcessLifeCycleEvent
+
+    }
+    interface ProcessRepository  {
+        + Store(process v1.Process) 
+        + GetByCompanyIdAndRepositoryIdAndAppName(companyId string, repositoryId string, appId string, option v1.ProcessQueryOption) []v1.Process
+        + CountTodaysRanProcessByCompanyId(companyId string) int64
+
+    }
+}
+
+
+namespace service {
+    interface Jwt  {
+        + ValidateToken(tokenString string) (bool, *jwt.Token)
+
+    }
+    interface LogEvent  {
+        + Store(log v1.LogEvent) 
+        + GetByProcessId(processId string, option v1.LogEventQueryOption) ([]string, int64)
+
+    }
+    interface Process  {
+        + Store(process v1.Process) 
+        + GetByCompanyIdAndRepositoryIdAndAppName(companyId string, repositoryId string, appId string, option v1.ProcessQueryOption) []v1.Process
+        + CountTodaysRanProcessByCompanyId(companyId string) int64
+
+    }
+    interface ProcessEvent  {
+        + Store(data v1.PipelineProcessEvent) 
+        + GetByProcessId(processId string) <font color=blue>map</font>[string]<font color=blue>interface</font>{}
+        + DequeueByProcessId(processId string) <font color=blue>map</font>[string]<font color=blue>interface</font>{}
+        + ReadEventByProcessId(c <font color=blue>chan</font> <font color=blue>map</font>[string]<font color=blue>interface</font>{}, processId string) 
+
+    }
+    interface ProcessLifeCycleEvent  {
+        + Store(events []v1.ProcessLifeCycleEvent) 
+        + PullNonInitializedAndAutoTriggerEnabledEventsByStepType(count int64, stepType string) []v1.ProcessLifeCycleEvent
+        + PullPausedAndAutoTriggerEnabledResourcesByAgentName(count int64, agent string) []v1.DeployableResource
+
+    }
+}
+
+
+namespace v1 {
+    class CompanyMetadata << (S,Aquamarine) >> {
+        + Labels <font color=blue>map</font>[string]string
+        + NumberOfConcurrentProcess int64
+        + TotalProcessPerDay int64
+
+    }
+    class DeployableResource << (S,Aquamarine) >> {
+        + Step string
+        + ProcessId string
+        + Descriptors *[]unstructured.Unstructured
+        + Type enums.PIPELINE_RESOURCE_TYPE
+        + Name string
+        + Namespace string
+        + Images []string
+
+    }
+    class Jwt << (S,Aquamarine) >> {
+        + PublicKey *rsa.PublicKey
+
+    }
+    class LogEvent << (S,Aquamarine) >> {
+        + ProcessId string
+        + Log string
+        + Step string
+        + CreatedAt time.Time
+
+    }
+    class LogEventQueryOption << (S,Aquamarine) >> {
+        + Pagination <font color=blue>struct</font>{int64, int64}
+        + Step string
+
+    }
+    class Pipeline << (S,Aquamarine) >> {
+        + MetaData PipelineMetadata
+        + Option PipelineApplyOption
+        + ApiVersion string
+        + Name string
+        + ProcessId string
+        + Label <font color=blue>map</font>[string]string
+        + Steps []Step
+
+        + Validate() error
+
+    }
+    class PipelineApplyOption << (S,Aquamarine) >> {
+        + Purging enums.PIPELINE_PURGING
+
+    }
+    class PipelineMetadata << (S,Aquamarine) >> {
+        + CompanyId string
+        + CompanyMetadata CompanyMetadata
+
+    }
+    class PipelineProcessEvent << (S,Aquamarine) >> {
+        + ProcessId string
+        + Data <font color=blue>map</font>[string]<font color=blue>interface</font>{}
+
+    }
+    class Process << (S,Aquamarine) >> {
+        + ProcessId string
+        + CompanyId string
+        + AppId string
+        + RepositoryId string
+        + Data <font color=blue>map</font>[string]<font color=blue>interface</font>{}
+        + CreatedAt time.Time
+
+    }
+    class ProcessLifeCycleEvent << (S,Aquamarine) >> {
+        + ProcessId string
+        + Step string
+        + StepType enums.STEP_TYPE
+        + Status enums.PROCESS_STATUS
+        + Next []string
+        + Agent string
+        + Pipeline *Pipeline
+        + CreatedAt time.Time
+        + Trigger enums.TRIGGER
+
+    }
+    class ProcessLifeCycleEventList << (S,Aquamarine) >> {
+        + Events []ProcessLifeCycleEvent
+
+    }
+    class ProcessQueryOption << (S,Aquamarine) >> {
+    }
+    class Step << (S,Aquamarine) >> {
+        + Name string
+        + Type enums.STEP_TYPE
+        + Trigger enums.TRIGGER
+        + Params <font color=blue>map</font>[enums.PARAMS]string
+        + Next []string
+        + ArgData <font color=blue>map</font>[string]string
+        + EnvData <font color=blue>map</font>[string]string
+        + Descriptors *[]unstructured.Unstructured
+
+        - validateDeployStep() error
+        - validateBuildStep() error
+
+        + Validate() error
+
+    }
+    class Subject << (S,Aquamarine) >> {
+        + Step string
+        + EventData <font color=blue>map</font>[string]<font color=blue>interface</font>{}
+        + ProcessLabel <font color=blue>map</font>[string]string
+        + ProcessId string
+
+    }
+    class logEventApi << (S,Aquamarine) >> {
+        - logEventService service.LogEvent
+
+        + Save(context echo.Context) error
+
+    }
+    class pipelineApi << (S,Aquamarine) >> {
+        - logEventService service.LogEvent
+        - processEventService service.ProcessEvent
+
+        + GetLogs(context echo.Context) error
+        + GetEvents(context echo.Context) error
+
+    }
+    class processApi << (S,Aquamarine) >> {
+        - processService service.Process
+
+        + Save(context echo.Context) error
+        + Get(context echo.Context) error
+
+    }
+    class processEventApi << (S,Aquamarine) >> {
+        - processEventService service.ProcessEvent
+
+        + Save(context echo.Context) error
+
+    }
+    class processLifeCycleEventApi << (S,Aquamarine) >> {
+        - processLifeCycleEventService service.ProcessLifeCycleEvent
+
+        + Pull(context echo.Context) error
+        + Save(context echo.Context) error
+
+    }
+}
+
+"api.LogEvent" <|-- "v1.logEventApi"
+"api.ProcessEvent" <|-- "v1.logEventApi"
+"api.Pipeline" <|-- "v1.pipelineApi"
+"api.LogEvent" <|-- "v1.processApi"
+"api.Process" <|-- "v1.processApi"
+"api.ProcessEvent" <|-- "v1.processApi"
+"api.LogEvent" <|-- "v1.processEventApi"
+"api.ProcessEvent" <|-- "v1.processEventApi"
+"api.LogEvent" <|-- "v1.processLifeCycleEventApi"
+"api.ProcessEvent" <|-- "v1.processLifeCycleEventApi"
+"api.ProcessLifeCycleEvent" <|-- "v1.processLifeCycleEventApi"
+
+"__builtin__.string" #.. "enums.PARAMS"
+"__builtin__.string" #.. "enums.PIPELINE_PURGING"
+"__builtin__.string" #.. "enums.PIPELINE_RESOURCE_TYPE"
+"__builtin__.string" #.. "enums.PROCESS_STATUS"
+"__builtin__.string" #.. "enums.STEP_TYPE"
+"__builtin__.string" #.. "enums.TRIGGER"
+@enduml

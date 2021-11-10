@@ -1,9 +1,9 @@
 package main
 
 import (
-	"github.com/klovercloud-ci/api"
-	"github.com/klovercloud-ci/config"
-	_ "github.com/klovercloud-ci/docs"
+	"github.com/klovercloud-ci-cd/klovercloud-ci-event-store/api"
+	"github.com/klovercloud-ci-cd/klovercloud-ci-event-store/config"
+	_ "github.com/klovercloud-ci-cd/klovercloud-ci-event-store/docs"
 )
 
 // @title Klovercloud-ci-event-store API

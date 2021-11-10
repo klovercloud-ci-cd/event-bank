@@ -1,7 +1,7 @@
 package v1
 
 import (
-	"github.com/klovercloud-ci/enums"
+	"github.com/klovercloud-ci-cd/klovercloud-ci-event-store/enums"
 	"time"
 )
 

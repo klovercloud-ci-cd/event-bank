@@ -1,7 +1,7 @@
 package service
 
 import (
-	v1 "github.com/klovercloud-ci/core/v1"
+	v1 "github.com/klovercloud-ci-cd/klovercloud-ci-event-store/core/v1"
 )
 
 // ProcessLifeCycleEvent Process Life Cycle Event operations.

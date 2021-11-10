@@ -5,9 +5,9 @@ import (
 	"crypto/x509"
 	"encoding/pem"
 	"github.com/dgrijalva/jwt-go"
-	"github.com/klovercloud-ci/config"
-	v1 "github.com/klovercloud-ci/core/v1"
-	"github.com/klovercloud-ci/core/v1/service"
+	"github.com/klovercloud-ci-cd/klovercloud-ci-event-store/config"
+	v1 "github.com/klovercloud-ci-cd/klovercloud-ci-event-store/core/v1"
+	"github.com/klovercloud-ci-cd/klovercloud-ci-event-store/core/v1/service"
 	"log"
 )
 

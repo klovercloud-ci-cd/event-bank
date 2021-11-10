@@ -2,10 +2,10 @@ package logic
 
 import (
 	"fmt"
-	v1 "github.com/klovercloud-ci/core/v1"
-	"github.com/klovercloud-ci/core/v1/repository"
-	"github.com/klovercloud-ci/core/v1/service"
-	"github.com/klovercloud-ci/enums"
+	v1 "github.com/klovercloud-ci-cd/klovercloud-ci-event-store/core/v1"
+	"github.com/klovercloud-ci-cd/klovercloud-ci-event-store/core/v1/repository"
+	"github.com/klovercloud-ci-cd/klovercloud-ci-event-store/core/v1/service"
+	"github.com/klovercloud-ci-cd/klovercloud-ci-event-store/enums"
 	"strings"
 )
 

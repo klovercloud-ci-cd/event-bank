@@ -3,8 +3,8 @@ package inmemory
 import (
 	"container/list"
 	"encoding/json"
-	v1 "github.com/klovercloud-ci/core/v1"
-	"github.com/klovercloud-ci/core/v1/repository"
+	v1 "github.com/klovercloud-ci-cd/klovercloud-ci-event-store/core/v1"
+	"github.com/klovercloud-ci-cd/klovercloud-ci-event-store/core/v1/repository"
 	"log"
 )
 

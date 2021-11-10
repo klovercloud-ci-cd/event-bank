@@ -1,12 +1,12 @@
 package dependency
 
 import (
-	"github.com/klovercloud-ci/config"
-	"github.com/klovercloud-ci/core/v1/logic"
-	"github.com/klovercloud-ci/core/v1/service"
-	"github.com/klovercloud-ci/enums"
-	in_memory "github.com/klovercloud-ci/repository/v1/inmemory"
-	"github.com/klovercloud-ci/repository/v1/mongo"
+	"github.com/klovercloud-ci-cd/klovercloud-ci-event-store/config"
+	"github.com/klovercloud-ci-cd/klovercloud-ci-event-store/core/v1/logic"
+	"github.com/klovercloud-ci-cd/klovercloud-ci-event-store/core/v1/service"
+	"github.com/klovercloud-ci-cd/klovercloud-ci-event-store/enums"
+	in_memory "github.com/klovercloud-ci-cd/klovercloud-ci-event-store/repository/v1/inmemory"
+	"github.com/klovercloud-ci-cd/klovercloud-ci-event-store/repository/v1/mongo"
 )
 
 // GetV1LogEventService returns LogEvent service

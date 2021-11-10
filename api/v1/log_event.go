@@ -2,10 +2,10 @@ package v1
 
 import (
 	"encoding/json"
-	"github.com/klovercloud-ci/api/common"
-	v1 "github.com/klovercloud-ci/core/v1"
-	"github.com/klovercloud-ci/core/v1/api"
-	"github.com/klovercloud-ci/core/v1/service"
+	"github.com/klovercloud-ci-cd/klovercloud-ci-event-store/api/common"
+	v1 "github.com/klovercloud-ci-cd/klovercloud-ci-event-store/core/v1"
+	"github.com/klovercloud-ci-cd/klovercloud-ci-event-store/core/v1/api"
+	"github.com/klovercloud-ci-cd/klovercloud-ci-event-store/core/v1/service"
 	"github.com/labstack/echo/v4"
 	"io/ioutil"
 	"log"

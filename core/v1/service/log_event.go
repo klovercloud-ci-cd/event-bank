@@ -1,7 +1,7 @@
 package service
 
 import (
-	v1 "github.com/klovercloud-ci-cd/klovercloud-ci-event-store/core/v1"
+	v1 "github.com/klovercloud-ci-cd/event-store/core/v1"
 )
 
 // LogEvent Log Event operations.

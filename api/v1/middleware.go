@@ -1,9 +1,9 @@
 package v1
 
 import (
-	"github.com/klovercloud-ci-cd/klovercloud-ci-event-store/api/common"
-	"github.com/klovercloud-ci-cd/klovercloud-ci-event-store/config"
-	"github.com/klovercloud-ci-cd/klovercloud-ci-event-store/dependency"
+	"github.com/klovercloud-ci-cd/event-store/api/common"
+	"github.com/klovercloud-ci-cd/event-store/config"
+	"github.com/klovercloud-ci-cd/event-store/dependency"
 	"github.com/labstack/echo/v4"
 )
 

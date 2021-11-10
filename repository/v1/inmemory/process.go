@@ -1,8 +1,8 @@
 package inmemory
 
 import (
-	v1 "github.com/klovercloud-ci-cd/klovercloud-ci-event-store/core/v1"
-	"github.com/klovercloud-ci-cd/klovercloud-ci-event-store/core/v1/repository"
+	v1 "github.com/klovercloud-ci-cd/event-store/core/v1"
+	"github.com/klovercloud-ci-cd/event-store/core/v1/repository"
 )
 
 type processRepository struct {

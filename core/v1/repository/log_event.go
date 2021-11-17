@@ -1,6 +1,6 @@
 package repository
 
-import v1 "github.com/klovercloud-ci-cd/event-store/core/v1"
+import v1 "github.com/klovercloud-ci-cd/event-bank/core/v1"
 
 // LogEventRepository Log Event Repository operations.
 type LogEventRepository interface {

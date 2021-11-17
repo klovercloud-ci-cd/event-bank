@@ -1,4 +1,4 @@
-module github.com/klovercloud-ci-cd/event-store
+module github.com/klovercloud-ci-cd/event-bank
 
 go 1.15
 

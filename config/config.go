@@ -2,7 +2,7 @@ package config
 
 import (
 	"github.com/joho/godotenv"
-	"github.com/klovercloud-ci-cd/event-store/enums"
+	"github.com/klovercloud-ci-cd/event-bank/enums"
 	"log"
 	"os"
 	"strings"

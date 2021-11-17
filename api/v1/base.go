@@ -1,7 +1,7 @@
 package v1
 
 import (
-	"github.com/klovercloud-ci-cd/event-store/dependency"
+	"github.com/klovercloud-ci-cd/event-bank/dependency"
 	"github.com/labstack/echo/v4"
 )
 

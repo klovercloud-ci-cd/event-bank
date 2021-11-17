@@ -2,7 +2,7 @@ package inmemory
 
 import (
 	"container/list"
-	v1 "github.com/klovercloud-ci-cd/event-store/core/v1"
+	v1 "github.com/klovercloud-ci-cd/event-bank/core/v1"
 	"github.com/stretchr/testify/assert"
 	"reflect"
 	"testing"

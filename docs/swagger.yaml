@@ -176,8 +176,8 @@ definitions:
     type: object
 info:
   contact: { }
-  description: Klovercloud-ci-event-store API
-  title: Klovercloud-ci-event-store API
+  description: Klovercloud-ci-event-bank API
+  title: Klovercloud-ci-event-bank API
 paths:
   /api/v1/logs:
     post:

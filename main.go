@@ -6,8 +6,8 @@ import (
 	_ "github.com/klovercloud-ci-cd/event-bank/docs"
 )
 
-// @title Klovercloud-ci-event-store API
-// @description Klovercloud-ci-event-store API
+// @title Klovercloud-ci-event-bank API
+// @description Klovercloud-ci-event-bank API
 
 func main() {
 	e := config.New()

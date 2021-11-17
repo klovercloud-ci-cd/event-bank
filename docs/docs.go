@@ -592,8 +592,8 @@ var SwaggerInfo = swaggerInfo{
 	Host:        "",
 	BasePath:    "",
 	Schemes:     []string{},
-	Title:       "Klovercloud-ci-event-store API",
-	Description: "Klovercloud-ci-event-store API",
+	Title:       "Klovercloud-ci-event-bank API",
+	Description: "Klovercloud-ci-event-bank API",
 }
 
 type s struct{}

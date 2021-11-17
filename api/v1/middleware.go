@@ -24,8 +24,6 @@ func AuthenticationAndAuthorizationHandler(handler echo.HandlerFunc) echo.Handle
 	}
 }
 
-
-
 // AuthenticationAndAuthorizationHandlerForWebSocket handle user authentication and authorization here.
 func AuthenticationAndAuthorizationHandlerForWebSocket(handler echo.HandlerFunc) echo.HandlerFunc {
 	return func(context echo.Context) (err error) {

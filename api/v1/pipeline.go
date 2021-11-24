@@ -32,7 +32,7 @@ var (
 // @Param processId path string true "Pipeline ProcessId"
 // @Param page query int64 false "Page number"
 // @Param limit query int64 false "Record count"
-// @Success 200 {object} common.ResponseDTO
+// @Success 200 {object} common.ResponseDTO{data=[]string}
 // @Router /api/v1/pipelines/{processId} [GET]
 func (p pipelineApi) GetLogs(context echo.Context) error {
 	processId := context.Param("processId")

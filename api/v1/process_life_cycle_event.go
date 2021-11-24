@@ -24,7 +24,7 @@ type processLifeCycleEventApi struct {
 // @Param agent path string true "Agen name"
 // @Param count path int64 true "Pull size"
 // @Param step_type path string false "Step type [BUILD, DEPLOY]"
-// @Success 200 {object} common.ResponseDTO
+// @Success 200 {object} common.ResponseDTO{data=[]v1.ProcessLifeCycleEvent}
 // @Router /api/v1/process_life_cycle_events [GET]
 func (p processLifeCycleEventApi) Pull(context echo.Context) error {
 	agentName := context.QueryParam("agent")

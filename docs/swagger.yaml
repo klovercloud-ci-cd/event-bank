@@ -20,7 +20,7 @@ definitions:
     properties:
       _metadata:
         $ref: '#/definitions/common.MetaData'
-      data: { }
+      data: {}
       message:
         type: string
       status:
@@ -175,24 +175,24 @@ definitions:
         type: string
     type: object
 info:
-  contact: { }
+  contact: {}
   description: Klovercloud-ci-event-bank API
   title: Klovercloud-ci-event-bank API
 paths:
   /api/v1/logs:
     post:
       consumes:
-        - application/json
+      - application/json
       description: Stores logs
       parameters:
-        - description: LogEvent Data
-          in: body
-          name: data
-          required: true
-          schema:
-            $ref: '#/definitions/v1.LogEvent'
+      - description: LogEvent Data
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/v1.LogEvent'
       produces:
-        - application/json
+      - application/json
       responses:
         "200":
           description: OK
@@ -204,75 +204,89 @@ paths:
             $ref: '#/definitions/common.ResponseDTO'
       summary: Save log
       tags:
-        - Log
+      - Log
   /api/v1/pipelines/{processId}:
     get:
       description: Gets logs by pipeline processId
       parameters:
-        - description: Pipeline ProcessId
-          in: path
-          name: processId
-          required: true
-          type: string
-        - description: Page number
-          in: query
-          name: page
-          type: integer
-        - description: Record count
-          in: query
-          name: limit
-          type: integer
+      - description: Pipeline ProcessId
+        in: path
+        name: processId
+        required: true
+        type: string
+      - description: Page number
+        in: query
+        name: page
+        type: integer
+      - description: Record count
+        in: query
+        name: limit
+        type: integer
       produces:
-        - application/json
+      - application/json
       responses:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/common.ResponseDTO'
+            allOf:
+            - $ref: '#/definitions/common.ResponseDTO'
+            - properties:
+                data:
+                  items:
+                    type: string
+                  type: array
+              type: object
       summary: Get Logs
       tags:
-        - Pipeline
+      - Pipeline
   /api/v1/process_life_cycle_events:
     get:
       description: Pulls auto trigger enabled steps
       parameters:
-        - description: Agen name
-          in: path
-          name: agent
-          required: true
-          type: string
-        - description: Pull size
-          in: path
-          name: count
-          required: true
-          type: integer
-        - description: Step type [BUILD, DEPLOY]
-          in: path
-          name: step_type
-          type: string
+      - description: Agen name
+        in: path
+        name: agent
+        required: true
+        type: string
+      - description: Pull size
+        in: path
+        name: count
+        required: true
+        type: integer
+      - description: Step type [BUILD, DEPLOY]
+        in: path
+        name: step_type
+        type: string
       produces:
-        - application/json
+      - application/json
       responses:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/common.ResponseDTO'
+            allOf:
+            - $ref: '#/definitions/common.ResponseDTO'
+            - properties:
+                data:
+                  items:
+                    $ref: '#/definitions/v1.ProcessLifeCycleEvent'
+                  type: array
+              type: object
       summary: Pull Steps
       tags:
-        - ProcessLifeCycle
+      - ProcessLifeCycle
     post:
       consumes:
-        - application/json
+      - application/json
       description: Stores process lifecycle event
       parameters:
-        - description: ProcessLifeCycleEventList Data
-          in: body
-          name: data
-          required: true
-          schema:
-            $ref: '#/definitions/v1.ProcessLifeCycleEventList'
+      - description: ProcessLifeCycleEventList Data
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/v1.ProcessLifeCycleEventList'
       produces:
-        - application/json
+      - application/json
       responses:
         "200":
           description: OK
@@ -284,52 +298,59 @@ paths:
             $ref: '#/definitions/common.ResponseDTO'
       summary: Save process lifecycle event
       tags:
-        - ProcessLifeCycle
+      - ProcessLifeCycle
   /api/v1/processes:
     get:
       description: Get Process List or count process
       parameters:
-        - description: Company Id
-          in: query
-          name: companyId
-          required: true
-          type: string
-        - description: Repository Id
-          in: query
-          name: repositoryId
-          type: string
-        - description: App Id
-          in: query
-          name: appId
-          required: true
-          type: string
-        - description: Operation[countTodaysProcessByCompanyId]
-          in: query
-          name: operation
-          type: string
+      - description: Company Id
+        in: query
+        name: companyId
+        required: true
+        type: string
+      - description: Repository Id
+        in: query
+        name: repositoryId
+        type: string
+      - description: App Id
+        in: query
+        name: appId
+        required: true
+        type: string
+      - description: Operation[countTodaysProcessByCompanyId]
+        in: query
+        name: operation
+        type: string
       produces:
-        - application/json
+      - application/json
       responses:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/common.ResponseDTO'
+            allOf:
+            - $ref: '#/definitions/common.ResponseDTO'
+            - properties:
+                data:
+                  items:
+                    $ref: '#/definitions/v1.Process'
+                  type: array
+              type: object
       summary: Get Process List or count process
       tags:
-        - Process
+      - Process
     post:
       consumes:
-        - application/json
+      - application/json
       description: Stores process
       parameters:
-        - description: Process Data
-          in: body
-          name: data
-          required: true
-          schema:
-            $ref: '#/definitions/v1.Process'
+      - description: Process Data
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/v1.Process'
       produces:
-        - application/json
+      - application/json
       responses:
         "200":
           description: OK
@@ -341,21 +362,21 @@ paths:
             $ref: '#/definitions/common.ResponseDTO'
       summary: Save process
       tags:
-        - Process
+      - Process
   /api/v1/processes_events:
     post:
       consumes:
-        - application/json
+      - application/json
       description: Stores Pipeline process event
       parameters:
-        - description: PipelineProcessEvent Data
-          in: body
-          name: data
-          required: true
-          schema:
-            $ref: '#/definitions/v1.PipelineProcessEvent'
+      - description: PipelineProcessEvent Data
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/v1.PipelineProcessEvent'
       produces:
-        - application/json
+      - application/json
       responses:
         "200":
           description: OK
@@ -367,5 +388,5 @@ paths:
             $ref: '#/definitions/common.ResponseDTO'
       summary: Save Pipeline process event
       tags:
-        - ProcessEvent
+      - ProcessEvent
 swagger: "2.0"

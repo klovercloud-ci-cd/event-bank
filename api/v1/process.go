@@ -48,7 +48,7 @@ func (p processApi) Save(context echo.Context) error {
 // @Param repositoryId query string false "Repository Id"
 // @Param appId query string true "App Id"
 // @Param operation query string false "Operation[countTodaysProcessByCompanyId]"
-// @Success 200 {object} common.ResponseDTO
+// @Success 200 {object} common.ResponseDTO{data=[]v1.Process}
 // @Router /api/v1/processes [GET]
 func (p processApi) Get(context echo.Context) error {
 	companyId := context.QueryParam("companyId")

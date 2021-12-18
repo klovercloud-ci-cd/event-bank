@@ -29,6 +29,7 @@ func GetDmManager() *dmManager {
 
 func (dm *dmManager) initConnection() {
 	// Base context.
+	log.Println(config.DatabaseConnectionString)
 	ctx := context.Background()
 	dm.Ctx = ctx
 	clientOpts := options.Client().ApplyURI(config.DatabaseConnectionString)

@@ -8,6 +8,8 @@ const (
 	BUILD = STEP_TYPE("BUILD")
 	// DEPLOY deploy step
 	DEPLOY = STEP_TYPE("DEPLOY")
+	// INTERMEDIARY step that runs custom jobs
+	INTERMEDIARY=STEP_TYPE("INTERMEDIARY")
 )
 const (
 	// MONGO mongo as db

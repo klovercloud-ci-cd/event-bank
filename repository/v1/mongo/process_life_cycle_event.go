@@ -23,13 +23,25 @@ type processLifeCycleRepository struct {
 
 func (p processLifeCycleRepository) PullNonInitializedAndAutoTriggerEnabledEventsByStepType(count int64, stepType string) []v1.ProcessLifeCycleEvent {
 	var data []v1.ProcessLifeCycleEvent
-	query := bson.M{
-		"$and": []bson.M{
-			{"status": enums.NON_INITIALIZED},
-			{"trigger": enums.AUTO},
-			{"step_type": stepType},
-		},
+	var query bson.M
+	if stepType==string(enums.INTERMEDIARY){
+		query = bson.M{
+			"$and": []bson.M{
+				{"status": enums.PAUSED},
+				{"trigger": enums.AUTO},
+				{"step_type": stepType},
+			},
+		}
+	}else{
+		query = bson.M{
+			"$and": []bson.M{
+				{"status": enums.NON_INITIALIZED},
+				{"trigger": enums.AUTO},
+				{"step_type": stepType},
+			},
+		}
 	}
+
 	coll := p.manager.Db.Collection(ProcessLifeCycleCollection)
 	result, err := coll.Find(p.manager.Ctx, query, &options.FindOptions{
 		Limit: &count,

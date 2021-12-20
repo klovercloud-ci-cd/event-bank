@@ -40,6 +40,7 @@ type DeployableResource struct {
 	Name        string                       `json:"name"`
 	Namespace   string                       `json:"namespace"`
 	Images      []string                     `json:"images"`
+	Pipeline  *Pipeline            `bson:"pipeline" json :"pipeline"`
 }
 
 // CompanyMetadata company metadata

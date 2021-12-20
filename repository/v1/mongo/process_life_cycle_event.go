@@ -24,10 +24,10 @@ type processLifeCycleRepository struct {
 func (p processLifeCycleRepository) PullNonInitializedAndAutoTriggerEnabledEventsByStepType(count int64, stepType string) []v1.ProcessLifeCycleEvent {
 	var data []v1.ProcessLifeCycleEvent
 	var query bson.M
-	if stepType==string(enums.INTERMEDIARY){
+	if stepType==string(enums.BUILD){
 		query = bson.M{
 			"$and": []bson.M{
-				{"status": enums.PAUSED},
+				{"status": enums.NON_INITIALIZED},
 				{"trigger": enums.AUTO},
 				{"step_type": stepType},
 			},
@@ -35,7 +35,7 @@ func (p processLifeCycleRepository) PullNonInitializedAndAutoTriggerEnabledEvent
 	}else{
 		query = bson.M{
 			"$and": []bson.M{
-				{"status": enums.NON_INITIALIZED},
+				{"status": enums.PAUSED},
 				{"trigger": enums.AUTO},
 				{"step_type": stepType},
 			},
@@ -119,7 +119,6 @@ func (p processLifeCycleRepository) Get(count int64) []v1.ProcessLifeCycleEvent 
 	}
 	return data
 }
-
 func (p processLifeCycleRepository) Store(events []v1.ProcessLifeCycleEvent) {
 	coll := p.manager.Db.Collection(ProcessLifeCycleCollection)
 	var pipeline *v1.Pipeline
@@ -145,7 +144,6 @@ func (p processLifeCycleRepository) Store(events []v1.ProcessLifeCycleEvent) {
 		}
 	}
 }
-
 func (p processLifeCycleRepository) updateStatus(data v1.ProcessLifeCycleEvent, status string) error {
 	filter := bson.M{
 		"$and": []bson.M{
@@ -218,7 +216,6 @@ func (p processLifeCycleRepository) GetByProcessIdAndStep(processId, step string
 	return temp
 
 }
-
 func (p processLifeCycleRepository) GetByProcessId(processId string) []v1.ProcessLifeCycleEvent {
 	query := bson.M{
 		"$and": []bson.M{

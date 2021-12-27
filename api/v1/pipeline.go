@@ -48,6 +48,7 @@ func (p pipelineApi) GetLogs(context echo.Context) error {
 	if (option.Pagination.Page+1)*option.Pagination.Limit < metadata.TotalCount {
 		metadata.Links = append(metadata.Links, map[string]string{"next": uri + "?order=" + context.QueryParam("order") + "&page=" + strconv.FormatInt(option.Pagination.Page+1, 10) + "&limit=" + strconv.FormatInt(option.Pagination.Limit, 10)})
 	}
+
 	return common.GenerateSuccessResponse(context, logs, &metadata, "")
 }
 

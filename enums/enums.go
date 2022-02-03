@@ -114,3 +114,15 @@ const (
 	// REPLICASET k8s replicaset as resource
 	REPLICASET = PIPELINE_RESOURCE_TYPE("replicaset")
 )
+
+// ENVIRONMENT run environment
+type ENVIRONMENT string
+
+const (
+	// PRODUCTION production environment
+	PRODUCTION = ENVIRONMENT("PRODUCTION")
+	// DEVELOP development environment
+	DEVELOP = ENVIRONMENT("DEVELOP")
+	// TEST test environment
+	TEST = ENVIRONMENT("TEST")
+)

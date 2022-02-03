@@ -8,20 +8,14 @@ spec:
   selector:
     matchLabels:
       app: klovercloud-ci-event-bank
-    strategy:
-      type: rollingUpdate
-      rollingUpdate:
-        maxSurge: 2
-        maxUnavailable: 0
-    minReadySeconds: 10
-    template:
-      metadata:
-        labels:
-          app: klovercloud-ci-event-bank
-      spec:
-        terminationGracePeriodSeconds: 60
-        containers:
-          name: app
+  template:
+    metadata:
+      labels:
+        app: klovercloud-ci-event-bank
+    spec:
+      terminationGracePeriodSeconds: 60
+      containers:
+        - name: app
           imagePullPolicy: Always
           image: quay.io/klovercloud/ci-event-bank:v1.0.0
           resources:

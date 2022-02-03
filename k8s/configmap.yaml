@@ -4,6 +4,7 @@ metadata:
   name: klovercloud-ci-event-bank-envar-config
   namespace: klovercloud
 data:
+  RUN_MODE: "PRODUCTION"
   SERVER_PORT: "8080"
   MONGO_SERVER:  "mongod-0.mongodb-service.default.svc.cluster.local"
   MONGO_PORT: "27017"

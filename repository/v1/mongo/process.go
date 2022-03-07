@@ -5,6 +5,7 @@ import (
 	v1 "github.com/klovercloud-ci-cd/event-bank/core/v1"
 	"github.com/klovercloud-ci-cd/event-bank/core/v1/repository"
 	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/mongo/options"
 	"log"
 	"time"
 )
@@ -50,17 +51,31 @@ func (p processRepository) Store(process v1.Process) {
 	}
 }
 
-func (p processRepository) GetByCompanyIdAndRepositoryIdAndAppName(companyId, repositoryId, appId string, option v1.ProcessQueryOption) []v1.Process {
+func (p processRepository) GetByCompanyIdAndRepositoryIdAndAppName(companyId, repositoryId, appId string, option v1.ProcessQueryOption) ([]v1.Process, int64) {
 	query := bson.M{
-		"$and": []bson.M{
-			{"company_id": companyId},
-			{"app_id": appId},
-			{"repository_id": repositoryId},
-		},
+		"$and": []bson.M{},
 	}
+	and := []bson.M{
+		{"company_id": companyId},
+		{"app_id": appId},
+		{"repository_id": repositoryId},
+	}
+	if option.Step != "" {
+		and = append(and, map[string]interface{}{"step": option.Step})
+	}
+	query["$and"] = and
 	coll := p.manager.Db.Collection(ProcessCollection)
+	count, err := coll.CountDocuments(p.manager.Ctx, query)
+	if err != nil {
+		log.Println(err.Error())
+	}
+	skip := option.Pagination.Page * option.Pagination.Limit
 
-	curser, err := coll.Find(p.manager.Ctx, query)
+	curser, err := coll.Find(p.manager.Ctx, query, &options.FindOptions{
+		Limit: &option.Pagination.Limit,
+		Skip:  &skip,
+		Sort: bson.M{"created_at": -1},
+	})
 	if err != nil {
 		log.Println(err.Error())
 	}
@@ -74,7 +89,7 @@ func (p processRepository) GetByCompanyIdAndRepositoryIdAndAppName(companyId, re
 		}
 		results = append(results, *elemValue)
 	}
-	return results
+	return results, count
 }
 
 // NewProcessRepository returns ProcessRepository type object

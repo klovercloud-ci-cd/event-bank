@@ -16,7 +16,7 @@ func (p processRepository) Store(process v1.Process) {
 	panic("implement me")
 }
 
-func (p processRepository) GetByCompanyIdAndRepositoryIdAndAppName(companyId, repositoryId, appId string, option v1.ProcessQueryOption) []v1.Process {
+func (p processRepository) GetByCompanyIdAndRepositoryIdAndAppName(companyId, repositoryId, appId string, option v1.ProcessQueryOption) ([]v1.Process, int64) {
 	panic("implement me")
 }
 

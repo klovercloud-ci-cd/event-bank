@@ -6,9 +6,12 @@ import (
 	v1 "github.com/klovercloud-ci-cd/event-bank/core/v1"
 	"github.com/klovercloud-ci-cd/event-bank/core/v1/api"
 	"github.com/klovercloud-ci-cd/event-bank/core/v1/service"
+	"github.com/klovercloud-ci-cd/event-bank/enums"
 	"github.com/labstack/echo/v4"
 	"io/ioutil"
 	"log"
+	"strconv"
+	"strings"
 )
 
 type processApi struct {
@@ -55,10 +58,37 @@ func (p processApi) Get(context echo.Context) error {
 	repositoryId := context.QueryParam("repositoryId")
 	appId := context.QueryParam("appId")
 	operation := context.QueryParam("operation")
+	option := getProcessQueryOption(context)
 	if operation == "countTodaysProcessByCompanyId" {
 		return common.GenerateSuccessResponse(context, p.processService.CountTodaysRanProcessByCompanyId(companyId), nil, "")
 	}
-	return common.GenerateSuccessResponse(context, p.processService.GetByCompanyIdAndRepositoryIdAndAppName(companyId, repositoryId, appId, v1.ProcessQueryOption{}), nil, "")
+	data, total := p.processService.GetByCompanyIdAndRepositoryIdAndAppName(companyId, repositoryId, appId, option)
+	metadata := common.GetPaginationMetadata(option.Pagination.Page, option.Pagination.Limit, total, int64(len(data)))
+	uri := strings.Split(context.Request().RequestURI, "?")[0]
+	if option.Pagination.Page > 0 {
+		metadata.Links = append(metadata.Links, map[string]string{"prev": uri + "?order=" + context.QueryParam("order") + "&page=" + strconv.FormatInt(option.Pagination.Page-1, 10) + "&limit=" + strconv.FormatInt(option.Pagination.Limit, 10)})
+	}
+	metadata.Links = append(metadata.Links, map[string]string{"self": uri + "?order=" + context.QueryParam("order") + "&page=" + strconv.FormatInt(option.Pagination.Page, 10) + "&limit=" + strconv.FormatInt(option.Pagination.Limit, 10)})
+
+	if (option.Pagination.Page+1)*option.Pagination.Limit < metadata.TotalCount {
+		metadata.Links = append(metadata.Links, map[string]string{"next": uri + "?order=" + context.QueryParam("order") + "&page=" + strconv.FormatInt(option.Pagination.Page+1, 10) + "&limit=" + strconv.FormatInt(option.Pagination.Limit, 10)})
+	}
+	return common.GenerateSuccessResponse(context, data, &metadata, "")
+}
+
+func getProcessQueryOption(context echo.Context) v1.ProcessQueryOption {
+	option := v1.ProcessQueryOption{}
+	page := context.QueryParam("page")
+	limit := context.QueryParam("limit")
+	option.Step = context.QueryParam("step")
+	if page == "" {
+		option.Pagination.Page = enums.DEFAULT_PAGE
+		option.Pagination.Limit = enums.DEFAULT_PAGE_LIMIT
+	} else {
+		option.Pagination.Page, _ = strconv.ParseInt(page, 10, 64)
+		option.Pagination.Limit, _ = strconv.ParseInt(limit, 10, 64)
+	}
+	return option
 }
 
 // NewProcessApi returns Process type api

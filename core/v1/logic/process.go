@@ -20,7 +20,7 @@ func (p processService) Store(process v1.Process) {
 	p.repo.Store(process)
 }
 
-func (p processService) GetByCompanyIdAndRepositoryIdAndAppName(companyId, repositoryId, appId string, option v1.ProcessQueryOption) []v1.Process {
+func (p processService) GetByCompanyIdAndRepositoryIdAndAppName(companyId, repositoryId, appId string, option v1.ProcessQueryOption) ([]v1.Process, int64) {
 	return p.repo.GetByCompanyIdAndRepositoryIdAndAppName(companyId, repositoryId, appId, option)
 }
 

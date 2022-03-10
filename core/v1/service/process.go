@@ -8,5 +8,6 @@ import (
 type Process interface {
 	Store(process v1.Process)
 	GetByCompanyIdAndRepositoryIdAndAppName(companyId, repositoryId, appId string, option v1.ProcessQueryOption) ([]v1.Process, int64)
+	GetByCompanyIdAndCommitId(companyId, commitId string, option v1.ProcessQueryOption) ([]v1.Process, int64)
 	CountTodaysRanProcessByCompanyId(companyId string) int64
 }

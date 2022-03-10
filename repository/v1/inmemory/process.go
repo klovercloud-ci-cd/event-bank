@@ -8,6 +8,10 @@ import (
 type processRepository struct {
 }
 
+func (p processRepository) GetByCompanyIdAndCommitId(companyId, commitId string, option v1.ProcessQueryOption) ([]v1.Process, int64) {
+	panic("implement me")
+}
+
 func (p processRepository) CountTodaysRanProcessByCompanyId(companyId string) int64 {
 	panic("implement me")
 }

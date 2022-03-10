@@ -92,6 +92,46 @@ func (p processRepository) GetByCompanyIdAndRepositoryIdAndAppName(companyId, re
 	return results, count
 }
 
+func (p processRepository) GetByCompanyIdAndCommitId(companyId, commitId string, option v1.ProcessQueryOption) ([]v1.Process, int64) {
+	query := bson.M{
+		"$and": []bson.M{},
+	}
+	and := []bson.M{
+		{"company_id": companyId},
+		{"commit_id": commitId},
+	}
+	if option.Step != "" {
+		and = append(and, map[string]interface{}{"step": option.Step})
+	}
+	query["$and"] = and
+	coll := p.manager.Db.Collection(ProcessCollection)
+	count, err := coll.CountDocuments(p.manager.Ctx, query)
+	if err != nil {
+		log.Println(err.Error())
+	}
+	skip := option.Pagination.Page * option.Pagination.Limit
+
+	curser, err := coll.Find(p.manager.Ctx, query, &options.FindOptions{
+		Limit: &option.Pagination.Limit,
+		Skip:  &skip,
+		Sort: bson.M{"created_at": -1},
+	})
+	if err != nil {
+		log.Println(err.Error())
+	}
+	var results []v1.Process
+	for curser.Next(context.TODO()) {
+		elemValue := new(v1.Process)
+		err := curser.Decode(elemValue)
+		if err != nil {
+			log.Println("[ERROR]", err)
+			break
+		}
+		results = append(results, *elemValue)
+	}
+	return results, count
+}
+
 // NewProcessRepository returns ProcessRepository type object
 func NewProcessRepository(timeout int) repository.ProcessRepository {
 	return &processRepository{

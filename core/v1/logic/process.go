@@ -24,6 +24,10 @@ func (p processService) GetByCompanyIdAndRepositoryIdAndAppName(companyId, repos
 	return p.repo.GetByCompanyIdAndRepositoryIdAndAppName(companyId, repositoryId, appId, option)
 }
 
+func (p processService) GetByCompanyIdAndCommitId(companyId, commitId string, option v1.ProcessQueryOption) ([]v1.Process, int64) {
+	return p.repo.GetByCompanyIdAndCommitId(companyId, commitId, option)
+}
+
 // NewProcessService returns Process type service
 func NewProcessService(repo repository.ProcessRepository) service.Process {
 	return &processService{

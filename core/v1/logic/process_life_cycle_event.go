@@ -13,6 +13,10 @@ type processLifeCycleEventService struct {
 	repo repository.ProcessLifeCycleEventRepository
 }
 
+func (p processLifeCycleEventService) GetByProcessId(processId string) []v1.ProcessLifeCycleEvent {
+	return p.repo.GetByProcessId(processId)
+}
+
 func (p processLifeCycleEventService) PullNonInitializedAndAutoTriggerEnabledEventsByStepType(count int64, stepType string) []v1.ProcessLifeCycleEvent {
 	return p.repo.PullNonInitializedAndAutoTriggerEnabledEventsByStepType(count, stepType)
 }

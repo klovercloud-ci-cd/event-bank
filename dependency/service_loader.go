@@ -59,6 +59,13 @@ func GetV1ProcessLifeCycleEventService() service.ProcessLifeCycleEvent {
 	return processLifeCycleEventService
 }
 
+// GetV1PipelineService returns Pipeline service
+func GetV1PipelineService() service.Pipeline {
+	var pipelineService service.Pipeline
+	pipelineService = logic.NewPipelineService(GetV1ProcessService(), GetV1ProcessLifeCycleEventService())
+	return pipelineService
+}
+
 // GetV1JwtService returns Jwt service
 func GetV1JwtService() service.Jwt {
 	return logic.NewJwtService()

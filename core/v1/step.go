@@ -10,6 +10,7 @@ import (
 type Step struct {
 	Name        string                       `json:"name" yaml:"name"`
 	Type        enums.STEP_TYPE              `json:"type" yaml:"type"`
+	Status		enums.PROCESS_STATUS		 `json:"status" yaml:"status"`
 	Trigger     enums.TRIGGER                `json:"trigger" yaml:"trigger"`
 	Params      map[enums.PARAMS]string      `json:"params" yaml:"params"`
 	Next        []string                     `json:"next" yaml:"next"`

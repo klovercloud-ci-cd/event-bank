@@ -16,6 +16,7 @@ import (
 )
 
 type pipelineApi struct {
+	pipelineService		service.Pipeline
 	logEventService     service.LogEvent
 	processEventService service.ProcessEvent
 }
@@ -23,6 +24,39 @@ type pipelineApi struct {
 var (
 	upgrader = websocket.Upgrader{}
 )
+
+// Get... Get Pipeline
+// @Summary Get Pipeline
+// @Description Gets pipeline or logs by pipeline processId If action is "get_pipeline", then pipeline will be returned or logs will be returned.
+// @Tags Pipeline
+// @Produce json
+// @Param processId path string true "Pipeline ProcessId"
+// @Param action query int64 false "action"
+// @Param page query int64 false "Page number"
+// @Param limit query int64 false "Record count"
+// @Success 200 {object} common.ResponseDTO{data=[]string}
+// @Router /api/v1/pipelines/{processId} [GET]
+func (p pipelineApi) Get(context echo.Context) error {
+	action := context.QueryParam("action")
+	if action == "get_pipeline" {
+		return p.GetByProcessId(context)
+	}
+	return p.GetLogs(context)
+}
+
+// Get... Get by process
+// @Summary Get by process id
+// @Description Gets pipeline by process id
+// @Tags Pipeline
+// @Produce json
+// @Param commitId path string true "processId"
+// @Success 200 {object} common.ResponseDTO{data=[]string}
+// @Router /api/v1/pipelines/{commitId} [GET]
+func (p pipelineApi) GetByProcessId(context echo.Context) error {
+	processId := context.Param("processId")
+	data := p.pipelineService.GetByProcessId(processId)
+	return common.GenerateSuccessResponse(context, data, nil, "")
+}
 
 // Get... Get logs
 // @Summary Get Logs
@@ -98,8 +132,9 @@ func (p pipelineApi) GetEvents(context echo.Context) error {
 }
 
 // NewPipelineApi returns Pipeline type api
-func NewPipelineApi(logEventService service.LogEvent, processEventService service.ProcessEvent) api.Pipeline {
+func NewPipelineApi(pipelineService service.Pipeline, logEventService service.LogEvent, processEventService service.ProcessEvent) api.Pipeline {
 	return &pipelineApi{
+		pipelineService: pipelineService,
 		logEventService:     logEventService,
 		processEventService: processEventService,
 	}

@@ -62,7 +62,7 @@ func GetV1ProcessLifeCycleEventService() service.ProcessLifeCycleEvent {
 // GetV1PipelineService returns Pipeline service
 func GetV1PipelineService() service.Pipeline {
 	var pipelineService service.Pipeline
-	pipelineService = logic.NewPipelineService(GetV1ProcessService(), GetV1ProcessLifeCycleEventService())
+	pipelineService = logic.NewPipelineService(mongo.NewProcessLifeCycleRepository(3000))
 	return pipelineService
 }
 

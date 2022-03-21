@@ -2,17 +2,17 @@ package logic
 
 import (
 	v1 "github.com/klovercloud-ci-cd/event-bank/core/v1"
+	"github.com/klovercloud-ci-cd/event-bank/core/v1/repository"
 	"github.com/klovercloud-ci-cd/event-bank/core/v1/service"
 	"github.com/klovercloud-ci-cd/event-bank/enums"
 )
 
 type pipelineService struct {
-	processService service.Process
-	processLifeCycleEventService service.ProcessLifeCycleEvent
+	processLifeCycleEventRepository repository.ProcessLifeCycleEventRepository
 }
 
 func (p pipelineService) GetByProcessId(processId string) v1.Pipeline {
-	events := p.processLifeCycleEventService.GetByProcessId(processId)
+	events := p.processLifeCycleEventRepository.GetByProcessId(processId)
 	pipeline := events[0].Pipeline
 	statusMap := make(map[string]enums.PROCESS_STATUS)
 	for _, eachEvent := range events {
@@ -29,10 +29,9 @@ func (p pipelineService) GetByProcessId(processId string) v1.Pipeline {
 }
 
 // NewPipelineService returns Pipeline type service
-func NewPipelineService(processService service.Process, processLifeCycleEventService service.ProcessLifeCycleEvent) service.Pipeline {
+func NewPipelineService(processLifeCycleEventRepository repository.ProcessLifeCycleEventRepository) service.Pipeline {
 	return &pipelineService{
-		processService: processService,
-		processLifeCycleEventService: processLifeCycleEventService,
+		processLifeCycleEventRepository: processLifeCycleEventRepository,
 	}
 }
 

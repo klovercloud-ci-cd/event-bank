@@ -7,3 +7,4 @@
 /out/
 *.exe
 event-store
+/k8s/

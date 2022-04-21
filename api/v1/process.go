@@ -27,7 +27,7 @@ type processApi struct {
 // @Param data body v1.Process true "Process Data"
 // @Success 200 {object} common.ResponseDTO
 // @Failure 404 {object} common.ResponseDTO
-// @Router /api/v1/processes [POST]
+// @Router /api/v1/processes [POST_AGENT_JOB]
 func (p processApi) Save(context echo.Context) error {
 	var data v1.Process
 	body, err := ioutil.ReadAll(context.Request().Body)

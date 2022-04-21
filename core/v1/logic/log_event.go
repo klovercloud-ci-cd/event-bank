@@ -8,10 +8,22 @@ import (
 
 type logEventService struct {
 	repo repository.LogEventRepository
+	processFootmarkService service.ProcessFootmark
 }
 
 func (l logEventService) Store(log v1.LogEvent) {
-	l.repo.Store(log)
+	if log.Log!="" {
+		l.repo.Store(log)
+	}
+	if log.Footmark!="" {
+		if l.processFootmarkService.GetFootmarkByProcessIdAndStepAndFootmark(log.ProcessId,log.Step,log.Footmark)==nil {
+			l.processFootmarkService.Store(v1.ProcessFootmark{
+				ProcessId: log.ProcessId,
+				Step:      log.Step,
+				Footmark:  log.Footmark,
+			})
+		}
+	}
 }
 
 func (l logEventService) GetByProcessId(processId string, option v1.LogEventQueryOption) ([]string, int64) {
@@ -19,8 +31,9 @@ func (l logEventService) GetByProcessId(processId string, option v1.LogEventQuer
 }
 
 // NewLogEventService returns LogEvent type service
-func NewLogEventService(repo repository.LogEventRepository) service.LogEvent {
+func NewLogEventService(repo repository.LogEventRepository,processFootmarkService service.ProcessFootmark) service.LogEvent {
 	return &logEventService{
 		repo: repo,
+		processFootmarkService: processFootmarkService,
 	}
 }

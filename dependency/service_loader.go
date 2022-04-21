@@ -11,16 +11,13 @@ import (
 
 // GetV1LogEventService returns LogEvent service
 func GetV1LogEventService() service.LogEvent {
-
-	var logEventService service.LogEvent
 	if config.Database == enums.MONGO {
-		logEventService = logic.NewLogEventService(mongo.NewLogEventRepository(3000))
-
+		return logic.NewLogEventService(mongo.NewLogEventRepository(3000), mongo.NewProcessFootmarkRepository(3000))
 	}
 	if config.Database == enums.INMEMORY {
-		logEventService = logic.NewLogEventService(in_memory.NewLogEventRepository())
+		return logic.NewLogEventService(in_memory.NewLogEventRepository(), in_memory.NewProcessFootmarkRepository())
 	}
-	return logic.NewLogEventService(logEventService)
+	return nil
 }
 
 // GetV1ProcessEventService returns ProcessEvent service

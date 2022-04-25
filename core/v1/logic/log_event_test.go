@@ -39,7 +39,7 @@ func Test_GetByProcessId(t *testing.T) {
 			},
 		})
 	}
-	logEventService := NewLogEventService(inmemory.NewLogEventRepository())
+	logEventService := NewLogEventService(inmemory.NewLogEventRepository(),inmemory.NewProcessFootmarkRepository())
 	for _, each := range testCases {
 		logEventService.Store(each.data)
 		logs, _ := logEventService.GetByProcessId(each.data.ProcessId, each.option)
@@ -66,7 +66,7 @@ func Test_GetByProcessId(t *testing.T) {
 			Step: "DEVELOP",
 		},
 	})
-	logEventService = NewLogEventService(inmemory.NewLogEventRepository())
+	logEventService = NewLogEventService(inmemory.NewLogEventRepository(),inmemory.NewProcessFootmarkRepository())
 	logEventService.Store(testCases[50].data)
 	logs, _ := logEventService.GetByProcessId(testCases[50].data.ProcessId, testCases[50].option)
 	if !reflect.DeepEqual(len(logs), testCases[50].expected) {
@@ -103,7 +103,7 @@ func Test_Store(t *testing.T) {
 			},
 		})
 	}
-	logEventService := NewLogEventService(inmemory.NewLogEventRepository())
+	logEventService := NewLogEventService(inmemory.NewLogEventRepository(),inmemory.NewProcessFootmarkRepository())
 	for _, each := range testCases {
 		logEventService.Store(each.data)
 		_, size := logEventService.GetByProcessId(each.data.ProcessId, each.option)

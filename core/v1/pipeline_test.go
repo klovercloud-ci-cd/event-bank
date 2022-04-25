@@ -16,7 +16,7 @@ func TestPipeline_Validate(t *testing.T) {
 	apiVersion := []string{"", "001", "0002"}
 	name := []string{"app1", "", "app2"}
 	proccessId := []string{"01", "02", ""}
-	outputs := []error{errors.New("Api version is required!"), errors.New("Pipeline name is required!"), errors.New("Pipeline process id is required!")}
+	outputs := []error{errors.New("api version is required"), errors.New("pipeline name is required"), errors.New("pipeline process id is required")}
 
 	var testcase []TestCase
 
@@ -34,7 +34,8 @@ func TestPipeline_Validate(t *testing.T) {
 		}
 		testcase = append(testcase, testdata)
 	}
-	for i := 0; i < 3; i++ {
+	for i := 0; i < len(testcase); i++ {
+
 		testcase[i].Actual = testcase[i].Data.Validate()
 		if !reflect.DeepEqual(testcase[i].Expected, testcase[i].Actual) {
 			assert.ElementsMatch(t, testcase[i].Expected, testcase[i].Actual)

@@ -373,6 +373,31 @@ paths:
       summary: Get Process List or count process
       tags:
       - Process
+    post:
+      consumes:
+      - application/json
+      description: Stores process
+      parameters:
+      - description: Process Data
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/v1.Process'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/common.ResponseDTO'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/common.ResponseDTO'
+      summary: Save process
+      tags:
+      - Process
   /api/v1/processes/{processId}/steps/{step}:
     get:
       description: Get Footmark List

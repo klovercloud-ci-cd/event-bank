@@ -398,6 +398,40 @@ paths:
       summary: Save process
       tags:
       - Process
+  /api/v1/processes/{processId}/logs:
+    get:
+      description: Gets logs by processId
+      parameters:
+      - description: Pipeline ProcessId
+        in: path
+        name: processId
+        required: true
+        type: string
+      - description: Page number
+        in: query
+        name: page
+        type: integer
+      - description: Record count
+        in: query
+        name: limit
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/common.ResponseDTO'
+            - properties:
+                data:
+                  items:
+                    type: string
+                  type: array
+              type: object
+      summary: Get Logs
+      tags:
+      - Process
   /api/v1/processes/{processId}/steps/{step}:
     get:
       description: Get Footmark List
@@ -427,6 +461,50 @@ paths:
                   type: array
               type: object
       summary: Get Footmark List
+      tags:
+      - Process
+  /api/v1/processes/{processId}/steps/{step}/footmarks/{footmark}/logs:
+    get:
+      description: Gets logs by processId, step, and footmark
+      parameters:
+      - description: Pipeline ProcessId
+        in: path
+        name: processId
+        required: true
+        type: string
+      - description: Pipeline step
+        in: path
+        name: step
+        required: true
+        type: string
+      - description: footmarks
+        in: path
+        name: footmark
+        required: true
+        type: string
+      - description: Page number
+        in: query
+        name: page
+        type: integer
+      - description: Record count
+        in: query
+        name: limit
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/common.ResponseDTO'
+            - properties:
+                data:
+                  items:
+                    type: string
+                  type: array
+              type: object
+      summary: Get Logs
       tags:
       - Process
   /api/v1/processes_events:

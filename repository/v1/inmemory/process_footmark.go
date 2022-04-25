@@ -9,6 +9,7 @@ type processFootmarkRepository struct {
 }
 
 func (l processFootmarkRepository) GetFootmarkByProcessIdAndStepAndFootmark(processId, step, footmark string) *v1.ProcessFootmark {
+	//TODO implement me
 	panic("implement me")
 }
 
@@ -22,9 +23,9 @@ func (l processFootmarkRepository) GetByProcessId(processId string) []v1.Process
 
 func (l processFootmarkRepository) Store(event v1.ProcessFootmark) {
 }
+
 // NewProcessFootmarkRepository returns ProcessLifeCycleEventRepository type object
 func NewProcessFootmarkRepository() repository.ProcessFootmarkRepository {
-	return &processFootmarkRepository{
-	}
+	return &processFootmarkRepository{}
 
 }

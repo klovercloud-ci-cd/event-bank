@@ -14,7 +14,6 @@ var (
 	ProcessFootmarkCollection = "processFootmarkCollection"
 )
 
-
 type processFootmarkRepository struct {
 	manager *dmManager
 	timeout time.Duration
@@ -69,12 +68,12 @@ func (l processFootmarkRepository) GetByProcessId(processId string) []v1.Process
 	return results
 }
 
-func (l processFootmarkRepository) GetFootmarkByProcessIdAndStepAndFootmark(processId,step,footmark string) *v1.ProcessFootmark{
+func (l processFootmarkRepository) GetFootmarkByProcessIdAndStepAndFootmark(processId, step, footmark string) *v1.ProcessFootmark {
 	query := bson.M{
 		"$and": []bson.M{
 			{"process_id": processId},
 			{"step": step},
-			{"footmark":footmark},
+			{"footmark": footmark},
 		},
 	}
 	coll := l.manager.Db.Collection(ProcessFootmarkCollection)
@@ -94,6 +93,10 @@ func (l processFootmarkRepository) GetFootmarkByProcessIdAndStepAndFootmark(proc
 	return nil
 }
 func (l processFootmarkRepository) Store(data v1.ProcessFootmark) {
+	existing := l.GetFootmarkByProcessIdAndStepAndFootmark(data.ProcessId, data.Step, data.Footmark)
+	if existing != nil {
+		return
+	}
 	coll := l.manager.Db.Collection(ProcessFootmarkCollection)
 	_, err := coll.InsertOne(l.manager.Ctx, data)
 	if err != nil {
@@ -101,6 +104,7 @@ func (l processFootmarkRepository) Store(data v1.ProcessFootmark) {
 	}
 
 }
+
 // NewProcessFootmarkRepository returns ProcessLifeCycleEventRepository type object
 func NewProcessFootmarkRepository(timeout int) repository.ProcessFootmarkRepository {
 	return &processFootmarkRepository{

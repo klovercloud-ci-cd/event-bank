@@ -8,6 +8,11 @@ import (
 type logEventRepository struct {
 }
 
+func (l logEventRepository) GetByProcessIdAndStepAndFootmark(processId string, step string, footmark string, option v1.LogEventQueryOption) ([]string, int64) {
+	//TODO implement me
+	panic("implement me")
+}
+
 func (l logEventRepository) Store(log v1.LogEvent) {
 	if len(IndexedLogEvents) == 0 {
 		IndexedLogEvents = make(map[string][]v1.LogEvent)

@@ -15,8 +15,69 @@ import (
 )
 
 type processApi struct {
-	processService service.Process
+	processService  service.Process
 	footmarkService service.ProcessFootmark
+	logEventService service.LogEvent
+}
+
+// Get... Get logs
+// @Summary Get Logs
+// @Description Gets logs by processId
+// @Tags Process
+// @Produce json
+// @Param processId path string true "Pipeline ProcessId"
+// @Param page query int64 false "Page number"
+// @Param limit query int64 false "Record count"
+// @Success 200 {object} common.ResponseDTO{data=[]string}
+// @Router /api/v1/processes/{processId}/logs [GET]
+func (p processApi) GetLogsById(context echo.Context) error {
+	processId := context.Param("processId")
+	option := getQueryOption(context)
+	logs, total := p.logEventService.GetByProcessId(processId, option)
+	metadata := common.GetPaginationMetadata(option.Pagination.Page, option.Pagination.Limit, total, int64(len(logs)))
+	uri := strings.Split(context.Request().RequestURI, "?")[0]
+	if option.Pagination.Page > 0 {
+		metadata.Links = append(metadata.Links, map[string]string{"prev": uri + "?order=" + context.QueryParam("order") + "&page=" + strconv.FormatInt(option.Pagination.Page-1, 10) + "&limit=" + strconv.FormatInt(option.Pagination.Limit, 10)})
+	}
+	metadata.Links = append(metadata.Links, map[string]string{"self": uri + "?order=" + context.QueryParam("order") + "&page=" + strconv.FormatInt(option.Pagination.Page, 10) + "&limit=" + strconv.FormatInt(option.Pagination.Limit, 10)})
+
+	if (option.Pagination.Page+1)*option.Pagination.Limit < metadata.TotalCount {
+		metadata.Links = append(metadata.Links, map[string]string{"next": uri + "?order=" + context.QueryParam("order") + "&page=" + strconv.FormatInt(option.Pagination.Page+1, 10) + "&limit=" + strconv.FormatInt(option.Pagination.Limit, 10)})
+	}
+
+	return common.GenerateSuccessResponse(context, logs, &metadata, "")
+}
+
+// Get... Get logs
+// @Summary Get Logs
+// @Description Gets logs by processId, step, and footmark
+// @Tags Process
+// @Produce json
+// @Param processId path string true "Pipeline ProcessId"
+// @Param step path string true "Pipeline step"
+// @Param footmark path string true "footmarks"
+// @Param page query int64 false "Page number"
+// @Param limit query int64 false "Record count"
+// @Success 200 {object} common.ResponseDTO{data=[]string}
+// @Router /api/v1/processes/{processId}/steps/{step}/footmarks/{footmark}/logs [GET]
+func (p processApi) GetLogsByProcessIdAndStepAndFootmark(context echo.Context) error {
+	processId := context.Param("processId")
+	step := context.Param("step")
+	footmark := context.Param("footmark")
+	option := getQueryOption(context)
+	logs, total := p.logEventService.GetByProcessIdAndStepAndFootmark(processId, step, footmark, option)
+	metadata := common.GetPaginationMetadata(option.Pagination.Page, option.Pagination.Limit, total, int64(len(logs)))
+	uri := strings.Split(context.Request().RequestURI, "?")[0]
+	if option.Pagination.Page > 0 {
+		metadata.Links = append(metadata.Links, map[string]string{"prev": uri + "?order=" + context.QueryParam("order") + "&page=" + strconv.FormatInt(option.Pagination.Page-1, 10) + "&limit=" + strconv.FormatInt(option.Pagination.Limit, 10)})
+	}
+	metadata.Links = append(metadata.Links, map[string]string{"self": uri + "?order=" + context.QueryParam("order") + "&page=" + strconv.FormatInt(option.Pagination.Page, 10) + "&limit=" + strconv.FormatInt(option.Pagination.Limit, 10)})
+
+	if (option.Pagination.Page+1)*option.Pagination.Limit < metadata.TotalCount {
+		metadata.Links = append(metadata.Links, map[string]string{"next": uri + "?order=" + context.QueryParam("order") + "&page=" + strconv.FormatInt(option.Pagination.Page+1, 10) + "&limit=" + strconv.FormatInt(option.Pagination.Limit, 10)})
+	}
+
+	return common.GenerateSuccessResponse(context, logs, &metadata, "")
 }
 
 // GetFootmarksByProcessIdAndStep... GetFootmarksByProcessIdAndStep Footmark List
@@ -29,10 +90,10 @@ type processApi struct {
 // @Success 200 {object} common.ResponseDTO{data=[]string}
 // @Router /api/v1/processes/{processId}/steps/{step} [GET]
 func (p processApi) GetFootmarksByProcessIdAndStep(context echo.Context) error {
-	process:=context.Param("processId")
-	step:=context.Param("step")
-	footmarks:=p.footmarkService.GetByProcessIdAndStep(process,step)
-	return common.GenerateSuccessResponse(context,v1.ProcessFootmark{}.GetFootMarks(footmarks),nil,"")
+	process := context.Param("processId")
+	step := context.Param("step")
+	footmarks := p.footmarkService.GetByProcessIdAndStep(process, step)
+	return common.GenerateSuccessResponse(context, v1.ProcessFootmark{}.GetFootMarks(footmarks), nil, "")
 }
 
 // Save ... Save process
@@ -133,9 +194,10 @@ func getProcessQueryOption(context echo.Context) v1.ProcessQueryOption {
 }
 
 // NewProcessApi returns Process type api
-func NewProcessApi(processService service.Process,	footmarkService service.ProcessFootmark) api.Process {
+func NewProcessApi(processService service.Process, footmarkService service.ProcessFootmark, logEventService service.LogEvent) api.Process {
 	return &processApi{
-		processService: processService,
+		processService:  processService,
 		footmarkService: footmarkService,
+		logEventService: logEventService,
 	}
 }

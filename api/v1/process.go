@@ -16,6 +16,23 @@ import (
 
 type processApi struct {
 	processService service.Process
+	footmarkService service.ProcessFootmark
+}
+
+// GetFootmarksByProcessIdAndStep... GetFootmarksByProcessIdAndStep Footmark List
+// @Summary Get Footmark List
+// @Description Get Footmark List
+// @Tags Process
+// @Produce json
+// @Param processId path string true "Process Id"
+// @Param step path string true "step name"
+// @Success 200 {object} common.ResponseDTO{data=[]string}
+// @Router /api/v1/processes/{processId}/steps/{step} [GET]
+func (p processApi) GetFootmarksByProcessIdAndStep(context echo.Context) error {
+	process:=context.Param("processId")
+	step:=context.Param("step")
+	footmarks:=p.footmarkService.GetByProcessIdAndStep(process,step)
+	return common.GenerateSuccessResponse(context,v1.ProcessFootmark{}.GetFootMarks(footmarks),nil,"")
 }
 
 // Save ... Save process
@@ -27,7 +44,7 @@ type processApi struct {
 // @Param data body v1.Process true "Process Data"
 // @Success 200 {object} common.ResponseDTO
 // @Failure 404 {object} common.ResponseDTO
-// @Router /api/v1/processes [POST_AGENT_JOB]
+// @Router /api/v1/processes [POST]
 func (p processApi) Save(context echo.Context) error {
 	var data v1.Process
 	body, err := ioutil.ReadAll(context.Request().Body)
@@ -116,8 +133,9 @@ func getProcessQueryOption(context echo.Context) v1.ProcessQueryOption {
 }
 
 // NewProcessApi returns Process type api
-func NewProcessApi(processService service.Process) api.Process {
+func NewProcessApi(processService service.Process,	footmarkService service.ProcessFootmark) api.Process {
 	return &processApi{
 		processService: processService,
+		footmarkService: footmarkService,
 	}
 }

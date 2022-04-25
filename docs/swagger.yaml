@@ -51,6 +51,8 @@ definitions:
     properties:
       createdAt:
         type: string
+      footmark:
+        type: string
       log:
         type: string
       processId:
@@ -96,12 +98,14 @@ definitions:
       data:
         additionalProperties: true
         type: object
-      processId:
+      process_id:
         type: string
     type: object
   v1.Process:
     properties:
       app_id:
+        type: string
+      commit_id:
         type: string
       company_id:
         type: string
@@ -169,6 +173,8 @@ definitions:
         additionalProperties:
           type: string
         type: object
+      status:
+        type: string
       trigger:
         type: string
       type:
@@ -205,6 +211,32 @@ paths:
       summary: Save log
       tags:
       - Log
+  /api/v1/pipelines/{commitId}:
+    get:
+      description: Gets pipeline by process id
+      parameters:
+      - description: processId
+        in: path
+        name: commitId
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/common.ResponseDTO'
+            - properties:
+                data:
+                  items:
+                    type: string
+                  type: array
+              type: object
+      summary: Get by process id
+      tags:
+      - Pipeline
   /api/v1/pipelines/{processId}:
     get:
       description: Gets logs by pipeline processId
@@ -315,7 +347,10 @@ paths:
       - description: App Id
         in: query
         name: appId
-        required: true
+        type: string
+      - description: Commit Id
+        in: query
+        name: appId
         type: string
       - description: Operation[countTodaysProcessByCompanyId]
         in: query
@@ -338,29 +373,35 @@ paths:
       summary: Get Process List or count process
       tags:
       - Process
-    post:
-      consumes:
-      - application/json
-      description: Stores process
+  /api/v1/processes/{processId}/steps/{step}:
+    get:
+      description: Get Footmark List
       parameters:
-      - description: Process Data
-        in: body
-        name: data
+      - description: Process Id
+        in: path
+        name: processId
         required: true
-        schema:
-          $ref: '#/definitions/v1.Process'
+        type: string
+      - description: step name
+        in: path
+        name: step
+        required: true
+        type: string
       produces:
       - application/json
       responses:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/common.ResponseDTO'
-        "404":
-          description: Not Found
-          schema:
-            $ref: '#/definitions/common.ResponseDTO'
-      summary: Save process
+            allOf:
+            - $ref: '#/definitions/common.ResponseDTO'
+            - properties:
+                data:
+                  items:
+                    type: string
+                  type: array
+              type: object
+      summary: Get Footmark List
       tags:
       - Process
   /api/v1/processes_events:

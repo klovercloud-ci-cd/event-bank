@@ -67,3 +67,14 @@ func GetV1PipelineService() service.Pipeline {
 func GetV1JwtService() service.Jwt {
 	return logic.NewJwtService()
 }
+
+// GetV1ProcessFootmarkService returns ProcessFootmark service
+func GetV1ProcessFootmarkService() service.ProcessFootmark {
+	if config.Database == enums.MONGO {
+		return logic.NewProcessFootmarkService(mongo.NewProcessFootmarkRepository(3000))
+	}
+	if config.Database == enums.INMEMORY {
+		return logic.NewProcessFootmarkService(in_memory.NewProcessFootmarkRepository())
+	}
+	return nil
+}

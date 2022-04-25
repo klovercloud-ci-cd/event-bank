@@ -8,6 +8,10 @@ import (
 type processFootmarkRepository struct {
 }
 
+func (l processFootmarkRepository) GetFootmarkByProcessIdAndStepAndFootmark(processId, step, footmark string) *v1.ProcessFootmark {
+	panic("implement me")
+}
+
 func (l processFootmarkRepository) GetByProcessIdAndStep(processId, step string) []v1.ProcessFootmark {
 	return nil
 }

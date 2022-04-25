@@ -63,6 +63,50 @@ var doc = `{
                 }
             }
         },
+        "/api/v1/pipelines/{commitId}": {
+            "get": {
+                "description": "Gets pipeline by process id",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Pipeline"
+                ],
+                "summary": "Get by process id",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "processId",
+                        "name": "commitId",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/common.ResponseDTO"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "string"
+                                            }
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
+            }
+        },
         "/api/v1/pipelines/{processId}": {
             "get": {
                 "description": "Gets logs by pipeline processId",
@@ -242,8 +286,13 @@ var doc = `{
                         "type": "string",
                         "description": "App Id",
                         "name": "appId",
-                        "in": "query",
-                        "required": true
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Commit Id",
+                        "name": "appId",
+                        "in": "query"
                     },
                     {
                         "type": "string",
@@ -275,41 +324,54 @@ var doc = `{
                         }
                     }
                 }
-            },
-            "post": {
-                "description": "Stores process",
-                "consumes": [
-                    "application/json"
-                ],
+            }
+        },
+        "/api/v1/processes/{processId}/steps/{step}": {
+            "get": {
+                "description": "Get Footmark List",
                 "produces": [
                     "application/json"
                 ],
                 "tags": [
                     "Process"
                 ],
-                "summary": "Save process",
+                "summary": "Get Footmark List",
                 "parameters": [
                     {
-                        "description": "Process Data",
-                        "name": "data",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/v1.Process"
-                        }
+                        "type": "string",
+                        "description": "Process Id",
+                        "name": "processId",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "step name",
+                        "name": "step",
+                        "in": "path",
+                        "required": true
                     }
                 ],
                 "responses": {
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/common.ResponseDTO"
-                        }
-                    },
-                    "404": {
-                        "description": "Not Found",
-                        "schema": {
-                            "$ref": "#/definitions/common.ResponseDTO"
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/common.ResponseDTO"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "string"
+                                            }
+                                        }
+                                    }
+                                }
+                            ]
                         }
                     }
                 }
@@ -431,6 +493,9 @@ var doc = `{
                 "createdAt": {
                     "type": "string"
                 },
+                "footmark": {
+                    "type": "string"
+                },
                 "log": {
                     "type": "string"
                 },
@@ -500,7 +565,7 @@ var doc = `{
                     "type": "object",
                     "additionalProperties": true
                 },
-                "processId": {
+                "process_id": {
                     "type": "string"
                 }
             }
@@ -509,6 +574,9 @@ var doc = `{
             "type": "object",
             "properties": {
                 "app_id": {
+                    "type": "string"
+                },
+                "commit_id": {
                     "type": "string"
                 },
                 "company_id": {
@@ -610,6 +678,9 @@ var doc = `{
                     "additionalProperties": {
                         "type": "string"
                     }
+                },
+                "status": {
+                    "type": "string"
                 },
                 "trigger": {
                     "type": "string"

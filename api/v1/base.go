@@ -38,7 +38,7 @@ func ProcessRouter(g *echo.Group) {
 	processRouter := NewProcessApi(dependency.GetV1ProcessService(),dependency.GetV1ProcessFootmarkService())
 	g.POST("", processRouter.Save, AuthenticationAndAuthorizationHandler)
 	g.GET("", processRouter.Get, AuthenticationAndAuthorizationHandler)
-	g.GET("/:processId/steps/:step", processRouter.GetFootmarksByProcessIdAndStep, AuthenticationAndAuthorizationHandler)
+	g.GET("/:processId/steps/:step/footmarks", processRouter.GetFootmarksByProcessIdAndStep, AuthenticationAndAuthorizationHandler)
 }
 
 // PipelineRouter api/v1/pipelines router/*

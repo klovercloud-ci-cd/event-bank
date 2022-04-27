@@ -21,6 +21,34 @@ type processLifeCycleRepository struct {
 	timeout time.Duration
 }
 
+func (p processLifeCycleRepository) UpdateClaim(processId, step,status string) error {
+	data:=p.GetByProcessIdAndStep(processId,step)
+	data.Claim=data.Claim+1
+	data.Status=enums.PROCESS_STATUS(status)
+	filter := bson.M{
+		"$and": []bson.M{
+			{"process_id": processId},
+			{"step": step},
+		},
+	}
+	update := bson.M{
+		"$set": data,
+	}
+	upsert := true
+	after := options.After
+	opt := options.FindOneAndUpdateOptions{
+		ReturnDocument: &after,
+		Upsert:         &upsert,
+	}
+	coll := p.manager.Db.Collection(ProcessLifeCycleCollection)
+	err := coll.FindOneAndUpdate(p.manager.Ctx, filter, update, &opt)
+	if err.Err() != nil {
+		log.Println("[ERROR]", err.Err())
+		return err.Err()
+	}
+	return nil
+}
+
 func (p processLifeCycleRepository) PullNonInitializedAndAutoTriggerEnabledEventsByStepType(count int64, stepType string) []v1.ProcessLifeCycleEvent {
 	var data []v1.ProcessLifeCycleEvent
 	var query bson.M

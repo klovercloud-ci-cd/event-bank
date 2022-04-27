@@ -13,6 +13,10 @@ type processLifeCycleEventService struct {
 	repo repository.ProcessLifeCycleEventRepository
 }
 
+func (p processLifeCycleEventService) UpdateClaim(processId, step, status string) error {
+	return p.repo.UpdateClaim(processId,step,status)
+}
+
 func (p processLifeCycleEventService) GetByProcessId(processId string) []v1.ProcessLifeCycleEvent {
 	return p.repo.GetByProcessId(processId)
 }

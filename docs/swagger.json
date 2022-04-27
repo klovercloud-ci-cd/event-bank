@@ -202,6 +202,47 @@
                     }
                 }
             },
+            "put": {
+                "description": "Update reclaim step",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "ProcessLifeCycle"
+                ],
+                "summary": "Update Steps",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Step name",
+                        "name": "step",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Process id",
+                        "name": "processId",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Process life cycle step status",
+                        "name": "status",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/common.ResponseDTO"
+                        }
+                    }
+                }
+            },
             "post": {
                 "description": "Stores process lifecycle event",
                 "consumes": [
@@ -623,6 +664,9 @@
             "properties": {
                 "agent": {
                     "type": "string"
+                },
+                "claim": {
+                    "type": "integer"
                 },
                 "createdAt": {
                     "type": "string"

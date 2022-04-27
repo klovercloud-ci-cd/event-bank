@@ -8,4 +8,5 @@ import (
 type ProcessLifeCycleEvent interface {
 	Save(context echo.Context) error
 	Pull(context echo.Context) error
+	Update(context echo.Context) error
 }

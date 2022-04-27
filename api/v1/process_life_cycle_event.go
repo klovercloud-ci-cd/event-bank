@@ -16,6 +16,33 @@ type processLifeCycleEventApi struct {
 	processLifeCycleEventService service.ProcessLifeCycleEvent
 }
 
+// Update... Update Steps
+// @Summary Update Steps
+// @Description Update reclaim step
+// @Tags ProcessLifeCycle
+// @Produce json
+// @Param step path string true "Step name"
+// @Param processId path string true "Process id"
+// @Param status path string true "Process life cycle step status"
+// @Success 200 {object} common.ResponseDTO{}
+// @Router /api/v1/process_life_cycle_events [PUT]
+func (p processLifeCycleEventApi) Update(context echo.Context) error {
+	action:=context.QueryParam("action")
+	if action =="reclaim" {
+		step := context.QueryParam("step")
+		processId := context.QueryParam("processId")
+		status := context.QueryParam("status")
+		if step == "" || processId == "" || status == "" {
+			return common.GenerateErrorResponse(context, "Make sure step, processId, status are not empty", "Operation Failed!")
+		}
+		err := p.processLifeCycleEventService.UpdateClaim(processId, step, status)
+		if err != nil {
+			return common.GenerateErrorResponse(context, err.Error(), "Operation Failed!")
+		}
+	}
+	return common.GenerateSuccessResponse(context,nil,nil,"Operation Successful!")
+}
+
 // Pull... Pull Steps
 // @Summary Pull Steps
 // @Description Pulls auto trigger enabled steps
@@ -36,7 +63,7 @@ func (p processLifeCycleEventApi) Pull(context echo.Context) error {
 	return common.GenerateSuccessResponse(context, p.processLifeCycleEventService.PullPausedAndAutoTriggerEnabledResourcesByAgentName(count, agentName), nil, "")
 }
 
-// Save ... Save process lifecycle event
+// Save... Save process lifecycle event
 // @Summary Save process lifecycle event
 // @Description Stores process lifecycle event
 // @Tags ProcessLifeCycle

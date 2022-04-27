@@ -7,4 +7,6 @@ type Process interface {
 	Save(context echo.Context) error
 	Get(context echo.Context) error
 	GetFootmarksByProcessIdAndStep(context echo.Context) error
+	GetLogsByProcessIdAndStepAndFootmark(context echo.Context) error
+	GetLogsById(context echo.Context) error
 }

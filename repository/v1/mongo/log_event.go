@@ -20,6 +20,38 @@ type logEventRepository struct {
 	timeout time.Duration
 }
 
+func (l logEventRepository) GetByProcessIdAndStepAndFootmark(processId string, step string, footmark string, option v1.LogEventQueryOption) ([]string, int64) {
+	var results []string
+	query := bson.M{
+		"$and": []bson.M{},
+	}
+	and := []bson.M{{"process_id": processId, "step": step, "footmark": footmark}}
+	query["$and"] = and
+	coll := l.manager.Db.Collection(LogEventCollection)
+	skip := option.Pagination.Page * option.Pagination.Limit
+	result, err := coll.Find(l.manager.Ctx, query, &options.FindOptions{
+		Limit: &option.Pagination.Limit,
+		Skip:  &skip,
+	})
+	if err != nil {
+		log.Println(err.Error())
+	}
+	for result.Next(context.TODO()) {
+		elemValue := new(v1.LogEvent)
+		err := result.Decode(elemValue)
+		if err != nil {
+			log.Println("[ERROR]", err)
+			break
+		}
+		results = append(results, elemValue.Log)
+	}
+	count, err := coll.CountDocuments(l.manager.Ctx, query)
+	if err != nil {
+		log.Println(err.Error())
+	}
+	return results, count
+}
+
 func (l logEventRepository) Store(event v1.LogEvent) {
 	coll := l.manager.Db.Collection(LogEventCollection)
 	_, err := coll.InsertOne(l.manager.Ctx, event)

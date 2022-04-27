@@ -13,7 +13,6 @@ func Router(g *echo.Group) {
 	ProcessRouter(g.Group("/processes"))
 	ProcessLifeCycleRouter(g.Group("/process_life_cycle_events"))
 
-
 }
 
 // LogEventRouter api/v1/logs/* router
@@ -35,10 +34,12 @@ func ProcessEventRouter(g *echo.Group) {
 
 // ProcessRouter api/v1/processes router/*
 func ProcessRouter(g *echo.Group) {
-	processRouter := NewProcessApi(dependency.GetV1ProcessService(),dependency.GetV1ProcessFootmarkService())
+	processRouter := NewProcessApi(dependency.GetV1ProcessService(), dependency.GetV1ProcessFootmarkService(), dependency.GetV1LogEventService())
 	g.POST("", processRouter.Save, AuthenticationAndAuthorizationHandler)
 	g.GET("", processRouter.Get, AuthenticationAndAuthorizationHandler)
 	g.GET("/:processId/steps/:step/footmarks", processRouter.GetFootmarksByProcessIdAndStep, AuthenticationAndAuthorizationHandler)
+	g.GET("/:processId/logs", processRouter.GetLogsById, AuthenticationAndAuthorizationHandler)
+	g.GET("/:processId/steps/:step/footmarks/:footmark/logs", processRouter.GetLogsByProcessIdAndStepAndFootmark, AuthenticationAndAuthorizationHandler)
 }
 
 // PipelineRouter api/v1/pipelines router/*

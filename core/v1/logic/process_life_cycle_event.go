@@ -47,6 +47,7 @@ func (p processLifeCycleEventService) PullPausedAndAutoTriggerEnabledResourcesBy
 				Namespace:   step.Params["namespace"],
 				Images:      strings.Split(fmt.Sprintf("%v", step.Params["images"]), ","),
 				Pipeline: event.Pipeline,
+				Claim: event.Claim,
 			})
 		}
 	}

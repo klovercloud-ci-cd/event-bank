@@ -46,6 +46,7 @@ type DeployableResource struct {
 	Namespace   string                       `json:"namespace"`
 	Images      []string                     `json:"images"`
 	Pipeline    *Pipeline                    `bson:"pipeline" json:"pipeline"`
+	Claim int  `bson:"claim" json:"claim"`
 }
 
 // CompanyMetadata company metadata

@@ -5,6 +5,7 @@ type ProcessFootmark struct {
 	ProcessId string `bson:"process_id"`
 	Step      string `bson:"step"`
 	Footmark  string `bson:"footmark"`
+	Claim int  `bson:"claim" json:"claim"`
 }
 
 func (ProcessFootmark) GetFootMarks(footmarks []ProcessFootmark) []string {

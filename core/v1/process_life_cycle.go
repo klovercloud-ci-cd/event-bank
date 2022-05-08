@@ -16,5 +16,5 @@ type ProcessLifeCycleEvent struct {
 	Pipeline  *Pipeline            `bson:"pipeline" json :"pipeline"`
 	CreatedAt time.Time            `bson:"created_at" json :"created_at"`
 	Trigger   enums.TRIGGER        `bson:"trigger" json :"trigger"`
-	Claim int  `bson:"claim" json :"claim"`
+	Claim int  `bson:"claim" json:"claim"`
 }

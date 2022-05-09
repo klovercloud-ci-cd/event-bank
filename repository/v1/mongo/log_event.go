@@ -20,12 +20,12 @@ type logEventRepository struct {
 	timeout time.Duration
 }
 
-func (l logEventRepository) GetByProcessIdAndStepAndFootmark(processId string, step string, footmark string, option v1.LogEventQueryOption) ([]string, int64) {
+func (l logEventRepository) GetByProcessIdAndStepAndFootmark(processId string, step string, footmark string, claim int, option v1.LogEventQueryOption) ([]string, int64) {
 	var results []string
 	query := bson.M{
 		"$and": []bson.M{},
 	}
-	and := []bson.M{{"process_id": processId, "step": step, "footmark": footmark}}
+	and := []bson.M{{"process_id": processId, "step": step, "footmark": footmark, "claim": claim}}
 	query["$and"] = and
 	coll := l.manager.Db.Collection(LogEventCollection)
 	skip := option.Pagination.Page * option.Pagination.Limit

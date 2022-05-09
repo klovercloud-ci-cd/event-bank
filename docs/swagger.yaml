@@ -127,7 +127,7 @@ definitions:
         type: string
       claim:
         type: integer
-      createdAt:
+      created_at:
         type: string
       next:
         items:
@@ -135,13 +135,13 @@ definitions:
         type: array
       pipeline:
         $ref: '#/definitions/v1.Pipeline'
-      processId:
+      process_id:
         type: string
       status:
         type: string
       step:
         type: string
-      stepType:
+      step_type:
         type: string
       trigger:
         type: string
@@ -512,6 +512,11 @@ paths:
       - description: footmarks
         in: path
         name: footmark
+        required: true
+        type: string
+      - description: claims
+        in: query
+        name: claims
         required: true
         type: string
       - description: Page number

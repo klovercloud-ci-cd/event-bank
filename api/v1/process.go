@@ -56,6 +56,7 @@ func (p processApi) GetLogsById(context echo.Context) error {
 // @Param processId path string true "Pipeline ProcessId"
 // @Param step path string true "Pipeline step"
 // @Param footmark path string true "footmarks"
+// @Param claims query string true "claims"
 // @Param page query int64 false "Page number"
 // @Param limit query int64 false "Record count"
 // @Success 200 {object} common.ResponseDTO{data=[]string}
@@ -64,8 +65,10 @@ func (p processApi) GetLogsByProcessIdAndStepAndFootmark(context echo.Context) e
 	processId := context.Param("processId")
 	step := context.Param("step")
 	footmark := context.Param("footmark")
+	claims := context.QueryParam("claims")
+	claim, _ := strconv.Atoi(claims)
 	option := getQueryOption(context)
-	logs, total := p.logEventService.GetByProcessIdAndStepAndFootmark(processId, step, footmark, option)
+	logs, total := p.logEventService.GetByProcessIdAndStepAndFootmark(processId, step, footmark, claim, option)
 	metadata := common.GetPaginationMetadata(option.Pagination.Page, option.Pagination.Limit, total, int64(len(logs)))
 	uri := strings.Split(context.Request().RequestURI, "?")[0]
 	if option.Pagination.Page > 0 {

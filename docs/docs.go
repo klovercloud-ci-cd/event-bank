@@ -538,6 +538,13 @@ const docTemplate = `{
                         "required": true
                     },
                     {
+                        "type": "string",
+                        "description": "claims",
+                        "name": "claims",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
                         "type": "integer",
                         "description": "Page number",
                         "name": "page",
@@ -807,7 +814,7 @@ const docTemplate = `{
                 "claim": {
                     "type": "integer"
                 },
-                "createdAt": {
+                "created_at": {
                     "type": "string"
                 },
                 "next": {
@@ -819,7 +826,7 @@ const docTemplate = `{
                 "pipeline": {
                     "$ref": "#/definitions/v1.Pipeline"
                 },
-                "processId": {
+                "process_id": {
                     "type": "string"
                 },
                 "status": {
@@ -828,7 +835,7 @@ const docTemplate = `{
                 "step": {
                     "type": "string"
                 },
-                "stepType": {
+                "step_type": {
                     "type": "string"
                 },
                 "trigger": {

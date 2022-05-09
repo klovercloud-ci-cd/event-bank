@@ -54,4 +54,5 @@ func ProcessLifeCycleRouter(g *echo.Group) {
 	processLifeCycleEventRouter := NewProcessLifeCycleEventApi(dependency.GetV1ProcessLifeCycleEventService())
 	g.POST("", processLifeCycleEventRouter.Save, AuthenticationAndAuthorizationHandler)
 	g.GET("", processLifeCycleEventRouter.Pull, AuthenticationAndAuthorizationHandler)
+	g.PUT("", processLifeCycleEventRouter.Update, AuthenticationAndAuthorizationHandler)
 }

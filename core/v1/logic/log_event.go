@@ -11,8 +11,8 @@ type logEventService struct {
 	processFootmarkService service.ProcessFootmark
 }
 
-func (l logEventService) GetByProcessIdAndStepAndFootmark(processId string, step string, footmark string, option v1.LogEventQueryOption) ([]string, int64) {
-	return l.repo.GetByProcessIdAndStepAndFootmark(processId, step, footmark, option)
+func (l logEventService) GetByProcessIdAndStepAndFootmark(processId string, step string, footmark string, cliam int, option v1.LogEventQueryOption) ([]string, int64) {
+	return l.repo.GetByProcessIdAndStepAndFootmark(processId, step, footmark, cliam, option)
 }
 
 func (l logEventService) Store(log v1.LogEvent) {

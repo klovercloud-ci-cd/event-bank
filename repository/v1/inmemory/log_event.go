@@ -8,7 +8,7 @@ import (
 type logEventRepository struct {
 }
 
-func (l logEventRepository) GetByProcessIdAndStepAndFootmark(processId string, step string, footmark string, option v1.LogEventQueryOption) ([]string, int64) {
+func (l logEventRepository) GetByProcessIdAndStepAndFootmark(processId string, step string, footmark string, claim int, option v1.LogEventQueryOption) ([]string, int64) {
 	//TODO implement me
 	panic("implement me")
 }

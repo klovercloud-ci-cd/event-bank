@@ -13,6 +13,9 @@ type pipelineService struct {
 
 func (p pipelineService) GetByProcessId(processId string) v1.Pipeline {
 	events := p.processLifeCycleEventRepository.GetByProcessId(processId)
+	if len(events) < 0 {
+		return v1.Pipeline{}
+	}
 	pipeline := events[0].Pipeline
 	statusMap := make(map[string]enums.PROCESS_STATUS)
 	for _, eachEvent := range events {
@@ -34,4 +37,3 @@ func NewPipelineService(processLifeCycleEventRepository repository.ProcessLifeCy
 		processLifeCycleEventRepository: processLifeCycleEventRepository,
 	}
 }
-

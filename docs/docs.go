@@ -688,6 +688,9 @@ const docTemplate = `{
         "v1.LogEvent": {
             "type": "object",
             "properties": {
+                "claim": {
+                    "type": "integer"
+                },
                 "createdAt": {
                     "type": "string"
                 },

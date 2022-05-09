@@ -49,6 +49,8 @@ definitions:
     type: object
   v1.LogEvent:
     properties:
+      claim:
+        type: integer
       createdAt:
         type: string
       footmark:

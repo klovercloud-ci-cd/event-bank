@@ -17,7 +17,7 @@ spec:
       containers:
         - name: app
           imagePullPolicy: Always
-          image: quay.io/klovercloud/ci-event-bank:v1.0.0
+          image: quay.io/klovercloud/ci-event-bank:v0.0.2
           resources:
             limits:
               cpu: 100m
@@ -29,7 +29,7 @@ spec:
             - configMapRef:
                 name: klovercloud-ci-event-bank-envar-config
             - secretRef:
-                name: klovercloud-ci-event-bank-mongo-secret
+                name: klovercloud-mongo-secret
           ports:
             - containerPort: 8080
           readinessProbe:

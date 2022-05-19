@@ -5,6 +5,7 @@ import (
 	v1 "github.com/klovercloud-ci-cd/event-bank/core/v1"
 	"github.com/klovercloud-ci-cd/event-bank/core/v1/repository"
 	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/mongo/options"
 	"log"
 	"time"
 )
@@ -26,8 +27,10 @@ func (l processFootmarkRepository) GetByProcessIdAndStep(processId, step string)
 			{"step": step},
 		},
 	}
+	opts := options.Find()
+	opts.SetSort(bson.D{{"time", 1}})
 	coll := l.manager.Db.Collection(ProcessFootmarkCollection)
-	curser, err := coll.Find(l.manager.Ctx, query)
+	curser, err := coll.Find(l.manager.Ctx, query, opts)
 	if err != nil {
 		log.Println(err.Error())
 	}

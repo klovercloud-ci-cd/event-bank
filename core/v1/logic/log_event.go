@@ -4,6 +4,7 @@ import (
 	v1 "github.com/klovercloud-ci-cd/event-bank/core/v1"
 	"github.com/klovercloud-ci-cd/event-bank/core/v1/repository"
 	"github.com/klovercloud-ci-cd/event-bank/core/v1/service"
+	"time"
 )
 
 type logEventService struct {
@@ -25,6 +26,7 @@ func (l logEventService) Store(log v1.LogEvent) {
 				ProcessId: log.ProcessId,
 				Step:      log.Step,
 				Footmark:  log.Footmark,
+				Time:      time.Now().UTC(),
 			})
 		}
 	}

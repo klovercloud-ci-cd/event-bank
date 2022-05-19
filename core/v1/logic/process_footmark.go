@@ -11,11 +11,11 @@ type processFootmarkService struct {
 }
 
 func (p processFootmarkService) GetFootmarkByProcessIdAndStepAndFootmark(processId, step, footmark string) *v1.ProcessFootmark {
-	return p.repo.GetFootmarkByProcessIdAndStepAndFootmark(processId,step,footmark)
+	return p.repo.GetFootmarkByProcessIdAndStepAndFootmark(processId, step, footmark)
 }
 
 func (p processFootmarkService) GetByProcessIdAndStep(processId, step string) []v1.ProcessFootmark {
-	return p.repo.GetByProcessIdAndStep(processId,step)
+	return p.repo.GetByProcessIdAndStep(processId, step)
 }
 
 func (p processFootmarkService) Store(processFootmark v1.ProcessFootmark) {

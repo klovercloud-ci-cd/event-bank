@@ -101,7 +101,7 @@ func getQueryOption(context echo.Context) v1.LogEventQueryOption {
 }
 
 func (p pipelineApi) GetEvents(context echo.Context) error {
-	processId := context.QueryParam("processId")
+	companyId := context.QueryParam("companyId")
 	upgrader.CheckOrigin = func(r *http.Request) bool { return true }
 	ws, err := upgrader.Upgrade(context.Response(), context.Request(), nil)
 	if err != nil {
@@ -112,7 +112,7 @@ func (p pipelineApi) GetEvents(context echo.Context) error {
 
 	status := make(chan map[string]interface{})
 	for {
-		go p.processEventService.ReadEventByProcessId(status, processId)
+		go p.processEventService.ReadEventByCompanyId(status, companyId)
 		jsonStr, err := json.Marshal(<-status)
 		if err != nil {
 			log.Println("[ERROR]: Failed to marshal", err.Error())

@@ -7,7 +7,7 @@ import (
 // ProcessEvent Process Event operations.
 type ProcessEvent interface {
 	Store(data v1.PipelineProcessEvent)
-	GetByProcessId(processId string) map[string]interface{}
-	DequeueByProcessId(processId string) map[string]interface{}
-	ReadEventByProcessId(c chan map[string]interface{}, processId string)
+	GetByCompanyId(companyId string) map[string]interface{}
+	DequeueByCompanyId(companyId string) map[string]interface{}
+	ReadEventByCompanyId(c chan map[string]interface{}, companyId string)
 }

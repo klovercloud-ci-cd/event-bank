@@ -38,15 +38,16 @@ type Subject struct {
 
 // DeployableResource agent applicable workload info.
 type DeployableResource struct {
-	Step        string                       `json:"step"`
-	ProcessId   string                       `json:"process_id"`
-	Descriptors *[]unstructured.Unstructured `json:"descriptors" yaml:"descriptors"`
-	Type        enums.PIPELINE_RESOURCE_TYPE `json:"type"`
-	Name        string                       `json:"name"`
-	Namespace   string                       `json:"namespace"`
-	Images      []string                     `json:"images"`
-	Pipeline    *Pipeline                    `bson:"pipeline" json:"pipeline"`
-	Claim int  `bson:"claim" json:"claim"`
+	Step           string                       `json:"step" bson:"step" yaml:"step"`
+	ProcessId      string                       `json:"process_id" bson:"process_id" yaml:"process_id"`
+	Descriptors    *[]unstructured.Unstructured `json:"descriptors" yaml:"descriptors" bson:"descriptors"`
+	Type           enums.PIPELINE_RESOURCE_TYPE `json:"type" bson:"type" yaml:"type"`
+	Name           string                       `json:"name" bson:"name" yaml:"name"`
+	Namespace      string                       `json:"namespace" bson:"namespace" yaml:"namespace"`
+	Images         []string                     `json:"images" bson:"images" yaml:"images"`
+	Pipeline       *Pipeline                    `bson:"pipeline" json:"pipeline" yaml:"pipeline"`
+	Claim          int                          `bson:"claim" json:"claim" yaml:"claim"`
+	RolloutRestart bool                         `bson:"rollout_restart" json:"rollout_restart" yaml:"rollout_restart"`
 }
 
 // CompanyMetadata company metadata

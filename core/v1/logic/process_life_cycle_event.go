@@ -6,6 +6,8 @@ import (
 	"github.com/klovercloud-ci-cd/event-bank/core/v1/repository"
 	"github.com/klovercloud-ci-cd/event-bank/core/v1/service"
 	"github.com/klovercloud-ci-cd/event-bank/enums"
+	"log"
+	"strconv"
 	"strings"
 )
 
@@ -38,6 +40,8 @@ func (p processLifeCycleEventService) PullPausedAndAutoTriggerEnabledResourcesBy
 			}
 		}
 		if step != nil {
+			log.Println(step.Params["rollout_restart"])
+			rolloutRestart,_:=strconv.ParseBool(step.Params["rollout_restart"])
 			resources = append(resources, v1.DeployableResource{
 				Step:        step.Name,
 				ProcessId:   event.ProcessId,
@@ -48,6 +52,7 @@ func (p processLifeCycleEventService) PullPausedAndAutoTriggerEnabledResourcesBy
 				Images:      strings.Split(fmt.Sprintf("%v", step.Params["images"]), ","),
 				Pipeline: event.Pipeline,
 				Claim: event.Claim,
+				RolloutRestart: rolloutRestart,
 			})
 		}
 	}

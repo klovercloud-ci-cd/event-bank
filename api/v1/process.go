@@ -20,6 +20,22 @@ type processApi struct {
 	logEventService service.LogEvent
 }
 
+// Get... Get Process by Id
+// @Summary Get Process by Id
+// @Description Get Process by Id
+// @Tags Process
+// @Produce json
+// @Param processId path string true "ProcessId"
+// @Param companyId query string true "Company Id"
+// @Success 200 {object} common.ResponseDTO{v1.Process}
+// @Router /api/v1/processes/{processId} [GET]
+func (p processApi) GetById(context echo.Context) error {
+	processId := context.Param("processId")
+	companyId := context.QueryParam("companyId")
+	data := p.processService.GetById(companyId, processId)
+	return common.GenerateSuccessResponse(context, data, nil, "Operation Successful!")
+}
+
 // Get... Get logs
 // @Summary Get Logs
 // @Description Gets logs by processId

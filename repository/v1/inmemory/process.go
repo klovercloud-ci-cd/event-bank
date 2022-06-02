@@ -8,6 +8,11 @@ import (
 type processRepository struct {
 }
 
+func (p processRepository) GetById(companyId, processId string) v1.Process {
+	//TODO implement me
+	panic("implement me")
+}
+
 func (p processRepository) GetByCompanyIdAndCommitId(companyId, commitId string, option v1.ProcessQueryOption) ([]v1.Process, int64) {
 	panic("implement me")
 }

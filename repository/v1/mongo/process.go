@@ -20,6 +20,23 @@ type processRepository struct {
 	timeout time.Duration
 }
 
+func (p processRepository) GetById(companyId, processId string) v1.Process {
+	var process = new(v1.Process)
+	query := bson.M{
+		"$and": []bson.M{
+			{"process_id": processId},
+			{"company_id": companyId},
+		},
+	}
+	coll := p.manager.Db.Collection(ProcessCollection)
+	result := coll.FindOne(p.manager.Ctx, query)
+	err := result.Decode(&process)
+	if err != nil {
+		log.Println("[ERROR]", err)
+	}
+	return *process
+}
+
 func (p processRepository) CountTodaysRanProcessByCompanyId(companyId string) int64 {
 	time.Local = time.UTC
 	t := time.Now()
@@ -74,7 +91,7 @@ func (p processRepository) GetByCompanyIdAndRepositoryIdAndAppName(companyId, re
 	curser, err := coll.Find(p.manager.Ctx, query, &options.FindOptions{
 		Limit: &option.Pagination.Limit,
 		Skip:  &skip,
-		Sort: bson.M{"created_at": -1},
+		Sort:  bson.M{"created_at": -1},
 	})
 	if err != nil {
 		log.Println(err.Error())
@@ -114,7 +131,7 @@ func (p processRepository) GetByCompanyIdAndCommitId(companyId, commitId string,
 	curser, err := coll.Find(p.manager.Ctx, query, &options.FindOptions{
 		Limit: &option.Pagination.Limit,
 		Skip:  &skip,
-		Sort: bson.M{"created_at": -1},
+		Sort:  bson.M{"created_at": -1},
 	})
 	if err != nil {
 		log.Println(err.Error())

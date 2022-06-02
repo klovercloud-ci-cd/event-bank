@@ -11,6 +11,10 @@ type processService struct {
 	repo repository.ProcessRepository
 }
 
+func (p processService) GetById(companyId, processId string) v1.Process {
+	return p.repo.GetById(companyId, processId)
+}
+
 func (p processService) CountTodaysRanProcessByCompanyId(companyId string) int64 {
 	return p.repo.CountTodaysRanProcessByCompanyId(companyId)
 }

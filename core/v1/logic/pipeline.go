@@ -16,7 +16,10 @@ func (p pipelineService) GetByProcessId(processId string) v1.Pipeline {
 	if len(events) < 0 {
 		return v1.Pipeline{}
 	}
-	pipeline := events[0].Pipeline
+	var pipeline *v1.Pipeline
+	if len(events) > 0 {
+		pipeline = events[0].Pipeline
+	}
 	statusMap := make(map[string]enums.PROCESS_STATUS)
 	for _, eachEvent := range events {
 		key := eachEvent.Step + ":" + string(eachEvent.StepType)

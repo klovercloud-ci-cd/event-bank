@@ -11,3 +11,17 @@
  | |___    \ V /   | |___  | |\  |   | |   |_____| | |_) |  / ___ \  | |\  | | . \ 
  |_____|    \_/    |_____| |_| \_|   |_|           |____/  /_/   \_\ |_| \_| |_|\_\
 ```
+## Responsibility
+
+- Manages process life cycle, logs and process life cycle events
+
+| Version 
+|---------|
+| v1      |
+## Want to contribute
+
+- See [CONTRIBUTING.md](markdownfiles/CONTRIBUTING.md)
+- See [DEVELOPMENT.md](markdownfiles/DEVELOPMENT.md) to get start
+- See [architecture](https://github.com/klovercloud-ci-cd/architecture)
+- Look at our
+  [our issues](https://github.com/klovercloud-ci-cd/klovercloud-ci-core/issues)

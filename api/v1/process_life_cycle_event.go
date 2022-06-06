@@ -27,8 +27,8 @@ type processLifeCycleEventApi struct {
 // @Success 200 {object} common.ResponseDTO{}
 // @Router /api/v1/process_life_cycle_events [PUT]
 func (p processLifeCycleEventApi) Update(context echo.Context) error {
-	action:=context.QueryParam("action")
-	if action =="reclaim" {
+	action := context.QueryParam("action")
+	if action == "reclaim" {
 		step := context.QueryParam("step")
 		processId := context.QueryParam("processId")
 		status := context.QueryParam("status")
@@ -40,7 +40,7 @@ func (p processLifeCycleEventApi) Update(context echo.Context) error {
 			return common.GenerateErrorResponse(context, err.Error(), "Operation Failed!")
 		}
 	}
-	return common.GenerateSuccessResponse(context,nil,nil,"Operation Successful!")
+	return common.GenerateSuccessResponse(context, nil, nil, "Operation Successful!")
 }
 
 // Pull... Pull Steps
@@ -83,6 +83,11 @@ func (p processLifeCycleEventApi) Save(context echo.Context) error {
 	}
 	if err := json.Unmarshal(body, &data); err != nil {
 		return common.GenerateErrorResponse(context, nil, err.Error())
+	}
+	for _, event := range data.Events {
+		if event.ProcessId == "" {
+			return common.GenerateErrorResponse(context, "ProcessId is empty", "Operation failed!")
+		}
 	}
 	p.processLifeCycleEventService.Store(data.Events)
 	return common.GenerateSuccessResponse(context, "", nil, "Operation Successful!")

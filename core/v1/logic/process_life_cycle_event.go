@@ -1,6 +1,7 @@
 package logic
 
 import (
+	"errors"
 	"fmt"
 	v1 "github.com/klovercloud-ci-cd/event-bank/core/v1"
 	"github.com/klovercloud-ci-cd/event-bank/core/v1/repository"
@@ -16,7 +17,10 @@ type processLifeCycleEventService struct {
 }
 
 func (p processLifeCycleEventService) UpdateClaim(processId, step, status string) error {
-	return p.repo.UpdateClaim(processId,step,status)
+	if processId == "" {
+		return errors.New("processId cannot be empty")
+	}
+	return p.repo.UpdateClaim(processId, step, status)
 }
 
 func (p processLifeCycleEventService) GetByProcessId(processId string) []v1.ProcessLifeCycleEvent {
@@ -41,17 +45,17 @@ func (p processLifeCycleEventService) PullPausedAndAutoTriggerEnabledResourcesBy
 		}
 		if step != nil {
 			log.Println(step.Params["rollout_restart"])
-			rolloutRestart,_:=strconv.ParseBool(step.Params["rollout_restart"])
+			rolloutRestart, _ := strconv.ParseBool(step.Params["rollout_restart"])
 			resources = append(resources, v1.DeployableResource{
-				Step:        step.Name,
-				ProcessId:   event.ProcessId,
-				Descriptors: step.Descriptors,
-				Type:        enums.PIPELINE_RESOURCE_TYPE(step.Params["type"]),
-				Name:        step.Params["name"],
-				Namespace:   step.Params["namespace"],
-				Images:      strings.Split(fmt.Sprintf("%v", step.Params["images"]), ","),
-				Pipeline: event.Pipeline,
-				Claim: event.Claim,
+				Step:           step.Name,
+				ProcessId:      event.ProcessId,
+				Descriptors:    step.Descriptors,
+				Type:           enums.PIPELINE_RESOURCE_TYPE(step.Params["type"]),
+				Name:           step.Params["name"],
+				Namespace:      step.Params["namespace"],
+				Images:         strings.Split(fmt.Sprintf("%v", step.Params["images"]), ","),
+				Pipeline:       event.Pipeline,
+				Claim:          event.Claim,
 				RolloutRestart: rolloutRestart,
 			})
 		}

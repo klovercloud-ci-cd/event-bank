@@ -388,6 +388,42 @@
                 }
             }
         },
+        "/api/v1/processes/{processId}": {
+            "get": {
+                "description": "Get Process by Id",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Process"
+                ],
+                "summary": "Get Process by Id",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "ProcessId",
+                        "name": "processId",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Company Id",
+                        "name": "companyId",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/common.ResponseDTO"
+                        }
+                    }
+                }
+            }
+        },
         "/api/v1/processes/{processId}/logs": {
             "get": {
                 "description": "Gets logs by processId",
@@ -759,6 +795,9 @@
         "v1.PipelineProcessEvent": {
             "type": "object",
             "properties": {
+                "company_id": {
+                    "type": "string"
+                },
                 "data": {
                     "type": "object",
                     "additionalProperties": true
@@ -772,6 +811,9 @@
             "type": "object",
             "properties": {
                 "app_id": {
+                    "type": "string"
+                },
+                "branch": {
                     "type": "string"
                 },
                 "commit_id": {

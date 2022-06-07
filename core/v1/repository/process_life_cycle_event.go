@@ -1,6 +1,9 @@
 package repository
 
-import v1 "github.com/klovercloud-ci-cd/event-bank/core/v1"
+import (
+	v1 "github.com/klovercloud-ci-cd/event-bank/core/v1"
+	"time"
+)
 
 // ProcessLifeCycleEventRepository Process life cycle event repository operations.
 type ProcessLifeCycleEventRepository interface {
@@ -9,5 +12,6 @@ type ProcessLifeCycleEventRepository interface {
 	PullPausedAndAutoTriggerEnabledResourcesByAgentName(count int64, agent string) []v1.ProcessLifeCycleEvent
 	PullNonInitializedAndAutoTriggerEnabledEventsByStepType(count int64, stepType string) []v1.ProcessLifeCycleEvent
 	GetByProcessId(processId string) []v1.ProcessLifeCycleEvent
-	UpdateClaim(processId,step,status string) error
+	UpdateClaim(processId, step, status string) error
+	UpdateStatusesByTime(time time.Time) error
 }

@@ -15,6 +15,7 @@ type ProcessLifeCycleEvent struct {
 	Agent     string               `bson:"agent" json:"agent"`
 	Pipeline  *Pipeline            `bson:"pipeline" json:"pipeline"`
 	CreatedAt time.Time            `bson:"created_at" json:"created_at"`
+	UpdatedAt time.Time            `bson:"updated_at" json:"updated_at"`
 	Trigger   enums.TRIGGER        `bson:"trigger" json:"trigger"`
 	Claim     int                  `bson:"claim" json:"claim"`
 }

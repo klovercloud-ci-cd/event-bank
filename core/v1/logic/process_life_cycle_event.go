@@ -10,10 +10,18 @@ import (
 	"log"
 	"strconv"
 	"strings"
+	"time"
 )
 
 type processLifeCycleEventService struct {
 	repo repository.ProcessLifeCycleEventRepository
+}
+
+func (p processLifeCycleEventService) UpdateStatusesByTime(time time.Time) {
+	err := p.repo.UpdateStatusesByTime(time)
+	if err != nil {
+		log.Println(err.Error())
+	}
 }
 
 func (p processLifeCycleEventService) UpdateClaim(processId, step, status string) error {

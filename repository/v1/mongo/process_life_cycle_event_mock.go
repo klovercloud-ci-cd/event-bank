@@ -4,6 +4,7 @@ import (
 	"context"
 	v1 "github.com/klovercloud-ci-cd/event-bank/core/v1"
 	"github.com/klovercloud-ci-cd/event-bank/core/v1/repository"
+	"time"
 )
 
 var eventsData []v1.ProcessLifeCycleEvent
@@ -11,52 +12,60 @@ var eventsData []v1.ProcessLifeCycleEvent
 // InitProcessLifeCycleEventData Return mock process life cycle event list
 func InitProcessLifeCycleEventData() []v1.ProcessLifeCycleEvent {
 	eventsData = append(eventsData, v1.ProcessLifeCycleEvent{
-		ProcessId: "24033301-5186-4de3-8ab2-469b8d717e45",
+		ProcessId: "1",
 		Step:      "build",
 		StepType:  "BUILD",
-		Status:    "completed",
+		Status:    "active",
+		CreatedAt: time.Now().UTC(),
 	})
 	eventsData = append(eventsData, v1.ProcessLifeCycleEvent{
-		ProcessId: "24033301-5186-4de3-8ab2-469b8d717e45",
+		ProcessId: "2",
 		Step:      "interstep",
 		StepType:  "INTERMEDIARY",
-		Status:    "completed",
+		Status:    "active",
+		CreatedAt: time.Now().UTC(),
 	})
 	eventsData = append(eventsData, v1.ProcessLifeCycleEvent{
-		ProcessId: "24033301-5186-4de3-8ab2-469b8d717e45",
+		ProcessId: "3",
 		Step:      "deployDev",
 		StepType:  "DEPLOY",
 		Status:    "completed",
+		CreatedAt: time.Now().UTC(),
 	})
 	eventsData = append(eventsData, v1.ProcessLifeCycleEvent{
-		ProcessId: "24033301-5186-4de3-8ab2-469b8d717e45",
+		ProcessId: "4",
 		Step:      "jenkinsjob",
 		StepType:  "JENKINS_JOB",
 		Status:    "non_initialized",
+		CreatedAt: time.Now().UTC(),
 	})
 	eventsData = append(eventsData, v1.ProcessLifeCycleEvent{
-		ProcessId: "12c9cdcd-55e0-4b21-a124-9329eabe991a",
+		ProcessId: "5",
 		Step:      "build",
 		StepType:  "BUILD",
 		Status:    "completed",
+		CreatedAt: time.Now().UTC(),
 	})
 	eventsData = append(eventsData, v1.ProcessLifeCycleEvent{
-		ProcessId: "12c9cdcd-55e0-4b21-a124-9329eabe991a",
+		ProcessId: "6",
 		Step:      "interstep",
 		StepType:  "INTERMEDIARY",
 		Status:    "completed",
+		CreatedAt: time.Now().UTC(),
 	})
 	eventsData = append(eventsData, v1.ProcessLifeCycleEvent{
-		ProcessId: "12c9cdcd-55e0-4b21-a124-9329eabe991a",
+		ProcessId: "7",
 		Step:      "deployDev",
 		StepType:  "DEPLOY",
 		Status:    "completed",
+		CreatedAt: time.Now().UTC(),
 	})
 	eventsData = append(eventsData, v1.ProcessLifeCycleEvent{
-		ProcessId: "12c9cdcd-55e0-4b21-a124-9329eabe991a",
+		ProcessId: "8",
 		Step:      "jenkinsjob",
 		StepType:  "JENKINS_JOB",
 		Status:    "non_initialized",
+		CreatedAt: time.Now().UTC(),
 	})
 	return eventsData
 }

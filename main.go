@@ -27,7 +27,7 @@ func main() {
 	e.Logger.Fatal(e.Start(":" + config.ServerPort))
 }
 
-//
+// UpdatePipelineStepStatus is a function to update pipeline step status in every 20 minutes
 func UpdatePipelineStepStatus() {
 	log.Println("Updating pipeline step status, time:", time.Now().UTC())
 	p := dependency.GetV1ProcessLifeCycleEventService()

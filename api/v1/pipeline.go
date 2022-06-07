@@ -16,7 +16,7 @@ import (
 )
 
 type pipelineApi struct {
-	pipelineService		service.Pipeline
+	pipelineService     service.Pipeline
 	logEventService     service.LogEvent
 	processEventService service.ProcessEvent
 }
@@ -31,7 +31,7 @@ var (
 // @Tags Pipeline
 // @Produce json
 // @Param processId path string true "Pipeline ProcessId"
-// @Param action query int64 false "action"
+// @Param action query string false "action"
 // @Param page query int64 false "Page number"
 // @Param limit query int64 false "Record count"
 // @Success 200 {object} common.ResponseDTO{data=[]string}
@@ -134,7 +134,7 @@ func (p pipelineApi) GetEvents(context echo.Context) error {
 // NewPipelineApi returns Pipeline type api
 func NewPipelineApi(pipelineService service.Pipeline, logEventService service.LogEvent, processEventService service.ProcessEvent) api.Pipeline {
 	return &pipelineApi{
-		pipelineService: pipelineService,
+		pipelineService:     pipelineService,
 		logEventService:     logEventService,
 		processEventService: processEventService,
 	}

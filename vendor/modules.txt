@@ -106,6 +106,9 @@ github.com/swaggo/files
 # github.com/swaggo/swag v1.8.1
 ## explicit
 github.com/swaggo/swag
+# github.com/twinj/uuid v1.0.0
+## explicit
+github.com/twinj/uuid
 # github.com/uber/jaeger-client-go v2.30.0+incompatible
 ## explicit
 github.com/uber/jaeger-client-go

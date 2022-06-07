@@ -24,7 +24,7 @@ func GetV1LogEventService() service.LogEvent {
 func GetV1ProcessEventService() service.ProcessEvent {
 	var processEventService service.ProcessEvent
 	if config.Database == enums.MONGO {
-		processEventService = logic.NewProcessEventService(in_memory.NewProcessEventRepository())
+		processEventService = logic.NewProcessEventService(mongo.NewProcessEventRepository(3000))
 	}
 	if config.Database == enums.INMEMORY {
 		processEventService = logic.NewProcessEventService(in_memory.NewProcessEventRepository())

@@ -29,6 +29,7 @@ func LogEventRouter(g *echo.Group) {
 // ProcessEventRouter api/v1/processes_events router/*
 func ProcessEventRouter(g *echo.Group) {
 	processEventRouter := NewProcessEventApi(dependency.GetV1ProcessEventService())
+	g.GET("", processEventRouter.DequeueByCompanyId, AuthenticationAndAuthorizationHandler)
 	g.POST("", processEventRouter.Save, AuthenticationAndAuthorizationHandler)
 }
 

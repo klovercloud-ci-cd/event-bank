@@ -1,5 +1,7 @@
 package v1
 
+import "time"
+
 // PipelineProcessEvent Pipeline ProcessEvent struct
 type PipelineProcessEvent struct {
 	Id        string                 `bson:"id" json:"id"`
@@ -7,4 +9,5 @@ type PipelineProcessEvent struct {
 	CompanyId string                 `bson:"company_id" json:"company_id"`
 	Read      bool                   `bson:"read" json:"read"`
 	Data      map[string]interface{} `bson:"data" json:"data"`
+	CreatedAt time.Time              `bson:"created_at"`
 }

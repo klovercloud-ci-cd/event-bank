@@ -22,6 +22,7 @@ type processEventRepository struct {
 
 func (p processEventRepository) Store(data v1.PipelineProcessEvent) {
 	data.Id = uuid.NewV4().String()
+	data.CreatedAt = time.Now().UTC()
 	coll := p.manager.Db.Collection(ProcessEventCollection)
 	_, err := coll.InsertOne(p.manager.Ctx, data)
 	if err != nil {
@@ -37,7 +38,10 @@ func (p processEventRepository) GetByCompanyId(companyId string) map[string]inte
 		},
 	}
 	coll := p.manager.Db.Collection(ProcessEventCollection)
-	result := coll.FindOne(p.manager.Ctx, query)
+	findOneOptions := options.FindOneOptions{
+		Sort: bson.M{"created_at": -1},
+	}
+	result := coll.FindOne(p.manager.Ctx, query, &findOneOptions)
 	err := result.Decode(&processEvent)
 	if err != nil {
 		log.Println("[ERROR]", err)
@@ -54,7 +58,10 @@ func (p processEventRepository) DequeueByCompanyId(companyId string) map[string]
 		},
 	}
 	coll := p.manager.Db.Collection(ProcessEventCollection)
-	result := coll.FindOne(p.manager.Ctx, query)
+	findOneOptions := options.FindOneOptions{
+		Sort: bson.M{"created_at": -1},
+	}
+	result := coll.FindOne(p.manager.Ctx, query, &findOneOptions)
 	err := result.Decode(&processEvent)
 	if err != nil {
 		log.Println("[ERROR]", err)

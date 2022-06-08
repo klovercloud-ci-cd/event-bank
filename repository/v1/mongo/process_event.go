@@ -78,6 +78,7 @@ func (p processEventRepository) DequeueByCompanyId(companyId string) map[string]
 		CompanyId: processEvent.CompanyId,
 		Read:      true,
 		Data:      processEvent.Data,
+		CreatedAt: processEvent.CreatedAt,
 	}
 	update := bson.M{
 		"$set": updatedProcessEvent,

@@ -7,7 +7,6 @@ import (
 	_ "github.com/klovercloud-ci-cd/event-bank/docs"
 	"github.com/labstack/echo-contrib/jaegertracing"
 	"io"
-	"log"
 	"time"
 )
 
@@ -29,7 +28,6 @@ func main() {
 
 // UpdatePipelineStepStatus is a function to update pipeline step status in every 20 minutes
 func UpdatePipelineStepStatus() {
-	log.Println("Updating pipeline step status, time:", time.Now().UTC())
 	p := dependency.GetV1ProcessLifeCycleEventService()
 	p.UpdateStatusesByTime(time.Now().UTC().Add(time.Minute * -20))
 	time.Sleep(time.Minute * 20)

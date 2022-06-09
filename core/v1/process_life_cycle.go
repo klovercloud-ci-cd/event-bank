@@ -18,4 +18,5 @@ type ProcessLifeCycleEvent struct {
 	UpdatedAt time.Time            `bson:"updated_at" json:"updated_at"`
 	Trigger   enums.TRIGGER        `bson:"trigger" json:"trigger"`
 	Claim     int                  `bson:"claim" json:"claim"`
+	ClaimedAt time.Time            `bson:"claimed_at" json:"claimed_at"`
 }

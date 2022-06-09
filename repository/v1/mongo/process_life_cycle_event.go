@@ -47,6 +47,7 @@ func (p processLifeCycleRepository) UpdateClaim(processId, step, status string) 
 	data.Claim = data.Claim + 1
 	data.Status = enums.PROCESS_STATUS(status)
 	data.UpdatedAt = time.Now().UTC()
+	data.ClaimedAt = time.Now().UTC()
 	filter := bson.M{
 		"$and": []bson.M{
 			{"process_id": processId},
@@ -109,6 +110,8 @@ func (p processLifeCycleRepository) PullNonInitializedAndAutoTriggerEnabledEvent
 		data = append(data, *elemValue)
 	}
 	for _, each := range data {
+		each.ClaimedAt = time.Now().UTC()
+		each.UpdatedAt = time.Now().UTC()
 		go p.updateStatus(each, string(enums.ACTIVE))
 	}
 	return data
@@ -141,6 +144,8 @@ func (p processLifeCycleRepository) PullPausedAndAutoTriggerEnabledResourcesByAg
 		data = append(data, *elemValue)
 	}
 	for _, each := range data {
+		each.ClaimedAt = time.Now().UTC()
+		each.UpdatedAt = time.Now().UTC()
 		go p.updateStatus(each, string(enums.ACTIVE))
 	}
 	return data
@@ -181,12 +186,17 @@ func (p processLifeCycleRepository) Store(events []v1.ProcessLifeCycleEvent) {
 	for _, each := range events {
 		existing := p.GetByProcessIdAndStep(each.ProcessId, each.Step)
 		if existing == nil {
+			each.CreatedAt = time.Now().UTC()
+			each.ClaimedAt = time.Now().UTC()
+			each.UpdatedAt = time.Now().UTC()
 			each.Pipeline = pipeline
 			_, err := coll.InsertOne(p.manager.Ctx, each)
 			if err != nil {
 				log.Println(err.Error())
 			}
 		} else {
+			existing.ClaimedAt = time.Now().UTC()
+			existing.UpdatedAt = time.Now().UTC()
 			existing.Status = each.Status
 			err := p.update(*existing)
 			if err != nil {

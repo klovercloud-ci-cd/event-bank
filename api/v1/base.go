@@ -47,7 +47,8 @@ func ProcessRouter(g *echo.Group) {
 // PipelineRouter api/v1/pipelines router/*
 func PipelineRouter(g *echo.Group) {
 	pipelineRouter := NewPipelineApi(dependency.GetV1PipelineService(), dependency.GetV1LogEventService(), dependency.GetV1ProcessEventService())
-	g.GET("/:processId", pipelineRouter.Get, AuthenticationAndAuthorizationHandler)
+	g.GET("", pipelineRouter.Get, AuthenticationAndAuthorizationHandler)
+	g.GET("/:processId", pipelineRouter.GetById, AuthenticationAndAuthorizationHandler)
 	g.GET("/ws", pipelineRouter.GetEvents, AuthenticationAndAuthorizationHandlerForWebSocket)
 }
 

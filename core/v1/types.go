@@ -67,10 +67,11 @@ type PipelineMetadata struct {
 type PipelineStatusCount struct {
 	Data struct {
 		Pipeline struct {
-			Completed int64 `json:"completed"`
-			Failed    int64 `json:"failed"`
-			Running   int64 `json:"running"`
-			Paused    int64 `json:"paused"`
+			Completed      int64 `json:"completed"`
+			Failed         int64 `json:"failed"`
+			Running        int64 `json:"running"`
+			Paused         int64 `json:"paused"`
+			NonInitialized int64 `json:"nonInitialized"`
 		} `json:"pipeline"`
 	} `json:"data"`
 }

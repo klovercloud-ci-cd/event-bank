@@ -32,29 +32,33 @@ func (p pipelineService) GetStatusCount(companyId string, fromDate, toDate time.
 	return v1.PipelineStatusCount{
 		Data: struct {
 			Pipeline struct {
-				Completed int64 `json:"completed"`
-				Failed    int64 `json:"failed"`
-				Running   int64 `json:"running"`
-				Paused    int64 `json:"paused"`
+				Completed      int64 `json:"completed"`
+				Failed         int64 `json:"failed"`
+				Running        int64 `json:"running"`
+				Paused         int64 `json:"paused"`
+				NonInitialized int64 `json:"nonInitialized"`
 			} `json:"pipeline"`
 		}(struct {
 			Pipeline struct {
-				Completed int64 `json:"completed"`
-				Failed    int64 `json:"failed"`
-				Running   int64 `json:"running"`
-				Paused    int64 `json:"paused"`
+				Completed      int64 `json:"completed"`
+				Failed         int64 `json:"failed"`
+				Running        int64 `json:"running"`
+				Paused         int64 `json:"paused"`
+				NonInitialized int64 `json:"nonInitialized"`
 			}
 		}{Pipeline: struct {
-			Completed int64 `json:"completed"`
-			Failed    int64 `json:"failed"`
-			Running   int64 `json:"running"`
-			Paused    int64 `json:"paused"`
+			Completed      int64 `json:"completed"`
+			Failed         int64 `json:"failed"`
+			Running        int64 `json:"running"`
+			Paused         int64 `json:"paused"`
+			NonInitialized int64 `json:"nonInitialized"`
 		}(struct {
-			Completed int64
-			Failed    int64
-			Running   int64
-			Paused    int64
-		}{Completed: completed, Failed: failed, Running: running, Paused: paused})}),
+			Completed      int64
+			Failed         int64
+			Running        int64
+			Paused         int64
+			NonInitialized int64
+		}{Completed: completed, Failed: failed, Running: running, Paused: paused, NonInitialized: nonInitialized})}),
 	}
 }
 

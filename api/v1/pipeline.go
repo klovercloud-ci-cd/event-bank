@@ -29,23 +29,18 @@ var (
 
 // Get... Get Pipeline
 // @Summary Get Pipeline
-// @Description Gets pipeline or logs by pipeline processId If action is "get_pipeline", then pipeline will be returned or logs will be returned.
-// @Tags Pipeline
+// @Description Gets status count of the pipeline by company id and a given date
+//@Tags Pipeline
 // @Produce json
-// @Param processId path string true "Pipeline ProcessId"
-// @Param action query string false "action"
-// @Param companyId query string false "Company Id"
-// @Param from query string false "From Data"
-// @Param to query string false "To Data"
-// @Param page query int64 false "Page number"
-// @Param limit query int64 false "Record count"
-// @Success 200 {object} common.ResponseDTO{data=[]string}
-// @Router /api/v1/pipelines/{processId} [GET]
+// @Param action query string true "action [dashboard_data]"
+// @Param companyId query string true "Company Id"
+// @Param from query string true "From Data"
+// @Param to query string true "To Data"
+// @Success 200 {object} common.ResponseDTO{data=v1.PipelineStatusCount}
+// @Router /api/v1/pipelines [GET]
 func (p pipelineApi) Get(context echo.Context) error {
 	action := context.QueryParam("action")
-	if action == "get_pipeline" {
-		return p.GetByProcessId(context)
-	} else if action == "status_count" {
+	if action == "dashboard_data" {
 		companyId := context.QueryParam("companyId")
 		if companyId == "" {
 			return common.GenerateErrorResponse(context, "[ERROR]: Company Id is not provided.", "Operation Failed.")
@@ -70,11 +65,30 @@ func (p pipelineApi) Get(context echo.Context) error {
 				toDate = fromDate.AddDate(0, 0, 10)
 			}
 		} else {
-			toDate = time.Now()
+			toDate = time.Now().UTC()
 			fromDate = toDate.AddDate(0, 0, -10)
 		}
 		data := p.pipelineService.GetStatusCount(companyId, fromDate, toDate)
 		return common.GenerateSuccessResponse(context, data, nil, "Operation Successful.")
+	}
+	return common.GenerateErrorResponse(context, "[ERROR]: Invalid action type is given.", "Operation Failed")
+}
+
+// Get... Get Pipeline
+// @Summary Get Pipeline
+// @Description Gets pipeline or logs by pipeline processId If action is "get_pipeline", then pipeline will be returned or logs will be returned.
+// @Tags Pipeline
+// @Produce json
+// @Param processId path string true "Pipeline ProcessId"
+// @Param action query string false "action"
+// @Param page query int64 false "Page number"
+// @Param limit query int64 false "Record count"
+// @Success 200 {object} common.ResponseDTO{data=[]string}
+// @Router /api/v1/pipelines/{processId} [GET]
+func (p pipelineApi) GetById(context echo.Context) error {
+	action := context.QueryParam("action")
+	if action == "get_pipeline" {
+		return p.GetByProcessId(context)
 	}
 	return p.GetLogs(context)
 }

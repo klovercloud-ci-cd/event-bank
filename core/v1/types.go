@@ -63,6 +63,18 @@ type PipelineMetadata struct {
 	CompanyMetadata CompanyMetadata `json:"company_metadata" yaml:"company_metadata"`
 }
 
+// PipelineStatusCount pipeline status count info
+type PipelineStatusCount struct {
+	Data struct {
+		Pipeline struct {
+			Completed int64 `json:"completed"`
+			Failed    int64 `json:"failed"`
+			Running   int64 `json:"running"`
+			Paused    int64 `json:"paused"`
+		} `json:"pipeline"`
+	} `json:"data"`
+}
+
 // ProcessLifeCycleEventList process life cycle event list
 type ProcessLifeCycleEventList struct {
 	Events []ProcessLifeCycleEvent `bson:"events" json:"events" yaml:"events"`

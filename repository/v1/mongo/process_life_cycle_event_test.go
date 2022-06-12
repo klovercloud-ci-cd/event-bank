@@ -56,7 +56,8 @@ func TestProcessLifeCycleRepository_UpdateStatusesByTime(t *testing.T) {
 	if err != nil {
 		log.Println(err.Error())
 	}
-	processes := p.Get(8)
+	processes := p.Get()
+	processes = processes[:8]
 	for _, each := range processes {
 		if each.Status == enums.ACTIVE {
 			testCases.actual = append(testCases.actual, each.ProcessId)
@@ -70,7 +71,8 @@ func TestProcessLifeCycleRepository_UpdateStatusesByTime(t *testing.T) {
 		expected: []string{},
 	}
 	err = p.UpdateStatusesByTime(testCases.time)
-	processes = p.Get(8)
+	processes = p.Get()
+	processes = processes[:8]
 	for _, each := range processes {
 		if each.Status == enums.ACTIVE {
 			testCases.actual = append(testCases.actual, each.ProcessId)

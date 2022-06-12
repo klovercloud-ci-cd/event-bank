@@ -21,6 +21,31 @@ type processLifeCycleRepository struct {
 	timeout time.Duration
 }
 
+func (p processLifeCycleRepository) GetByCompanyId(companyId string, fromDate, toDate time.Time) []v1.ProcessLifeCycleEvent {
+	var data []v1.ProcessLifeCycleEvent
+	query := bson.M{
+		"$and": []bson.M{
+			{"updated_at": bson.M{"$gte": fromDate, "$lte": toDate}},
+			{"pipeline.metadata.companyd": companyId},
+		},
+	}
+	coll := p.manager.Db.Collection(ProcessLifeCycleCollection)
+	result, err := coll.Find(p.manager.Ctx, query, nil)
+	if err != nil {
+		log.Println(err.Error())
+	}
+	for result.Next(context.TODO()) {
+		elemValue := new(v1.ProcessLifeCycleEvent)
+		err := result.Decode(elemValue)
+		if err != nil {
+			log.Println("[ERROR]", err)
+			break
+		}
+		data = append(data, *elemValue)
+	}
+	return data
+}
+
 func (p processLifeCycleRepository) UpdateStatusesByTime(time time.Time) error {
 	query := bson.M{
 		"$and": []bson.M{
@@ -151,13 +176,11 @@ func (p processLifeCycleRepository) PullPausedAndAutoTriggerEnabledResourcesByAg
 	return data
 }
 
-func (p processLifeCycleRepository) Get(count int64) []v1.ProcessLifeCycleEvent {
+func (p processLifeCycleRepository) Get() []v1.ProcessLifeCycleEvent {
 	var data []v1.ProcessLifeCycleEvent
 	query := bson.M{}
 	coll := p.manager.Db.Collection(ProcessLifeCycleCollection)
-	result, err := coll.Find(p.manager.Ctx, query, &options.FindOptions{
-		Limit: &count,
-	})
+	result, err := coll.Find(p.manager.Ctx, query, nil)
 	if err != nil {
 		log.Println(err.Error())
 	}

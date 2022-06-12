@@ -2,6 +2,7 @@ package v1
 
 import (
 	"encoding/json"
+	"errors"
 	"github.com/gorilla/websocket"
 	"github.com/klovercloud-ci-cd/event-bank/api/common"
 	v1 "github.com/klovercloud-ci-cd/event-bank/core/v1"
@@ -13,6 +14,7 @@ import (
 	"net/http"
 	"strconv"
 	"strings"
+	"time"
 )
 
 type pipelineApi struct {
@@ -32,6 +34,9 @@ var (
 // @Produce json
 // @Param processId path string true "Pipeline ProcessId"
 // @Param action query string false "action"
+// @Param companyId query string false "Company Id"
+// @Param from query string false "From Data"
+// @Param to query string false "To Data"
 // @Param page query int64 false "Page number"
 // @Param limit query int64 false "Record count"
 // @Success 200 {object} common.ResponseDTO{data=[]string}
@@ -40,8 +45,51 @@ func (p pipelineApi) Get(context echo.Context) error {
 	action := context.QueryParam("action")
 	if action == "get_pipeline" {
 		return p.GetByProcessId(context)
+	} else if action == "status_count" {
+		companyId := context.QueryParam("companyId")
+		if companyId == "" {
+			return common.GenerateErrorResponse(context, "[ERROR]: Company Id is not provided.", "Operation Failed.")
+		}
+		from := context.QueryParam("from")
+		to := context.QueryParam("to")
+		var fromDate time.Time
+		var toDate time.Time
+		if from != "" {
+			date, err := convertDatetoDateTime(from)
+			if err != nil {
+				return common.GenerateErrorResponse(context, "[ERROR]: Invalid Date Format", err.Error())
+			}
+			fromDate = date
+			if to != "" {
+				date, err = convertDatetoDateTime(to)
+				if err != nil {
+					return common.GenerateErrorResponse(context, "[ERROR]: Invalid Date Format", err.Error())
+				}
+				toDate = date
+			} else {
+				toDate = fromDate.AddDate(0, 0, 10)
+			}
+		} else {
+			toDate = time.Now()
+			fromDate = toDate.AddDate(0, 0, -10)
+		}
+		data := p.pipelineService.GetStatusCount(companyId, fromDate, toDate)
+		return common.GenerateSuccessResponse(context, data, nil, "Operation Successful.")
 	}
 	return p.GetLogs(context)
+}
+
+func convertDatetoDateTime(date string) (time.Time, error) {
+	layout := "2006-1-2"
+	d, err := time.Parse(layout, date)
+	if err != nil {
+		return time.Time{}, errors.New("invalid date format")
+	}
+	dateTime, err := time.Parse(time.RFC3339, d.Format(time.RFC3339))
+	if err != nil {
+		return time.Time{}, errors.New("invalid date format")
+	}
+	return dateTime, nil
 }
 
 // Get... Get by process

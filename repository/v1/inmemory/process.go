@@ -3,9 +3,15 @@ package inmemory
 import (
 	v1 "github.com/klovercloud-ci-cd/event-bank/core/v1"
 	"github.com/klovercloud-ci-cd/event-bank/core/v1/repository"
+	"time"
 )
 
 type processRepository struct {
+}
+
+func (p processRepository) CountProcessByCompanyIdAndDate(companyId string, from, to time.Time) int64 {
+	//TODO implement me
+	panic("implement me")
 }
 
 func (p processRepository) GetById(companyId, processId string) v1.Process {

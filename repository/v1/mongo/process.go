@@ -20,6 +20,25 @@ type processRepository struct {
 	timeout time.Duration
 }
 
+func (p processRepository) CountProcessByCompanyIdAndDate(companyId string, from, to time.Time) int64 {
+	query := bson.M{
+		"$and": []bson.M{
+			{"company_id": companyId},
+			{
+				"created_at": bson.M{
+					"$gte": from,
+					"$lte": to,
+				},
+			},
+		},
+	}
+	total, err := p.manager.Db.Collection(ProcessCollection).CountDocuments(p.manager.Ctx, query)
+	if err != nil {
+		log.Println(err.Error())
+	}
+	return total
+}
+
 func (p processRepository) GetById(companyId, processId string) v1.Process {
 	var process = new(v1.Process)
 	query := bson.M{

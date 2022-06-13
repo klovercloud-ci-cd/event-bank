@@ -12,6 +12,7 @@ import (
 	"log"
 	"strconv"
 	"strings"
+	"time"
 )
 
 type processApi struct {
@@ -148,7 +149,7 @@ func (p processApi) Save(context echo.Context) error {
 // @Param repositoryId query string false "Repository Id"
 // @Param appId query string false "App Id"
 // @Param appId query string false "Commit Id"
-// @Param operation query string false "Operation[countTodaysProcessByCompanyId]"
+// @Param operation query string false "Operation[countTodaysProcessByCompanyId/countProcessByCompanyIdAndDate]"
 // @Success 200 {object} common.ResponseDTO{data=[]v1.Process}
 // @Router /api/v1/processes [GET]
 func (p processApi) Get(context echo.Context) error {
@@ -160,6 +161,31 @@ func (p processApi) Get(context echo.Context) error {
 	commitId := context.QueryParam("commitId")
 	if operation == "countTodaysProcessByCompanyId" {
 		return common.GenerateSuccessResponse(context, p.processService.CountTodaysRanProcessByCompanyId(companyId), nil, "")
+	} else if operation == "countProcessByCompanyIdAndDate" {
+		from := context.QueryParam("from")
+		to := context.QueryParam("to")
+		var fromDate time.Time
+		var toDate time.Time
+		if from != "" {
+			date, err := convertDatetoDateTime(from)
+			if err != nil {
+				return common.GenerateErrorResponse(context, "[ERROR]: Invalid Date Format", err.Error())
+			}
+			fromDate = date
+			if to != "" {
+				date, err = convertDatetoDateTime(to)
+				if err != nil {
+					return common.GenerateErrorResponse(context, "[ERROR]: Invalid Date Format", err.Error())
+				}
+				toDate = date
+			} else {
+				toDate = fromDate.AddDate(0, 0, 9).Add(time.Hour * 23).Add(time.Minute * 59).Add(time.Second * 59)
+			}
+		} else {
+			toDate = time.Now().UTC()
+			fromDate = toDate.AddDate(0, 0, -9).Add(-time.Hour * 23).Add(-time.Minute * 59).Add(-time.Second * 59)
+		}
+		return common.GenerateSuccessResponse(context, p.processService.CountProcessByCompanyIdAndDate(companyId, fromDate, toDate), nil, "Operation Successful.")
 	} else if commitId == "" {
 		return p.GetByCompanyIdAndRepositoryIdAndAppName(context, companyId, repositoryId, appId, option)
 	} else {

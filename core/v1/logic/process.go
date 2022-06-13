@@ -15,6 +15,10 @@ func (p processService) GetById(companyId, processId string) v1.Process {
 	return p.repo.GetById(companyId, processId)
 }
 
+func (p processService) CountProcessByCompanyIdAndDate(companyId string, from, to time.Time) int64 {
+	return p.repo.CountProcessByCompanyIdAndDate(companyId, from, to)
+}
+
 func (p processService) CountTodaysRanProcessByCompanyId(companyId string) int64 {
 	return p.repo.CountTodaysRanProcessByCompanyId(companyId)
 }

@@ -62,11 +62,11 @@ func (p pipelineApi) Get(context echo.Context) error {
 				}
 				toDate = date
 			} else {
-				toDate = fromDate.AddDate(0, 0, 10)
+				toDate = fromDate.AddDate(0, 0, 9).Add(time.Hour * 23).Add(time.Minute * 59).Add(time.Second * 59)
 			}
 		} else {
 			toDate = time.Now().UTC()
-			fromDate = toDate.AddDate(0, 0, -10)
+			fromDate = toDate.AddDate(0, 0, -9).Add(-time.Hour * 23).Add(-time.Minute * 59).Add(-time.Second * 59)
 		}
 		data := p.pipelineService.GetStatusCount(companyId, fromDate, toDate)
 		return common.GenerateSuccessResponse(context, data, nil, "Operation Successful.")

@@ -10,7 +10,7 @@ type processEventService struct {
 	repo repository.ProcessEventRepository
 }
 
-func (p *processEventService) GetByCompanyIdAndProcessId(companyId, processId string, option v1.ProcessQueryOption) []v1.PipelineProcessEvent {
+func (p *processEventService) GetByCompanyIdAndProcessId(companyId, processId string, option v1.ProcessQueryOption) ([]v1.PipelineProcessEvent, int64) {
 	return p.repo.GetByCompanyIdAndProcessId(companyId, processId, option)
 }
 

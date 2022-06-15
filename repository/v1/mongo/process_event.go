@@ -22,7 +22,7 @@ type processEventRepository struct {
 	timeout time.Duration
 }
 
-func (p processEventRepository) GetByCompanyIdAndProcessId(companyId, processId string, option v1.ProcessQueryOption) []v1.PipelineProcessEvent {
+func (p processEventRepository) GetByCompanyIdAndProcessId(companyId, processId string, option v1.ProcessQueryOption) ([]v1.PipelineProcessEvent, int64) {
 	var results []v1.PipelineProcessEvent
 	var query bson.M
 	if processId == "" {
@@ -68,7 +68,11 @@ func (p processEventRepository) GetByCompanyIdAndProcessId(companyId, processId 
 		}
 		results = append(results, *elemValue)
 	}
-	return results
+	count, err := coll.CountDocuments(p.manager.Ctx, query)
+	if err != nil {
+		log.Println(err.Error())
+	}
+	return results, count
 }
 
 func (p processEventRepository) Store(data v1.PipelineProcessEvent) {

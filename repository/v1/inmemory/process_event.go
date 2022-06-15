@@ -11,7 +11,7 @@ import (
 type processEventRepository struct {
 }
 
-func (p processEventRepository) GetByCompanyIdAndProcessId(companyId, processId string, option v1.ProcessQueryOption) []v1.PipelineProcessEvent {
+func (p processEventRepository) GetByCompanyIdAndProcessId(companyId, processId string, option v1.ProcessQueryOption) ([]v1.PipelineProcessEvent, int64) {
 	//TODO implement me
 	panic("implement me")
 }

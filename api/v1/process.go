@@ -108,7 +108,7 @@ func (p processApi) GetLogsByProcessIdAndStepAndFootmark(context echo.Context) e
 // @Param processId path string true "Process Id"
 // @Param step path string true "step name"
 // @Success 200 {object} common.ResponseDTO{data=[]string}
-// @Router /api/v1/processes/{processId}/steps/{step} [GET]
+// @Router /api/v1/processes/{processId}/steps/{step}/footmarks [GET]
 func (p processApi) GetFootmarksByProcessIdAndStep(context echo.Context) error {
 	process := context.Param("processId")
 	step := context.Param("step")

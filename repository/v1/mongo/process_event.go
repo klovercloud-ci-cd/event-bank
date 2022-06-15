@@ -29,6 +29,7 @@ func (p processEventRepository) GetByCompanyIdAndProcessId(companyId, processId 
 		query = bson.M{
 			"$and": []bson.M{
 				{"company_id": companyId},
+				{"process_id": bson.M{"$ne": ""}},
 			},
 			"$or": []bson.M{
 				{"data.status": string(enums.PROCESS_EVENT_INITIALIZING)},
@@ -41,6 +42,7 @@ func (p processEventRepository) GetByCompanyIdAndProcessId(companyId, processId 
 			"$and": []bson.M{
 				{"company_id": companyId},
 				{"process_id": processId},
+				{"process_id": bson.M{"$ne": ""}},
 			},
 			"$or": []bson.M{
 				{"data.status": string(enums.PROCESS_EVENT_INITIALIZING)},

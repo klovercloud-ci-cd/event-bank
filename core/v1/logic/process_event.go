@@ -10,6 +10,10 @@ type processEventService struct {
 	repo repository.ProcessEventRepository
 }
 
+func (p *processEventService) GetByCompanyIdAndProcessId(companyId, processId string, option v1.ProcessQueryOption) []v1.PipelineProcessEvent {
+	return p.repo.GetByCompanyIdAndProcessId(companyId, processId, option)
+}
+
 func (p *processEventService) ReadEventByCompanyId(c chan map[string]interface{}, processId string) {
 	c <- p.DequeueByCompanyId(processId)
 }

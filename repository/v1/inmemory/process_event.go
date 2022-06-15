@@ -11,6 +11,11 @@ import (
 type processEventRepository struct {
 }
 
+func (p processEventRepository) GetByCompanyIdAndProcessId(companyId, processId string, option v1.ProcessQueryOption) []v1.PipelineProcessEvent {
+	//TODO implement me
+	panic("implement me")
+}
+
 func (p processEventRepository) Store(data v1.PipelineProcessEvent) {
 	if ProcessEventStore == nil {
 		ProcessEventStore = map[string]*list.List{}

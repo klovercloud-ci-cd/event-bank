@@ -1,8 +1,10 @@
 package mongo
 
 import (
+	"context"
 	v1 "github.com/klovercloud-ci-cd/event-bank/core/v1"
 	"github.com/klovercloud-ci-cd/event-bank/core/v1/repository"
+	"github.com/klovercloud-ci-cd/event-bank/enums"
 	"github.com/twinj/uuid"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo/options"
@@ -18,6 +20,55 @@ var (
 type processEventRepository struct {
 	manager *dmManager
 	timeout time.Duration
+}
+
+func (p processEventRepository) GetByCompanyIdAndProcessId(companyId, processId string, option v1.ProcessQueryOption) []v1.PipelineProcessEvent {
+	var results []v1.PipelineProcessEvent
+	var query bson.M
+	if processId == "" {
+		query = bson.M{
+			"$and": []bson.M{
+				{"company_id": companyId},
+			},
+			"$or": []bson.M{
+				{"data.status": string(enums.PROCESS_EVENT_INITIALIZING)},
+				{"data.status": string(enums.PROCESS_EVENT_FAILED)},
+				{"data.status": string(enums.PROCESS_EVENT_SUCCESSFUL)},
+			},
+		}
+	} else {
+		query = bson.M{
+			"$and": []bson.M{
+				{"company_id": companyId},
+				{"process_id": processId},
+			},
+			"$or": []bson.M{
+				{"data.status": string(enums.PROCESS_EVENT_INITIALIZING)},
+				{"data.status": string(enums.PROCESS_EVENT_FAILED)},
+				{"data.status": string(enums.PROCESS_EVENT_SUCCESSFUL)},
+			},
+		}
+	}
+	coll := p.manager.Db.Collection(ProcessEventCollection)
+	skip := option.Pagination.Page * option.Pagination.Limit
+	curser, err := coll.Find(p.manager.Ctx, query, &options.FindOptions{
+		Limit: &option.Pagination.Limit,
+		Skip:  &skip,
+		Sort:  bson.M{"created_at": -1},
+	})
+	if err != nil {
+		log.Println(err.Error())
+	}
+	for curser.Next(context.TODO()) {
+		elemValue := new(v1.PipelineProcessEvent)
+		err := curser.Decode(elemValue)
+		if err != nil {
+			log.Println("[ERROR]", err)
+			break
+		}
+		results = append(results, *elemValue)
+	}
+	return results
 }
 
 func (p processEventRepository) Store(data v1.PipelineProcessEvent) {

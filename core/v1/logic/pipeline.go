@@ -70,7 +70,7 @@ func GetProcessStatusMapFromEvents(events []v1.ProcessLifeCycleEvent) map[string
 
 func (p pipelineService) GetByProcessId(processId string) v1.Pipeline {
 	events := p.processLifeCycleEventRepository.GetByProcessId(processId)
-	if len(events) < 0 {
+	if len(events) == 0 {
 		return v1.Pipeline{}
 	}
 	var pipeline *v1.Pipeline
@@ -87,6 +87,9 @@ func (p pipelineService) GetByProcessId(processId string) v1.Pipeline {
 		if status, ok := statusMap[key]; ok {
 			pipeline.Steps[idx].Status = status
 		}
+	}
+	if len(events)>0{
+		pipeline.Claim=	events[0].Claim
 	}
 	return *pipeline
 }

@@ -29,7 +29,7 @@ func (p processLifeCycleEventService) UpdateStatusesByTime(time time.Time) {
 	}
 	processLifeCycleEvents, err := p.repo.GetByTime(time)
 	for _, each := range processLifeCycleEvents {
-		if each.Pipeline==nil{
+		if each.Pipeline == nil {
 			continue
 		}
 		processEvent := v1.PipelineProcessEvent{

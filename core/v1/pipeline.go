@@ -11,6 +11,7 @@ type Pipeline struct {
 	ProcessId  string              `json:"process_id" yaml:"process_id"`
 	Label      map[string]string   `json:"label" yaml:"label"`
 	Steps      []Step              `json:"steps" yaml:"steps"`
+	Claim int `json:"claim" yaml:"claim"`
 }
 
 // Validate validates pipeline.

@@ -116,7 +116,11 @@ func convertDatetoDateTime(date string) (time.Time, error) {
 // @Router /api/v1/pipelines/{commitId} [GET]
 func (p pipelineApi) GetByProcessId(context echo.Context) error {
 	processId := context.Param("processId")
+	companyId := context.QueryParam("companyId")
 	data := p.pipelineService.GetByProcessId(processId)
+	if data.MetaData.CompanyId!=companyId{
+		return common.GenerateErrorResponse(context,nil,"")
+	}
 	return common.GenerateSuccessResponse(context, data, nil, "")
 }
 

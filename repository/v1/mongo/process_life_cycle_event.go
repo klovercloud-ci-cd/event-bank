@@ -93,31 +93,44 @@ func (p processLifeCycleRepository) UpdateStatusesByTime(time time.Time) error {
 }
 
 func (p processLifeCycleRepository) UpdateClaim(processId, step, status string) error {
-	data := p.GetByProcessIdAndStep(processId, step)
-	data.Claim = data.Claim + 1
-	data.Status = enums.PROCESS_STATUS(status)
-	data.UpdatedAt = time.Now().UTC()
-	data.ClaimedAt = time.Now().UTC()
-	filter := bson.M{
-		"$and": []bson.M{
-			{"process_id": processId},
-			{"step": step},
-		},
-	}
-	update := bson.M{
-		"$set": data,
-	}
-	upsert := true
-	after := options.After
-	opt := options.FindOneAndUpdateOptions{
-		ReturnDocument: &after,
-		Upsert:         &upsert,
-	}
-	coll := p.manager.Db.Collection(ProcessLifeCycleCollection)
-	err := coll.FindOneAndUpdate(p.manager.Ctx, filter, update, &opt)
-	if err.Err() != nil {
-		log.Println("[ERROR]", err.Err())
-		return err.Err()
+	processes := p.GetByProcessId(processId)
+	filter := bson.M{}
+	for i, _ := range processes {
+		processes[i].Claim = processes[i].Claim + 1
+		processes[i].UpdatedAt = time.Now().UTC()
+		processes[i].ClaimedAt = time.Now().UTC()
+		if processes[i].Step == step {
+			processes[i].Status = enums.PROCESS_STATUS(status)
+			filter = bson.M{
+				"$and": []bson.M{
+					{"process_id": processId},
+					{"step": step},
+				},
+			}
+		} else {
+			filter = bson.M{
+				"$and": []bson.M{
+					{"process_id": processId},
+					{"step": processes[i].Step},
+				},
+			}
+
+		}
+		update := bson.M{
+			"$set": processes[i],
+		}
+		upsert := true
+		after := options.After
+		opt := options.FindOneAndUpdateOptions{
+			ReturnDocument: &after,
+			Upsert:         &upsert,
+		}
+		coll := p.manager.Db.Collection(ProcessLifeCycleCollection)
+		err := coll.FindOneAndUpdate(p.manager.Ctx, filter, update, &opt)
+		if err.Err() != nil {
+			log.Println("[ERROR]", err.Err())
+			return err.Err()
+		}
 	}
 	return nil
 }

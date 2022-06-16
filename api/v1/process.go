@@ -22,20 +22,27 @@ type processApi struct {
 	processLifeCycleEventService service.ProcessLifeCycleEvent
 }
 
-// Get... Get Process by Id
-// @Summary Get Process by Id
-// @Description Get Process by Id
+// Get... Get Process by Id and Step
+// @Summary Get Process by Id and Step
+// @Description Get Process by Id and Step
 // @Tags Process
 // @Produce json
 // @Param processId path string true "ProcessId"
 // @Param step query string true "step"
-// @Success 200 {object} common.ResponseDTO{v1.ProcessLifeCycleEvent}
-// @Router /api/v1/processes/{processId}/process_life_cycle_event [GET]
+// @Param step query string true "companyId"
+// @Success 200 {object} common.ResponseDTO{data=v1.ProcessLifeCycleEvent}
+// @Router /api/v1/processes/{processId}/process_life_cycle_events [GET]
 func (p processApi) GetProcessLifeCycleEventByProcessIdAndStepName(context echo.Context) error {
 	processId := context.Param("processId")
 	step := context.QueryParam("step")
+	companyId := context.QueryParam("companyId")
 	data := p.processLifeCycleEventService.GetByProcessIdAndStep(processId, step)
-	return common.GenerateSuccessResponse(context, data, nil, "Operation Successful")
+	if data.Pipeline!=nil{
+		if companyId==data.Pipeline.MetaData.CompanyId{
+			return common.GenerateSuccessResponse(context, data, nil, "Operation Successful")
+		}
+	}
+	return common.GenerateErrorResponse(context, nil, "Operation Failed!")
 }
 
 // Get... Get Process by Id

@@ -38,7 +38,7 @@ func ProcessRouter(g *echo.Group) {
 	processRouter := NewProcessApi(dependency.GetV1ProcessService(), dependency.GetV1ProcessFootmarkService(), dependency.GetV1LogEventService(), dependency.GetV1ProcessLifeCycleEventService())
 	g.POST("", processRouter.Save, AuthenticationAndAuthorizationHandler)
 	g.GET("", processRouter.Get, AuthenticationAndAuthorizationHandler)
-	g.GET("/:processId/process_life_cycle_event", processRouter.GetProcessLifeCycleEventByProcessIdAndStepName, AuthenticationAndAuthorizationHandler)
+	g.GET("/:processId/process_life_cycle_events", processRouter.GetProcessLifeCycleEventByProcessIdAndStepName, AuthenticationAndAuthorizationHandler)
 	g.GET("/:processId", processRouter.GetById, AuthenticationAndAuthorizationHandler)
 	g.GET("/:processId/steps/:step/footmarks", processRouter.GetFootmarksByProcessIdAndStep, AuthenticationAndAuthorizationHandler)
 	g.GET("/:processId/logs", processRouter.GetLogsById, AuthenticationAndAuthorizationHandler)

@@ -78,3 +78,4 @@ type PipelineStatusCount struct {
 type ProcessLifeCycleEventList struct {
 	Events []ProcessLifeCycleEvent `bson:"events" json:"events" yaml:"events"`
 }
+

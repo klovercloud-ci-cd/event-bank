@@ -14,13 +14,41 @@ import (
 )
 
 type processLifeCycleEventService struct {
-	repo repository.ProcessLifeCycleEventRepository
+	repo         repository.ProcessLifeCycleEventRepository
+	processEvent service.ProcessEvent
 }
 
 func (p processLifeCycleEventService) UpdateStatusesByTime(time time.Time) {
 	err := p.repo.UpdateStatusesByTime(time)
 	if err != nil {
 		log.Println(err.Error())
+	}
+	processLifeCycleEvents, err := p.repo.GetByTime(time)
+	for _, each := range processLifeCycleEvents {
+		processEvent := v1.PipelineProcessEvent{
+			ProcessId: each.ProcessId,
+			CompanyId: each.Pipeline.MetaData.CompanyId,
+			Read:      false,
+			Data: map[string]interface{}{
+				"log":       "forcefully terminated",
+				"type":      each.Step,
+				"claim":     each.Claim,
+				"companyId": each.Pipeline.MetaData.CompanyId,
+				"processId": each.ProcessId,
+				"status":    enums.FAILED,
+			},
+			CreatedAt: time,
+		}
+		if each.StepType == enums.BUILD {
+			processEvent.Data["footmark"] = enums.POST_BUILD_JOB
+		} else if each.StepType == enums.INTERMEDIARY {
+			processEvent.Data["footmark"] = enums.POST_INTERMEDIARY_JOB
+		} else if each.StepType == enums.JENKIN {
+			processEvent.Data["footmark"] = enums.POST_JENKINS_JOB
+		} else {
+			processEvent.Data["footmark"] = enums.POST_DEPLOY_JOB
+		}
+		p.processEvent.Store(processEvent)
 	}
 }
 
@@ -76,8 +104,9 @@ func (p processLifeCycleEventService) Store(events []v1.ProcessLifeCycleEvent) {
 }
 
 // NewProcessLifeCycleEventService returns ProcessLifeCycleEvent type service
-func NewProcessLifeCycleEventService(repo repository.ProcessLifeCycleEventRepository) service.ProcessLifeCycleEvent {
+func NewProcessLifeCycleEventService(repo repository.ProcessLifeCycleEventRepository, processEvent service.ProcessEvent) service.ProcessLifeCycleEvent {
 	return &processLifeCycleEventService{
-		repo: repo,
+		repo:         repo,
+		processEvent: processEvent,
 	}
 }

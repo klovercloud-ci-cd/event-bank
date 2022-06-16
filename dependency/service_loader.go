@@ -48,10 +48,10 @@ func GetV1ProcessService() service.Process {
 func GetV1ProcessLifeCycleEventService() service.ProcessLifeCycleEvent {
 	var processLifeCycleEventService service.ProcessLifeCycleEvent
 	if config.Database == enums.MONGO {
-		processLifeCycleEventService = logic.NewProcessLifeCycleEventService(mongo.NewProcessLifeCycleRepository(3000))
+		processLifeCycleEventService = logic.NewProcessLifeCycleEventService(mongo.NewProcessLifeCycleRepository(3000), GetV1ProcessEventService())
 	}
 	if config.Database == enums.INMEMORY {
-		processLifeCycleEventService = logic.NewProcessLifeCycleEventService(mongo.NewProcessLifeCycleRepository(3000))
+		processLifeCycleEventService = logic.NewProcessLifeCycleEventService(mongo.NewProcessLifeCycleRepository(3000), GetV1ProcessEventService())
 	}
 	return processLifeCycleEventService
 }

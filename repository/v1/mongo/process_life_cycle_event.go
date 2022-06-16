@@ -21,6 +21,31 @@ type processLifeCycleRepository struct {
 	timeout time.Duration
 }
 
+func (p processLifeCycleRepository) GetByTime(time time.Time) ([]v1.ProcessLifeCycleEvent, error) {
+	var data []v1.ProcessLifeCycleEvent
+	query := bson.M{
+		"$and": []bson.M{
+			{"updated_at": bson.M{"$lte": time}},
+		},
+	}
+	coll := p.manager.Db.Collection(ProcessLifeCycleCollection)
+	result, err := coll.Find(p.manager.Ctx, query, nil)
+	if err != nil {
+		log.Println(err.Error())
+		return []v1.ProcessLifeCycleEvent{}, err
+	}
+	for result.Next(context.TODO()) {
+		elemValue := new(v1.ProcessLifeCycleEvent)
+		err := result.Decode(elemValue)
+		if err != nil {
+			log.Println("[ERROR]", err)
+			break
+		}
+		data = append(data, *elemValue)
+	}
+	return data, nil
+}
+
 func (p processLifeCycleRepository) GetByCompanyId(companyId string, fromDate, toDate time.Time) []v1.ProcessLifeCycleEvent {
 	var data []v1.ProcessLifeCycleEvent
 	query := bson.M{

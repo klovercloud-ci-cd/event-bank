@@ -10,6 +10,8 @@ const (
 	DEPLOY = STEP_TYPE("DEPLOY")
 	// INTERMEDIARY step that runs custom jobs
 	INTERMEDIARY = STEP_TYPE("INTERMEDIARY")
+	// JENKIN step that runs jenkin jobs
+	JENKIN = STEP_TYPE("JENKINS_JOB")
 )
 const (
 	// MONGO mongo as db
@@ -143,4 +145,30 @@ const (
 	DEVELOP = ENVIRONMENT("DEVELOP")
 	// TEST test environment
 	TEST = ENVIRONMENT("TEST")
+)
+
+// FOOTMARK process footmark (step breakdown)
+type FOOTMARK string
+
+const (
+	// INIT_BUILD_JOB FOOTMARK name
+	INIT_BUILD_JOB = FOOTMARK("init_build_job")
+	// POST_BUILD_JOB FOOTMARK name
+	POST_BUILD_JOB = FOOTMARK("post_build_job")
+	// BUILD_AND_PUSH FOOTMARK name
+	BUILD_AND_PUSH = FOOTMARK("build_and_push")
+	// GIT_CLONE FOOTMARK name
+	GIT_CLONE = FOOTMARK("git_clone")
+
+	// INIT_INTERMEDIARY_JOB FOOTMARK name
+	INIT_INTERMEDIARY_JOB = FOOTMARK("init_intermediary_job")
+	// POST_INTERMEDIARY_JOB FOOTMARK name
+	POST_INTERMEDIARY_JOB = FOOTMARK("post_intermediary_job")
+
+	// INIT_JENKINS_JOB FOOTMARK name
+	INIT_JENKINS_JOB = FOOTMARK("init_jenkins_job")
+	// POST_JENKINS_JOB FOOTMARK name
+	POST_JENKINS_JOB = FOOTMARK("post_jenkins_job")
+
+	POST_DEPLOY_JOB = FOOTMARK("post_deploy_job")
 )

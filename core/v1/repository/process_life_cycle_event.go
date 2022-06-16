@@ -15,4 +15,5 @@ type ProcessLifeCycleEventRepository interface {
 	GetByProcessId(processId string) []v1.ProcessLifeCycleEvent
 	UpdateClaim(processId, step, status string) error
 	UpdateStatusesByTime(time time.Time) error
+	GetByTime(time time.Time) ([]v1.ProcessLifeCycleEvent, error)
 }

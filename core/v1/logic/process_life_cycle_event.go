@@ -18,6 +18,10 @@ type processLifeCycleEventService struct {
 	processEvent service.ProcessEvent
 }
 
+func (p processLifeCycleEventService) GetByProcessIdAndStep(processId, step string) v1.ProcessLifeCycleEvent {
+	return p.repo.GetByProcessIdAndStep(processId, step)
+}
+
 func (p processLifeCycleEventService) UpdateStatusesByTime(time time.Time) {
 	err := p.repo.UpdateStatusesByTime(time)
 	if err != nil {

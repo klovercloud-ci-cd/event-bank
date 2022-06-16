@@ -233,7 +233,7 @@ func (p processLifeCycleRepository) Store(events []v1.ProcessLifeCycleEvent) {
 	}
 	for _, each := range events {
 		existing := p.GetByProcessIdAndStep(each.ProcessId, each.Step)
-		if existing == nil {
+		if existing.ProcessId == "" {
 			each.CreatedAt = time.Now().UTC()
 			each.ClaimedAt = time.Now().UTC()
 			each.UpdatedAt = time.Now().UTC()
@@ -246,7 +246,7 @@ func (p processLifeCycleRepository) Store(events []v1.ProcessLifeCycleEvent) {
 			existing.ClaimedAt = time.Now().UTC()
 			existing.UpdatedAt = time.Now().UTC()
 			existing.Status = each.Status
-			err := p.update(*existing)
+			err := p.update(existing)
 			if err != nil {
 				log.Println(err.Error())
 			}
@@ -305,7 +305,7 @@ func (p processLifeCycleRepository) update(data v1.ProcessLifeCycleEvent) error 
 
 	return nil
 }
-func (p processLifeCycleRepository) GetByProcessIdAndStep(processId, step string) *v1.ProcessLifeCycleEvent {
+func (p processLifeCycleRepository) GetByProcessIdAndStep(processId, step string) v1.ProcessLifeCycleEvent {
 	query := bson.M{
 		"$and": []bson.M{
 			{"process_id": processId},
@@ -316,14 +316,11 @@ func (p processLifeCycleRepository) GetByProcessIdAndStep(processId, step string
 	temp := new(v1.ProcessLifeCycleEvent)
 	coll := p.manager.Db.Collection(ProcessLifeCycleCollection)
 	result := coll.FindOne(p.manager.Ctx, query)
-	err := result.Decode(temp)
+	err := result.Decode(&temp)
 	if err != nil {
 		log.Println("[ERROR]", err)
 	}
-	if temp.ProcessId == "" {
-		return nil
-	}
-	return temp
+	return *temp
 
 }
 func (p processLifeCycleRepository) GetByProcessId(processId string) []v1.ProcessLifeCycleEvent {

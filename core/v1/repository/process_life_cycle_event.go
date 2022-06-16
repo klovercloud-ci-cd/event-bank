@@ -9,6 +9,7 @@ import (
 type ProcessLifeCycleEventRepository interface {
 	Store(data []v1.ProcessLifeCycleEvent)
 	Get() []v1.ProcessLifeCycleEvent
+	GetByProcessIdAndStep(processId, step string) v1.ProcessLifeCycleEvent
 	GetByCompanyId(companyId string, fromDate, toDate time.Time) []v1.ProcessLifeCycleEvent
 	PullPausedAndAutoTriggerEnabledResourcesByAgentName(count int64, agent string) []v1.ProcessLifeCycleEvent
 	PullNonInitializedAndAutoTriggerEnabledEventsByStepType(count int64, stepType string) []v1.ProcessLifeCycleEvent

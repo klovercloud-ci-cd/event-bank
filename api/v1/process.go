@@ -16,9 +16,26 @@ import (
 )
 
 type processApi struct {
-	processService  service.Process
-	footmarkService service.ProcessFootmark
-	logEventService service.LogEvent
+	processService               service.Process
+	footmarkService              service.ProcessFootmark
+	logEventService              service.LogEvent
+	processLifeCycleEventService service.ProcessLifeCycleEvent
+}
+
+// Get... Get Process by Id
+// @Summary Get Process by Id
+// @Description Get Process by Id
+// @Tags Process
+// @Produce json
+// @Param processId path string true "ProcessId"
+// @Param step query string true "step"
+// @Success 200 {object} common.ResponseDTO{v1.ProcessLifeCycleEvent}
+// @Router /api/v1/processes/{processId}/process_life_cycle_event [GET]
+func (p processApi) GetProcessLifeCycleEventByProcessIdAndStepName(context echo.Context) error {
+	processId := context.Param("processId")
+	step := context.QueryParam("step")
+	data := p.processLifeCycleEventService.GetByProcessIdAndStep(processId, step)
+	return common.GenerateSuccessResponse(context, data, nil, "Operation Successful")
 }
 
 // Get... Get Process by Id
@@ -241,10 +258,11 @@ func getProcessQueryOption(context echo.Context) v1.ProcessQueryOption {
 }
 
 // NewProcessApi returns Process type api
-func NewProcessApi(processService service.Process, footmarkService service.ProcessFootmark, logEventService service.LogEvent) api.Process {
+func NewProcessApi(processService service.Process, footmarkService service.ProcessFootmark, logEventService service.LogEvent, processLifeCycleEventService service.ProcessLifeCycleEvent) api.Process {
 	return &processApi{
-		processService:  processService,
-		footmarkService: footmarkService,
-		logEventService: logEventService,
+		processService:               processService,
+		footmarkService:              footmarkService,
+		logEventService:              logEventService,
+		processLifeCycleEventService: processLifeCycleEventService,
 	}
 }

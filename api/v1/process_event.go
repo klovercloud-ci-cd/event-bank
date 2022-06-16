@@ -95,6 +95,9 @@ func (p processEventApi) Save(context echo.Context) error {
 	if err := json.Unmarshal(body, &data); err != nil {
 		return common.GenerateErrorResponse(context, nil, err.Error())
 	}
+	if data.ProcessId == "" {
+		return common.GenerateErrorResponse(context, "[ERROR]: Process id is not found", "Operation failed")
+	}
 	p.processEventService.Store(data)
 	return common.GenerateSuccessResponse(context, "", nil, "Operation Successful!")
 }

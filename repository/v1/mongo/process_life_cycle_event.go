@@ -2,6 +2,7 @@ package mongo
 
 import (
 	"context"
+	"errors"
 	v1 "github.com/klovercloud-ci-cd/event-bank/core/v1"
 	"github.com/klovercloud-ci-cd/event-bank/core/v1/repository"
 	"github.com/klovercloud-ci-cd/event-bank/enums"
@@ -92,10 +93,13 @@ func (p processLifeCycleRepository) UpdateStatusesByTime(time time.Time) error {
 	return nil
 }
 
-func (p processLifeCycleRepository) UpdateClaim(processId, step, status string) error {
+func (p processLifeCycleRepository) UpdateClaim(companyId,processId, step, status string) error {
 	processes := p.GetByProcessId(processId)
 	filter := bson.M{}
 	for i, _ := range processes {
+		if processes[i].Pipeline.MetaData.CompanyId!=companyId{
+			return errors.New("Unauthorized!")
+		}
 		processes[i].Claim = processes[i].Claim + 1
 		processes[i].UpdatedAt = time.Now().UTC()
 		processes[i].ClaimedAt = time.Now().UTC()

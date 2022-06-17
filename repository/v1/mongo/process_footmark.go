@@ -96,6 +96,10 @@ func (l processFootmarkRepository) GetFootmarkByProcessIdAndStepAndFootmark(proc
 	return nil
 }
 func (l processFootmarkRepository) Store(data v1.ProcessFootmark) {
+	log.Println(data.ProcessId, " ",data.Footmark)
+	if data.Step=="jenkins"{
+		log.Println(data.ProcessId, " ",data.Footmark)
+	}
 	existing := l.GetFootmarkByProcessIdAndStepAndFootmark(data.ProcessId, data.Step, data.Footmark)
 	if existing != nil {
 		return

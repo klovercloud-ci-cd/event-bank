@@ -32,15 +32,16 @@ func (p processLifeCycleEventApi) Update(context echo.Context) error {
 		step := context.QueryParam("step")
 		processId := context.QueryParam("processId")
 		status := context.QueryParam("status")
+		companyId := context.QueryParam("companyId")
 		if step == "" || processId == "" || status == "" {
 			return common.GenerateErrorResponse(context, "Make sure step, processId, status are not empty", "Operation Failed!")
 		}
-		err := p.processLifeCycleEventService.UpdateClaim(processId, step, status)
+		err := p.processLifeCycleEventService.UpdateClaim(companyId,processId, step, status)
 		if err != nil {
 			return common.GenerateErrorResponse(context, err.Error(), "Operation Failed!")
 		}
 	}
-	return common.GenerateSuccessResponse(context, nil, nil, "Operation Successful!")
+	return common.GenerateSuccessResponse(context, "Please provide a valid action!", nil, "Operation Failed!")
 }
 
 // Pull... Pull Steps

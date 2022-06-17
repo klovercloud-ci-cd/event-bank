@@ -59,11 +59,11 @@ func (p processLifeCycleEventService) UpdateStatusesByTime(time time.Time) {
 	}
 }
 
-func (p processLifeCycleEventService) UpdateClaim(processId, step, status string) error {
+func (p processLifeCycleEventService) UpdateClaim(companyId,processId, step, status string) error {
 	if processId == "" {
 		return errors.New("processId cannot be empty")
 	}
-	return p.repo.UpdateClaim(processId, step, status)
+	return p.repo.UpdateClaim(companyId,processId, step, status)
 }
 
 func (p processLifeCycleEventService) GetByProcessId(processId string) []v1.ProcessLifeCycleEvent {

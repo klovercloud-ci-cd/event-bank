@@ -48,7 +48,7 @@ func (p processEventRepository) GetByCompanyId(companyId string) map[string]inte
 	return nil
 }
 
-func (p processEventRepository) DequeueByCompanyId(companyId string) map[string]interface{} {
+func (p processEventRepository) DequeueByCompanyIdAndUserId(companyId, userId string) map[string]interface{} {
 	if _, ok := ProcessEventStore[companyId]; ok {
 		e := ProcessEventStore[companyId]
 		if ProcessEventStore[companyId].Front() != nil {

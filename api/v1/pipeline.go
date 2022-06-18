@@ -118,7 +118,7 @@ func (p pipelineApi) GetByProcessId(context echo.Context) error {
 	processId := context.Param("processId")
 	companyId := context.QueryParam("companyId")
 	data := p.pipelineService.GetByProcessId(processId)
-	if data.MetaData.CompanyId!=companyId{
+	if data.MetaData.CompanyId != companyId {
 		return common.GenerateSuccessResponse(context, v1.Pipeline{}, nil, "")
 	}
 	return common.GenerateSuccessResponse(context, data, nil, "")
@@ -168,6 +168,7 @@ func getQueryOption(context echo.Context) v1.LogEventQueryOption {
 
 func (p pipelineApi) GetEvents(context echo.Context) error {
 	companyId := context.QueryParam("company_id")
+	userId := context.QueryParam("user_id")
 	upgrader.CheckOrigin = func(r *http.Request) bool { return true }
 	ws, err := upgrader.Upgrade(context.Response(), context.Request(), nil)
 	if err != nil {
@@ -178,7 +179,7 @@ func (p pipelineApi) GetEvents(context echo.Context) error {
 
 	status := make(chan map[string]interface{})
 	for {
-		go p.processEventService.ReadEventByCompanyId(status, companyId)
+		go p.processEventService.ReadEventByCompanyIdAndUserId(status, companyId, userId)
 		jsonStr, err := json.Marshal(<-status)
 		if err != nil {
 			log.Println("[ERROR]: Failed to marshal", err.Error())

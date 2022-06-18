@@ -12,7 +12,6 @@ func Router(g *echo.Group) {
 	ProcessEventRouter(g.Group("/processes_events"))
 	ProcessRouter(g.Group("/processes"))
 	ProcessLifeCycleRouter(g.Group("/process_life_cycle_events"))
-
 }
 
 // LogEventRouter api/v1/logs/* router

@@ -33,11 +33,12 @@ type processEventApi struct {
 // @Router /api/v1/processes_events [GET]
 func (p processEventApi) Get(context echo.Context) error {
 	companyId := context.QueryParam("companyId")
+	userId := context.QueryParam("userId")
 	scope := context.QueryParam("scope")
 	if scope == "notification" {
 		return p.GetByCompanyIdAndProcessId(context, companyId)
 	}
-	return p.DequeueByCompanyId(context, companyId)
+	return p.DequeueByCompanyIdAndUserId(context, companyId, userId)
 }
 
 func (p processEventApi) GetByCompanyIdAndProcessId(context echo.Context, companyId string) error {
@@ -71,8 +72,8 @@ func (p processEventApi) getProcessEventQueryOption(context echo.Context) v1.Pro
 	return option
 }
 
-func (p processEventApi) DequeueByCompanyId(context echo.Context, companyId string) error {
-	data := p.processEventService.DequeueByCompanyId(companyId)
+func (p processEventApi) DequeueByCompanyIdAndUserId(context echo.Context, companyId, userId string) error {
+	data := p.processEventService.DequeueByCompanyIdAndUserId(companyId, userId)
 	return common.GenerateSuccessResponse(context, data, nil, "Operation Successful!")
 }
 

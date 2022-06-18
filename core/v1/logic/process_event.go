@@ -14,8 +14,8 @@ func (p *processEventService) GetByCompanyIdAndProcessId(companyId, processId st
 	return p.repo.GetByCompanyIdAndProcessId(companyId, processId, option)
 }
 
-func (p *processEventService) ReadEventByCompanyId(c chan map[string]interface{}, processId string) {
-	c <- p.DequeueByCompanyId(processId)
+func (p *processEventService) ReadEventByCompanyIdAndUserId(c chan map[string]interface{}, companyId, userId string) {
+	c <- p.DequeueByCompanyIdAndUserId(companyId, userId)
 }
 
 func (p processEventService) Store(data v1.PipelineProcessEvent) {
@@ -26,8 +26,8 @@ func (p processEventService) GetByCompanyId(companyId string) map[string]interfa
 	return p.repo.GetByCompanyId(companyId)
 }
 
-func (p processEventService) DequeueByCompanyId(companyId string) map[string]interface{} {
-	return p.repo.DequeueByCompanyId(companyId)
+func (p processEventService) DequeueByCompanyIdAndUserId(companyId, userId string) map[string]interface{} {
+	return p.repo.DequeueByCompanyIdAndUserId(companyId, userId)
 }
 
 // NewProcessEventService returns ProcessEvent type service

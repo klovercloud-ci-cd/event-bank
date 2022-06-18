@@ -106,12 +106,12 @@ func (p processEventRepository) GetByCompanyId(companyId string) map[string]inte
 	return processEvent.Data
 }
 
-func (p processEventRepository) DequeueByCompanyId(companyId string) map[string]interface{} {
+func (p processEventRepository) DequeueByCompanyIdAndUserId(companyId, userId string) map[string]interface{} {
 	var processEvent = new(v1.PipelineProcessEvent)
 	query := bson.M{
 		"$and": []bson.M{
 			{"company_id": companyId},
-			{"read": false},
+			{"read_by": bson.M{"$nin": []string{userId}}},
 		},
 	}
 	coll := p.manager.Db.Collection(ProcessEventCollection)
@@ -129,11 +129,14 @@ func (p processEventRepository) DequeueByCompanyId(companyId string) map[string]
 			{"id": processEvent.Id},
 		},
 	}
+	var readBy []string
+	readBy = processEvent.ReadBy
+	readBy = append(readBy, userId)
 	updatedProcessEvent := v1.PipelineProcessEvent{
 		Id:        processEvent.Id,
 		ProcessId: processEvent.ProcessId,
 		CompanyId: processEvent.CompanyId,
-		Read:      true,
+		ReadBy:    readBy,
 		Data:      processEvent.Data,
 		CreatedAt: processEvent.CreatedAt,
 	}

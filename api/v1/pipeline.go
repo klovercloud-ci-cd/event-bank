@@ -119,7 +119,7 @@ func (p pipelineApi) GetByProcessId(context echo.Context) error {
 	companyId := context.QueryParam("companyId")
 	data := p.pipelineService.GetByProcessId(processId)
 	if data.MetaData.CompanyId!=companyId{
-		return common.GenerateErrorResponse(context,nil,"")
+		return common.GenerateSuccessResponse(context, v1.Pipeline{}, nil, "")
 	}
 	return common.GenerateSuccessResponse(context, data, nil, "")
 }

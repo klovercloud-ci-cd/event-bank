@@ -107,10 +107,25 @@ func (p processApi) GetLogsByProcessIdAndStepAndFootmark(context echo.Context) e
 	step := context.Param("step")
 	footmark := context.Param("footmark")
 	claims := context.QueryParam("claims")
+	companyId := context.QueryParam("companyId")
 	claim, _ := strconv.Atoi(claims)
 	option := getQueryOption(context)
-	logs, total := p.logEventService.GetByProcessIdAndStepAndFootmark(processId, step, footmark, claim, option)
-	metadata := common.GetPaginationMetadata(option.Pagination.Page, option.Pagination.Limit, total, int64(len(logs)))
+
+	process:=p.processService.GetById(companyId,processId)
+	if process.ProcessId==""{
+		return common.GenerateErrorResponse(context,"Unauthorized!","Operation Successful!")
+	}
+	var total int64
+    var metadata common.MetaData
+	var logEvents []v1.LogEvent
+	var logs []string
+	if footmark=="*"{
+		logEvents, total = p.logEventService.GetByProcessIdAndStepAndClaim(processId, step, claim, option)
+		metadata = common.GetPaginationMetadata(option.Pagination.Page, option.Pagination.Limit, total, int64(len(logEvents)))
+	}else{
+		logs, total = p.logEventService.GetByProcessIdAndStepAndFootmark(processId, step, footmark, claim, option)
+		metadata = common.GetPaginationMetadata(option.Pagination.Page, option.Pagination.Limit, total, int64(len(logs)))
+	}
 	uri := strings.Split(context.Request().RequestURI, "?")[0]
 	if option.Pagination.Page > 0 {
 		metadata.Links = append(metadata.Links, map[string]string{"prev": uri + "?order=" + context.QueryParam("order") + "&page=" + strconv.FormatInt(option.Pagination.Page-1, 10) + "&limit=" + strconv.FormatInt(option.Pagination.Limit, 10)})
@@ -120,7 +135,9 @@ func (p processApi) GetLogsByProcessIdAndStepAndFootmark(context echo.Context) e
 	if (option.Pagination.Page+1)*option.Pagination.Limit < metadata.TotalCount {
 		metadata.Links = append(metadata.Links, map[string]string{"next": uri + "?order=" + context.QueryParam("order") + "&page=" + strconv.FormatInt(option.Pagination.Page+1, 10) + "&limit=" + strconv.FormatInt(option.Pagination.Limit, 10)})
 	}
-
+	if footmark=="*"{
+		return common.GenerateSuccessResponse(context, logEvents, &metadata, "")
+	}
 	return common.GenerateSuccessResponse(context, logs, &metadata, "")
 }
 

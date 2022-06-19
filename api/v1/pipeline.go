@@ -167,8 +167,8 @@ func getQueryOption(context echo.Context) v1.LogEventQueryOption {
 }
 
 func (p pipelineApi) GetEvents(context echo.Context) error {
-	companyId := context.QueryParam("company_id")
-	userId := context.QueryParam("user_id")
+	companyId := context.QueryParam("companyId")
+	userId := context.QueryParam("userId")
 	upgrader.CheckOrigin = func(r *http.Request) bool { return true }
 	ws, err := upgrader.Upgrade(context.Response(), context.Request(), nil)
 	if err != nil {

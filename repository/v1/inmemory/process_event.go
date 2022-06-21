@@ -6,9 +6,15 @@ import (
 	v1 "github.com/klovercloud-ci-cd/event-bank/core/v1"
 	"github.com/klovercloud-ci-cd/event-bank/core/v1/repository"
 	"log"
+	"time"
 )
 
 type processEventRepository struct {
+}
+
+func (p processEventRepository) DequeueByCompanyIdAndUserIdAndTime(companyId, userId string, from time.Time) map[string]interface{} {
+	//TODO implement me
+	panic("implement me")
 }
 
 func (p processEventRepository) GetByCompanyIdAndProcessId(companyId, processId string, option v1.ProcessQueryOption) ([]v1.PipelineProcessEvent, int64) {

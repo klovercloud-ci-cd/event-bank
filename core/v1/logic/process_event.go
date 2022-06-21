@@ -4,6 +4,7 @@ import (
 	v1 "github.com/klovercloud-ci-cd/event-bank/core/v1"
 	"github.com/klovercloud-ci-cd/event-bank/core/v1/repository"
 	"github.com/klovercloud-ci-cd/event-bank/core/v1/service"
+	"time"
 )
 
 type processEventService struct {
@@ -18,6 +19,10 @@ func (p *processEventService) ReadEventByCompanyIdAndUserId(c chan map[string]in
 	c <- p.DequeueByCompanyIdAndUserId(companyId, userId)
 }
 
+func (p *processEventService) ReadEventByCompanyIdAndUserIdAndTime(c chan map[string]interface{}, companyId, userId string, createdTime time.Time) {
+	c <- p.DequeueByCompanyIdAndUserIdAndTime(companyId, userId, createdTime)
+}
+
 func (p processEventService) Store(data v1.PipelineProcessEvent) {
 	p.repo.Store(data)
 }
@@ -28,6 +33,10 @@ func (p processEventService) GetByCompanyId(companyId string) map[string]interfa
 
 func (p processEventService) DequeueByCompanyIdAndUserId(companyId, userId string) map[string]interface{} {
 	return p.repo.DequeueByCompanyIdAndUserId(companyId, userId)
+}
+
+func (p *processEventService) DequeueByCompanyIdAndUserIdAndTime(companyId, userId string, from time.Time) map[string]interface{} {
+	return p.repo.DequeueByCompanyIdAndUserIdAndTime(companyId, userId, from)
 }
 
 // NewProcessEventService returns ProcessEvent type service

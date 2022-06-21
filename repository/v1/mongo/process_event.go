@@ -156,6 +156,57 @@ func (p processEventRepository) DequeueByCompanyIdAndUserId(companyId, userId st
 	return processEvent.Data
 }
 
+func (p processEventRepository) DequeueByCompanyIdAndUserIdAndTime(companyId, userId string, from time.Time) map[string]interface{} {
+	var processEvent = new(v1.PipelineProcessEvent)
+	query := bson.M{
+		"$and": []bson.M{
+			{"company_id": companyId},
+			{"read_by": bson.M{"$nin": []string{userId}}},
+			{"created_at": bson.M{"$gte": from}},
+		},
+	}
+	coll := p.manager.Db.Collection(ProcessEventCollection)
+	findOneOptions := options.FindOneOptions{
+		Sort: bson.M{"created_at": -1},
+	}
+	result := coll.FindOne(p.manager.Ctx, query, &findOneOptions)
+	err := result.Decode(&processEvent)
+	if err != nil {
+		log.Println("[ERROR]", err)
+	}
+	filter := bson.M{
+		"$and": []bson.M{
+			{"company_id": companyId},
+			{"id": processEvent.Id},
+		},
+	}
+	var readBy []string
+	readBy = processEvent.ReadBy
+	readBy = append(readBy, userId)
+	updatedProcessEvent := v1.PipelineProcessEvent{
+		Id:        processEvent.Id,
+		ProcessId: processEvent.ProcessId,
+		CompanyId: processEvent.CompanyId,
+		ReadBy:    readBy,
+		Data:      processEvent.Data,
+		CreatedAt: processEvent.CreatedAt,
+	}
+	update := bson.M{
+		"$set": updatedProcessEvent,
+	}
+	upsert := false
+	after := options.After
+	opt := options.FindOneAndUpdateOptions{
+		ReturnDocument: &after,
+		Upsert:         &upsert,
+	}
+	result = coll.FindOneAndUpdate(p.manager.Ctx, filter, update, &opt)
+	if result.Err() != nil {
+		log.Println("[ERROR]", result.Err().Error())
+	}
+	return processEvent.Data
+}
+
 // NewProcessEventRepository returns ProcessEventRepository type object
 func NewProcessEventRepository(timeout int) repository.ProcessEventRepository {
 	return &processEventRepository{

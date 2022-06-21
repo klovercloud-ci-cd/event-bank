@@ -50,6 +50,8 @@ var ServiceName string
 // RunMode refers to run mode.
 var RunMode string
 
+// Url for klovercloud ci-core
+var CiCoreBaseUrl string
 
 // InitEnvironmentVariables initializes environment variables
 func InitEnvironmentVariables() {
@@ -75,6 +77,7 @@ func InitEnvironmentVariables() {
 	DbPassword = os.Getenv("MONGO_PASSWORD")
 	DatabaseName = os.Getenv("DATABASE_NAME")
 	Database = os.Getenv("DATABASE")
+	CiCoreBaseUrl = os.Getenv("KLOVERCLOUD_CI_CORE_URL")
 	if Database == enums.MONGO {
 		DatabaseConnectionString = "mongodb://" + DbUsername + ":" + DbPassword + "@" + DbServer + ":" + DbPort
 	}
@@ -91,15 +94,15 @@ func InitEnvironmentVariables() {
 		}
 	}
 
-	if os.Getenv("ENABLE_OPENTRACING")==""{
-		EnableOpenTracing=false
-	}else{
+	if os.Getenv("ENABLE_OPENTRACING") == "" {
+		EnableOpenTracing = false
+	} else {
 		if strings.ToLower(os.Getenv("ENABLE_OPENTRACING")) == "true" {
 			EnableOpenTracing = true
 		} else {
 			EnableOpenTracing = false
 		}
 	}
-	ServiceName=os.Getenv("JAEGER_SERVICE_NAME")
+	ServiceName = os.Getenv("JAEGER_SERVICE_NAME")
 	Token = os.Getenv("TOKEN")
 }

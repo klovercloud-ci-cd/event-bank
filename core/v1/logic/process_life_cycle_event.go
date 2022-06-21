@@ -1,13 +1,17 @@
 package logic
 
 import (
+	"encoding/json"
 	"errors"
 	"fmt"
+	"github.com/klovercloud-ci-cd/event-bank/api/common"
+	"github.com/klovercloud-ci-cd/event-bank/config"
 	v1 "github.com/klovercloud-ci-cd/event-bank/core/v1"
 	"github.com/klovercloud-ci-cd/event-bank/core/v1/repository"
 	"github.com/klovercloud-ci-cd/event-bank/core/v1/service"
 	"github.com/klovercloud-ci-cd/event-bank/enums"
 	"log"
+	"reflect"
 	"strconv"
 	"strings"
 	"time"
@@ -16,6 +20,7 @@ import (
 type processLifeCycleEventService struct {
 	repo         repository.ProcessLifeCycleEventRepository
 	processEvent service.ProcessEvent
+	httpClient   service.HttpClient
 }
 
 func (p processLifeCycleEventService) GetByProcessIdAndStep(processId, step string) v1.ProcessLifeCycleEvent {
@@ -62,7 +67,31 @@ func (p processLifeCycleEventService) UpdateClaim(companyId, processId, step, st
 	if processId == "" {
 		return errors.New("processId cannot be empty")
 	}
-	return p.repo.UpdateClaim(companyId, processId, step, status)
+	process := p.repo.GetByProcessIdAndStep(processId, step)
+	if process.StepType != enums.DEPLOY {
+		if process.Status == enums.ACTIVE {
+			response := common.ResponseDTO{}
+			reclaimAbility := v1.ReclaimAbleStatus{}
+			url := config.CiCoreBaseUrl + "/pipelines/" + processId + "/steps" + "?question=IfStepIsClaimable&name=" + step
+			header := make(map[string]string)
+			header["Content-Type"] = "application/json"
+			bytes, err := p.httpClient.Get(url, header)
+			if err != nil {
+				return err
+			}
+			err = json.Unmarshal(bytes, &response)
+			reclaimAbility.ClaimAble = reflect.ValueOf(response.Data).Bool()
+			if reclaimAbility.ClaimAble == true {
+				return p.repo.UpdateClaim(companyId, processId, step, status)
+			} else {
+				return errors.New("process is not reclaimable")
+			}
+		} else {
+			return p.repo.UpdateClaim(companyId, processId, step, status)
+		}
+
+	}
+	return nil
 }
 
 func (p processLifeCycleEventService) GetByProcessId(processId string) []v1.ProcessLifeCycleEvent {
@@ -110,9 +139,10 @@ func (p processLifeCycleEventService) Store(events []v1.ProcessLifeCycleEvent) {
 }
 
 // NewProcessLifeCycleEventService returns ProcessLifeCycleEvent type service
-func NewProcessLifeCycleEventService(repo repository.ProcessLifeCycleEventRepository, processEvent service.ProcessEvent) service.ProcessLifeCycleEvent {
+func NewProcessLifeCycleEventService(repo repository.ProcessLifeCycleEventRepository, processEvent service.ProcessEvent, httpClient service.HttpClient) service.ProcessLifeCycleEvent {
 	return &processLifeCycleEventService{
 		repo:         repo,
 		processEvent: processEvent,
+		httpClient:   httpClient,
 	}
 }

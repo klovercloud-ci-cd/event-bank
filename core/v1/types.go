@@ -14,6 +14,11 @@ type LogEventQueryOption struct {
 	Step string
 }
 
+// ReclaimAbleStatus reclaim process status
+type ReclaimAbleStatus struct {
+	ClaimAble bool `json:"claim_able" bson:"claim_able"`
+}
+
 // ProcessQueryOption process query params
 type ProcessQueryOption struct {
 	Pagination struct {
@@ -78,4 +83,3 @@ type PipelineStatusCount struct {
 type ProcessLifeCycleEventList struct {
 	Events []ProcessLifeCycleEvent `bson:"events" json:"events" yaml:"events"`
 }
-

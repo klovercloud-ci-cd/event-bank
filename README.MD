@@ -11,13 +11,15 @@
  | |___    \ V /   | |___  | |\  |   | |   |_____| | |_) |  / ___ \  | |\  | | . \ 
  |_____|    \_/    |_____| |_| \_|   |_|           |____/  /_/   \_\ |_| \_| |_|\_\
 ```
+
 ## Responsibility
 
 - Manages process life cycle, logs and process life cycle events
 
-| Version 
+| Version
 |---------|
 | v1      |
+
 ## Want to contribute
 
 - See [CONTRIBUTING.md](markdownfiles/CONTRIBUTING.md)

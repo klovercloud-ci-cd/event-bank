@@ -13,7 +13,7 @@ type logEventService struct {
 }
 
 func (l logEventService) GetByProcessIdAndStepAndClaim(processId string, step string, claim int, option v1.LogEventQueryOption) ([]v1.LogEvent, int64) {
-	return l.repo.GetByProcessIdAndStepAndClaim(processId,step,claim,option)
+	return l.repo.GetByProcessIdAndStepAndClaim(processId, step, claim, option)
 }
 
 func (l logEventService) GetByProcessIdAndStepAndFootmark(processId string, step string, footmark string, cliam int, option v1.LogEventQueryOption) ([]string, int64) {

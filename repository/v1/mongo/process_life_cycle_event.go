@@ -93,11 +93,11 @@ func (p processLifeCycleRepository) UpdateStatusesByTime(time time.Time) error {
 	return nil
 }
 
-func (p processLifeCycleRepository) UpdateClaim(companyId,processId, step, status string) error {
+func (p processLifeCycleRepository) UpdateClaim(companyId, processId, step, status string) error {
 	processes := p.GetByProcessId(processId)
 	filter := bson.M{}
-	for i, _ := range processes {
-		if processes[i].Pipeline.MetaData.CompanyId!=companyId{
+	for i := range processes {
+		if processes[i].Pipeline.MetaData.CompanyId != companyId {
 			return errors.New("Unauthorized!")
 		}
 		processes[i].Claim = processes[i].Claim + 1

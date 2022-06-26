@@ -1,4 +1,5 @@
 package opentracing
+
 import (
 	"net/http"
 

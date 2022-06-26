@@ -10,7 +10,7 @@ import (
 type Step struct {
 	Name        string                       `json:"name" yaml:"name"`
 	Type        enums.STEP_TYPE              `json:"type" yaml:"type"`
-	Status		enums.PROCESS_STATUS		 `json:"status" yaml:"status"`
+	Status      enums.PROCESS_STATUS         `json:"status" yaml:"status"`
 	Trigger     enums.TRIGGER                `json:"trigger" yaml:"trigger"`
 	Params      map[enums.PARAMS]string      `json:"params" yaml:"params"`
 	Next        []string                     `json:"next" yaml:"next"`
@@ -29,7 +29,7 @@ func (step Step) Validate() error {
 		if err != nil {
 			return err
 		}
-	}else if step.Type == enums.INTERMEDIARY {
+	} else if step.Type == enums.INTERMEDIARY {
 		err := step.validateIntermediaryStep()
 		if err != nil {
 			return err
@@ -42,7 +42,7 @@ func (step Step) Validate() error {
 	} else if step.Type == "" {
 		return errors.New("Step type is required!")
 	} else {
-		return errors.New("Invalid step type! "+string(step.Type))
+		return errors.New("Invalid step type! " + string(step.Type))
 	}
 	if step.Trigger == "" {
 		return errors.New("Step triger required!")

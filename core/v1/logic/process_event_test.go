@@ -15,11 +15,11 @@ func TestProcessEventService_Store(t *testing.T) {
 
 	testCases := testCase{}
 	testCases.data = []v1.PipelineProcessEvent{
-		v1.PipelineProcessEvent{
+		{
 			ProcessId: "01",
 			CompanyId: "1",
 			Data:      nil,
-		},
+				},
 		{
 			ProcessId: "02",
 			CompanyId: "2",

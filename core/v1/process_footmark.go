@@ -4,11 +4,11 @@ import "time"
 
 // ProcessFootmark ProcessFootmark struct
 type ProcessFootmark struct {
-	ProcessId string    `bson:"process_id"`
-	Step      string    `bson:"step"`
-	Footmark  string    `bson:"footmark"`
-	Claim     int       `bson:"claim" json:"claim"`
-	Time      time.Time `bson:"time" json:"time"`
+	ProcessId string    `bson:"process_id" json:"process_id"`
+	Step      string    `bson:"step" json:"step"`
+	Footmark  string    `bson:"footmark" json:"footmark"`
+	Claim     int       `bson:"claim" json:"claim" json:"claim"`
+	Time      time.Time `bson:"time" json:"time" json:"time"`
 }
 
 func (ProcessFootmark) GetFootMarks(footmarks []ProcessFootmark) []string {

@@ -78,14 +78,12 @@ func (p processApi) GetLogsById(context echo.Context) error {
 	metadata := common.GetPaginationMetadata(option.Pagination.Page, option.Pagination.Limit, total, int64(len(logs)))
 	uri := strings.Split(context.Request().RequestURI, "?")[0]
 	if option.Pagination.Page > 0 {
-		metadata.Links = append(metadata.Links, map[string]string{"prev": uri + "?order=" + context.QueryParam("order") + "&page=" + strconv.FormatInt(option.Pagination.Page-1, 10) + "&limit=" + strconv.FormatInt(option.Pagination.Limit, 10)})
+		metadata.Links = append(metadata.Links, map[string]string{"prev": uri + "?processId=" + context.QueryParam("processId") + "&page=" + strconv.FormatInt(option.Pagination.Page-1, 10) + "&limit=" + strconv.FormatInt(option.Pagination.Limit, 10)})
 	}
-	metadata.Links = append(metadata.Links, map[string]string{"self": uri + "?order=" + context.QueryParam("order") + "&page=" + strconv.FormatInt(option.Pagination.Page, 10) + "&limit=" + strconv.FormatInt(option.Pagination.Limit, 10)})
-
+	metadata.Links = append(metadata.Links, map[string]string{"self": uri + "?processId=" + context.QueryParam("processId") + "&page=" + strconv.FormatInt(option.Pagination.Page, 10) + "&limit=" + strconv.FormatInt(option.Pagination.Limit, 10)})
 	if (option.Pagination.Page+1)*option.Pagination.Limit < metadata.TotalCount {
-		metadata.Links = append(metadata.Links, map[string]string{"next": uri + "?order=" + context.QueryParam("order") + "&page=" + strconv.FormatInt(option.Pagination.Page+1, 10) + "&limit=" + strconv.FormatInt(option.Pagination.Limit, 10)})
+		metadata.Links = append(metadata.Links, map[string]string{"next": uri + "?processId=" + context.QueryParam("processId") + "&page=" + strconv.FormatInt(option.Pagination.Page+1, 10) + "&limit=" + strconv.FormatInt(option.Pagination.Limit, 10)})
 	}
-
 	return common.GenerateSuccessResponse(context, logs, &metadata, "")
 }
 
@@ -128,12 +126,11 @@ func (p processApi) GetLogsByProcessIdAndStepAndFootmark(context echo.Context) e
 	}
 	uri := strings.Split(context.Request().RequestURI, "?")[0]
 	if option.Pagination.Page > 0 {
-		metadata.Links = append(metadata.Links, map[string]string{"prev": uri + "?order=" + context.QueryParam("order") + "&page=" + strconv.FormatInt(option.Pagination.Page-1, 10) + "&limit=" + strconv.FormatInt(option.Pagination.Limit, 10)})
+		metadata.Links = append(metadata.Links, map[string]string{"prev": uri + "?processId=" + context.QueryParam("processId") + "&step=" + context.Param("step") + "&footmark=" + context.Param("footmark") + "&claims=" + context.QueryParam("claims") + "&companyId=" + context.QueryParam("companyId") + "&page=" + strconv.FormatInt(option.Pagination.Page-1, 10) + "&limit=" + strconv.FormatInt(option.Pagination.Limit, 10)})
 	}
-	metadata.Links = append(metadata.Links, map[string]string{"self": uri + "?order=" + context.QueryParam("order") + "&page=" + strconv.FormatInt(option.Pagination.Page, 10) + "&limit=" + strconv.FormatInt(option.Pagination.Limit, 10)})
-
+	metadata.Links = append(metadata.Links, map[string]string{"self": uri + "?processId=" + context.QueryParam("processId") + "&step=" + context.Param("step") + "&footmark=" + context.Param("footmark") + "&claims=" + context.QueryParam("claims") + "&companyId=" + context.QueryParam("companyId") + "&page=" + strconv.FormatInt(option.Pagination.Page, 10) + "&limit=" + strconv.FormatInt(option.Pagination.Limit, 10)})
 	if (option.Pagination.Page+1)*option.Pagination.Limit < metadata.TotalCount {
-		metadata.Links = append(metadata.Links, map[string]string{"next": uri + "?order=" + context.QueryParam("order") + "&page=" + strconv.FormatInt(option.Pagination.Page+1, 10) + "&limit=" + strconv.FormatInt(option.Pagination.Limit, 10)})
+		metadata.Links = append(metadata.Links, map[string]string{"next": uri + "?processId=" + context.QueryParam("processId") + "&step=" + context.Param("step") + "&footmark=" + context.Param("footmark") + "&claims=" + context.QueryParam("claims") + "&companyId=" + context.QueryParam("companyId") + "&page=" + strconv.FormatInt(option.Pagination.Page+1, 10) + "&limit=" + strconv.FormatInt(option.Pagination.Limit, 10)})
 	}
 	if footmark == "*" {
 		return common.GenerateSuccessResponse(context, logEvents, &metadata, "")
@@ -241,12 +238,12 @@ func (p processApi) GetByCompanyIdAndRepositoryIdAndAppName(context echo.Context
 	metadata := common.GetPaginationMetadata(option.Pagination.Page, option.Pagination.Limit, total, int64(len(data)))
 	uri := strings.Split(context.Request().RequestURI, "?")[0]
 	if option.Pagination.Page > 0 {
-		metadata.Links = append(metadata.Links, map[string]string{"prev": uri + "?order=" + context.QueryParam("order") + "&page=" + strconv.FormatInt(option.Pagination.Page-1, 10) + "&limit=" + strconv.FormatInt(option.Pagination.Limit, 10)})
+		metadata.Links = append(metadata.Links, map[string]string{"prev": uri + "?companyId=" + context.QueryParam("companyId") + "&repositoryId=" + context.QueryParam("repositoryId") + "&appId=" + context.QueryParam("appId") + "&operation=" + context.QueryParam("operation") + "&commitId=" + context.QueryParam("commitId") + "&step=" + context.QueryParam("step") + "&page=" + strconv.FormatInt(option.Pagination.Page-1, 10) + "&limit=" + strconv.FormatInt(option.Pagination.Limit, 10)})
 	}
-	metadata.Links = append(metadata.Links, map[string]string{"self": uri + "?order=" + context.QueryParam("order") + "&page=" + strconv.FormatInt(option.Pagination.Page, 10) + "&limit=" + strconv.FormatInt(option.Pagination.Limit, 10)})
+	metadata.Links = append(metadata.Links, map[string]string{"self": uri + "?companyId=" + context.QueryParam("companyId") + "&repositoryId=" + context.QueryParam("repositoryId") + "&appId=" + context.QueryParam("appId") + "&operation=" + context.QueryParam("operation") + "&commitId=" + context.QueryParam("commitId") + "&step=" + context.QueryParam("step") + "&page=" + strconv.FormatInt(option.Pagination.Page, 10) + "&limit=" + strconv.FormatInt(option.Pagination.Limit, 10)})
 
 	if (option.Pagination.Page+1)*option.Pagination.Limit < metadata.TotalCount {
-		metadata.Links = append(metadata.Links, map[string]string{"next": uri + "?order=" + context.QueryParam("order") + "&page=" + strconv.FormatInt(option.Pagination.Page+1, 10) + "&limit=" + strconv.FormatInt(option.Pagination.Limit, 10)})
+		metadata.Links = append(metadata.Links, map[string]string{"next": uri + "?companyId=" + context.QueryParam("companyId") + "&repositoryId=" + context.QueryParam("repositoryId") + "&appId=" + context.QueryParam("appId") + "&operation=" + context.QueryParam("operation") + "&commitId=" + context.QueryParam("commitId") + "&step=" + context.QueryParam("step") + "&page=" + strconv.FormatInt(option.Pagination.Page+1, 10) + "&limit=" + strconv.FormatInt(option.Pagination.Limit, 10)})
 	}
 	return common.GenerateSuccessResponse(context, data, &metadata, "")
 }
@@ -256,12 +253,12 @@ func (p processApi) GetByCompanyIdAndCommitId(context echo.Context, companyId, c
 	metadata := common.GetPaginationMetadata(option.Pagination.Page, option.Pagination.Limit, total, int64(len(data)))
 	uri := strings.Split(context.Request().RequestURI, "?")[0]
 	if option.Pagination.Page > 0 {
-		metadata.Links = append(metadata.Links, map[string]string{"prev": uri + "?order=" + context.QueryParam("order") + "&page=" + strconv.FormatInt(option.Pagination.Page-1, 10) + "&limit=" + strconv.FormatInt(option.Pagination.Limit, 10)})
+		metadata.Links = append(metadata.Links, map[string]string{"prev": uri + "?companyId=" + context.QueryParam("companyId") + "&repositoryId=" + context.QueryParam("repositoryId") + "&appId=" + context.QueryParam("appId") + "&operation=" + context.QueryParam("operation") + "&commitId=" + context.QueryParam("commitId") + "&step=" + context.QueryParam("step") + "&page=" + strconv.FormatInt(option.Pagination.Page-1, 10) + "&limit=" + strconv.FormatInt(option.Pagination.Limit, 10)})
 	}
-	metadata.Links = append(metadata.Links, map[string]string{"self": uri + "?order=" + context.QueryParam("order") + "&page=" + strconv.FormatInt(option.Pagination.Page, 10) + "&limit=" + strconv.FormatInt(option.Pagination.Limit, 10)})
+	metadata.Links = append(metadata.Links, map[string]string{"self": uri + "?companyId=" + context.QueryParam("companyId") + "&repositoryId=" + context.QueryParam("repositoryId") + "&appId=" + context.QueryParam("appId") + "&operation=" + context.QueryParam("operation") + "&commitId=" + context.QueryParam("commitId") + "&step=" + context.QueryParam("step") + "&page=" + strconv.FormatInt(option.Pagination.Page, 10) + "&limit=" + strconv.FormatInt(option.Pagination.Limit, 10)})
 
 	if (option.Pagination.Page+1)*option.Pagination.Limit < metadata.TotalCount {
-		metadata.Links = append(metadata.Links, map[string]string{"next": uri + "?order=" + context.QueryParam("order") + "&page=" + strconv.FormatInt(option.Pagination.Page+1, 10) + "&limit=" + strconv.FormatInt(option.Pagination.Limit, 10)})
+		metadata.Links = append(metadata.Links, map[string]string{"next": uri + "?companyId=" + context.QueryParam("companyId") + "&repositoryId=" + context.QueryParam("repositoryId") + "&appId=" + context.QueryParam("appId") + "&operation=" + context.QueryParam("operation") + "&commitId=" + context.QueryParam("commitId") + "&step=" + context.QueryParam("step") + "&page=" + strconv.FormatInt(option.Pagination.Page+1, 10) + "&limit=" + strconv.FormatInt(option.Pagination.Limit, 10)})
 	}
 	return common.GenerateSuccessResponse(context, data, &metadata, "")
 }

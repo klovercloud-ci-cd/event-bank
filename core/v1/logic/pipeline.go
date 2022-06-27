@@ -10,6 +10,7 @@ import (
 
 type pipelineService struct {
 	processLifeCycleEventRepository repository.ProcessLifeCycleEventRepository
+	processRepository               repository.ProcessRepository
 }
 
 func (p pipelineService) GetStatusCount(companyId string, fromDate, toDate time.Time) v1.PipelineStatusCount {
@@ -94,9 +95,14 @@ func (p pipelineService) GetByProcessId(processId string) v1.Pipeline {
 	return *pipeline
 }
 
+func (p pipelineService) GetProcessByCompanyIdAndProcessId(companyId, processId string) v1.Process {
+	return p.processRepository.GetById(companyId, processId)
+}
+
 // NewPipelineService returns Pipeline type service
-func NewPipelineService(processLifeCycleEventRepository repository.ProcessLifeCycleEventRepository) service.Pipeline {
+func NewPipelineService(processLifeCycleEventRepository repository.ProcessLifeCycleEventRepository, processRepository repository.ProcessRepository) service.Pipeline {
 	return &pipelineService{
 		processLifeCycleEventRepository: processLifeCycleEventRepository,
+		processRepository:               processRepository,
 	}
 }

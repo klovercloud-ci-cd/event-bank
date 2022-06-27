@@ -80,6 +80,7 @@ func (p pipelineApi) Get(context echo.Context) error {
 // @Tags Pipeline
 // @Produce json
 // @Param processId path string true "Pipeline ProcessId"
+// @Param companyId query string true "companyId"
 // @Param action query string false "action"
 // @Param page query int64 false "Page number"
 // @Param limit query int64 false "Record count"
@@ -93,6 +94,37 @@ func (p pipelineApi) GetById(context echo.Context) error {
 	return p.GetLogs(context)
 }
 
+func (p pipelineApi) GetByProcessId(context echo.Context) error {
+	processId := context.Param("processId")
+	companyId := context.QueryParam("companyId")
+	data := p.pipelineService.GetByProcessId(processId)
+	if data.MetaData.CompanyId != companyId {
+		return common.GenerateSuccessResponse(context, v1.Pipeline{}, nil, "")
+	}
+	return common.GenerateSuccessResponse(context, data, nil, "")
+}
+
+func (p pipelineApi) GetLogs(context echo.Context) error {
+	processId := context.Param("processId")
+	companyId := context.QueryParam("companyId")
+	process := p.pipelineService.GetProcessByCompanyIdAndProcessId(companyId, processId)
+	if process.ProcessId == "" {
+		return common.GenerateSuccessResponse(context, v1.Pipeline{}, nil, "")
+	}
+	option := getQueryOption(context)
+	logs, total := p.logEventService.GetByProcessId(processId, option)
+	metadata := common.GetPaginationMetadata(option.Pagination.Page, option.Pagination.Limit, total, int64(len(logs)))
+	uri := strings.Split(context.Request().RequestURI, "?")[0]
+	if option.Pagination.Page > 0 {
+		metadata.Links = append(metadata.Links, map[string]string{"prev": uri + "?processId=" + context.QueryParam("processId") + "&companyId=" + context.QueryParam("companyId") + "&page=" + strconv.FormatInt(option.Pagination.Page-1, 10) + "&limit=" + strconv.FormatInt(option.Pagination.Limit, 10)})
+	}
+	metadata.Links = append(metadata.Links, map[string]string{"self": uri + "?processId=" + context.QueryParam("processId") + "&companyId=" + context.QueryParam("companyId") + "&page=" + strconv.FormatInt(option.Pagination.Page, 10) + "&limit=" + strconv.FormatInt(option.Pagination.Limit, 10)})
+	if (option.Pagination.Page+1)*option.Pagination.Limit < metadata.TotalCount {
+		metadata.Links = append(metadata.Links, map[string]string{"next": uri + "?processId=" + context.QueryParam("processId") + "&companyId=" + context.QueryParam("companyId") + "&page=" + strconv.FormatInt(option.Pagination.Page+1, 10) + "&limit=" + strconv.FormatInt(option.Pagination.Limit, 10)})
+	}
+	return common.GenerateSuccessResponse(context, logs, &metadata, "")
+}
+
 func convertDatetoDateTime(date string) (time.Time, error) {
 	layout := "2006-1-2"
 	d, err := time.Parse(layout, date)
@@ -104,50 +136,6 @@ func convertDatetoDateTime(date string) (time.Time, error) {
 		return time.Time{}, errors.New("invalid date format")
 	}
 	return dateTime, nil
-}
-
-// Get... Get by process
-// @Summary Get by process id
-// @Description Gets pipeline by process id
-// @Tags Pipeline
-// @Produce json
-// @Param commitId path string true "processId"
-// @Success 200 {object} common.ResponseDTO{data=[]string}
-// @Router /api/v1/pipelines/{commitId} [GET]
-func (p pipelineApi) GetByProcessId(context echo.Context) error {
-	processId := context.Param("processId")
-	companyId := context.QueryParam("companyId")
-	data := p.pipelineService.GetByProcessId(processId)
-	if data.MetaData.CompanyId != companyId {
-		return common.GenerateSuccessResponse(context, v1.Pipeline{}, nil, "")
-	}
-	return common.GenerateSuccessResponse(context, data, nil, "")
-}
-
-// Get... Get logs
-// @Summary Get Logs
-// @Description Gets logs by pipeline processId
-// @Tags Pipeline
-// @Produce json
-// @Param processId path string true "Pipeline ProcessId"
-// @Param page query int64 false "Page number"
-// @Param limit query int64 false "Record count"
-// @Success 200 {object} common.ResponseDTO{data=[]string}
-// @Router /api/v1/pipelines/{processId} [GET]
-func (p pipelineApi) GetLogs(context echo.Context) error {
-	processId := context.Param("processId")
-	option := getQueryOption(context)
-	logs, total := p.logEventService.GetByProcessId(processId, option)
-	metadata := common.GetPaginationMetadata(option.Pagination.Page, option.Pagination.Limit, total, int64(len(logs)))
-	uri := strings.Split(context.Request().RequestURI, "?")[0]
-	if option.Pagination.Page > 0 {
-		metadata.Links = append(metadata.Links, map[string]string{"prev": uri + "?processId=" + context.QueryParam("processId") + "&page=" + strconv.FormatInt(option.Pagination.Page-1, 10) + "&limit=" + strconv.FormatInt(option.Pagination.Limit, 10)})
-	}
-	metadata.Links = append(metadata.Links, map[string]string{"self": uri + "?processId=" + context.QueryParam("processId") + "&page=" + strconv.FormatInt(option.Pagination.Page, 10) + "&limit=" + strconv.FormatInt(option.Pagination.Limit, 10)})
-	if (option.Pagination.Page+1)*option.Pagination.Limit < metadata.TotalCount {
-		metadata.Links = append(metadata.Links, map[string]string{"next": uri + "?processId=" + context.QueryParam("processId") + "&page=" + strconv.FormatInt(option.Pagination.Page+1, 10) + "&limit=" + strconv.FormatInt(option.Pagination.Limit, 10)})
-	}
-	return common.GenerateSuccessResponse(context, logs, &metadata, "")
 }
 
 func getQueryOption(context echo.Context) v1.LogEventQueryOption {

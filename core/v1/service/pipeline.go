@@ -8,5 +8,6 @@ import (
 // Pipeline Pipeline operations
 type Pipeline interface {
 	GetByProcessId(processId string) v1.Pipeline
+	GetProcessByCompanyIdAndProcessId(companyId, processId string) v1.Process
 	GetStatusCount(companyId string, fromDate, toDate time.Time) v1.PipelineStatusCount
 }

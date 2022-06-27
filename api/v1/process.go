@@ -73,16 +73,21 @@ func (p processApi) GetById(context echo.Context) error {
 // @Router /api/v1/processes/{processId}/logs [GET]
 func (p processApi) GetLogsById(context echo.Context) error {
 	processId := context.Param("processId")
+	companyId := context.QueryParam("companyId")
+	process := p.processService.GetById(companyId, processId)
+	if process.ProcessId == "" {
+		return common.GenerateSuccessResponse(context, v1.Pipeline{}, nil, "")
+	}
 	option := getQueryOption(context)
 	logs, total := p.logEventService.GetByProcessId(processId, option)
 	metadata := common.GetPaginationMetadata(option.Pagination.Page, option.Pagination.Limit, total, int64(len(logs)))
 	uri := strings.Split(context.Request().RequestURI, "?")[0]
 	if option.Pagination.Page > 0 {
-		metadata.Links = append(metadata.Links, map[string]string{"prev": uri + "?processId=" + context.QueryParam("processId") + "&page=" + strconv.FormatInt(option.Pagination.Page-1, 10) + "&limit=" + strconv.FormatInt(option.Pagination.Limit, 10)})
+		metadata.Links = append(metadata.Links, map[string]string{"prev": uri + "?processId=" + context.QueryParam("processId") + "&companyId=" + context.QueryParam("companyId") + "&page=" + strconv.FormatInt(option.Pagination.Page-1, 10) + "&limit=" + strconv.FormatInt(option.Pagination.Limit, 10)})
 	}
-	metadata.Links = append(metadata.Links, map[string]string{"self": uri + "?processId=" + context.QueryParam("processId") + "&page=" + strconv.FormatInt(option.Pagination.Page, 10) + "&limit=" + strconv.FormatInt(option.Pagination.Limit, 10)})
+	metadata.Links = append(metadata.Links, map[string]string{"self": uri + "?processId=" + context.QueryParam("processId") + "&companyId=" + context.QueryParam("companyId") + "&page=" + strconv.FormatInt(option.Pagination.Page, 10) + "&limit=" + strconv.FormatInt(option.Pagination.Limit, 10)})
 	if (option.Pagination.Page+1)*option.Pagination.Limit < metadata.TotalCount {
-		metadata.Links = append(metadata.Links, map[string]string{"next": uri + "?processId=" + context.QueryParam("processId") + "&page=" + strconv.FormatInt(option.Pagination.Page+1, 10) + "&limit=" + strconv.FormatInt(option.Pagination.Limit, 10)})
+		metadata.Links = append(metadata.Links, map[string]string{"next": uri + "?processId=" + context.QueryParam("processId") + "&companyId=" + context.QueryParam("companyId") + "&page=" + strconv.FormatInt(option.Pagination.Page+1, 10) + "&limit=" + strconv.FormatInt(option.Pagination.Limit, 10)})
 	}
 	return common.GenerateSuccessResponse(context, logs, &metadata, "")
 }

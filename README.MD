@@ -16,14 +16,16 @@
 
 - Manages process life cycle, logs and process life cycle events
 
-| Version
-|---------|
-| v1      |
+| Versions | Descriptors  |
+|----------|-------------|
+| [v0.0.1-beta](https://github.com/klovercloud-ci-cd/event-bank/releases/tag/v0.0.1-beta) | [k8s](k8s/v0.0.1-beta) |
+
+
 
 ## Want to contribute
 
 - See [CONTRIBUTING.md](markdownfiles/CONTRIBUTING.md)
 - See [DEVELOPMENT.md](markdownfiles/DEVELOPMENT.md) to get start
-- See [architecture](https://github.com/klovercloud-ci-cd/architecture)
+- See [architecture](https://github.com/klovercloud-ci-cd/architecture/blob/master/README.md)
 - Look at our
-  [our issues](https://github.com/klovercloud-ci-cd/klovercloud-ci-core/issues)
+  [our issues](https://github.com/klovercloud-ci-cd/klovercloud-ci-core/event-bank/issues)

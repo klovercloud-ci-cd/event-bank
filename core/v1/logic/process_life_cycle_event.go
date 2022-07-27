@@ -77,9 +77,14 @@ func (p processLifeCycleEventService) UpdateClaim(companyId, processId, step, st
 			header["Content-Type"] = "application/json"
 			bytes, err := p.httpClient.Get(url, header)
 			if err != nil {
+				log.Println(err.Error())
 				return err
 			}
 			err = json.Unmarshal(bytes, &response)
+			if err != nil {
+				log.Println(err.Error())
+				return err
+			}
 			reclaimAbility.ClaimAble = reflect.ValueOf(response.Data).Bool()
 			if reclaimAbility.ClaimAble == true {
 				return p.repo.UpdateClaim(companyId, processId, step, status)

@@ -52,7 +52,7 @@ func (p processLifeCycleRepository) GetByCompanyId(companyId string, fromDate, t
 	query := bson.M{
 		"$and": []bson.M{
 			{"updated_at": bson.M{"$gte": fromDate, "$lte": toDate}},
-			{"pipeline.metadata.companyid": companyId},
+			{"pipeline._metadata.company_id": companyId},
 		},
 	}
 	coll := p.manager.Db.Collection(ProcessLifeCycleCollection)

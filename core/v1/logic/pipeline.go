@@ -90,6 +90,7 @@ func (p pipelineService) GetByProcessId(processId string) v1.Pipeline {
 		}
 	}
 	if len(events) > 0 {
+		pipeline.MetaData = events[0].Pipeline.MetaData
 		pipeline.Claim = events[0].Claim
 	}
 	return *pipeline

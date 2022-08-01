@@ -64,8 +64,8 @@ type CompanyMetadata struct {
 
 // PipelineMetadata pipeline metadata
 type PipelineMetadata struct {
-	CompanyId       string          `json:"company_id" yaml:"company_id"`
-	CompanyMetadata CompanyMetadata `json:"company_metadata" yaml:"company_metadata"`
+	CompanyId       string          `json:"company_id" yaml:"company_id" bson:"company_id"`
+	CompanyMetadata CompanyMetadata `json:"company_metadata" yaml:"company_metadata" bson:"company_metadata"`
 }
 
 // PipelineStatusCount pipeline status count info

@@ -21,7 +21,6 @@ type pipelineApi struct {
 	pipelineService     service.Pipeline
 	logEventService     service.LogEvent
 	processEventService service.ProcessEvent
-	processService      service.Process
 }
 
 var (
@@ -98,11 +97,10 @@ func (p pipelineApi) GetById(context echo.Context) error {
 func (p pipelineApi) GetByProcessId(context echo.Context) error {
 	processId := context.Param("processId")
 	companyId := context.QueryParam("companyId")
-	process := p.processService.GetById(companyId, processId)
-	if process.ProcessId == "" {
+	data := p.pipelineService.GetByProcessId(processId)
+	if data.MetaData.CompanyId != companyId {
 		return common.GenerateSuccessResponse(context, v1.Pipeline{}, nil, "")
 	}
-	data := p.pipelineService.GetByProcessId(processId)
 	return common.GenerateSuccessResponse(context, data, nil, "")
 }
 
@@ -189,11 +187,10 @@ func (p pipelineApi) GetEvents(context echo.Context) error {
 }
 
 // NewPipelineApi returns Pipeline type api
-func NewPipelineApi(pipelineService service.Pipeline, logEventService service.LogEvent, processEventService service.ProcessEvent, processService service.Process) api.Pipeline {
+func NewPipelineApi(pipelineService service.Pipeline, logEventService service.LogEvent, processEventService service.ProcessEvent) api.Pipeline {
 	return &pipelineApi{
 		pipelineService:     pipelineService,
 		logEventService:     logEventService,
 		processEventService: processEventService,
-		processService:      processService,
 	}
 }

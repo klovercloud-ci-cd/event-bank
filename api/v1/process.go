@@ -153,9 +153,14 @@ func (p processApi) GetLogsByProcessIdAndStepAndFootmark(context echo.Context) e
 // @Success 200 {object} common.ResponseDTO{data=[]string}
 // @Router /api/v1/processes/{processId}/steps/{step}/footmarks [GET]
 func (p processApi) GetFootmarksByProcessIdAndStep(context echo.Context) error {
-	process := context.Param("processId")
+	processId := context.Param("processId")
 	step := context.Param("step")
-	footmarks := p.footmarkService.GetByProcessIdAndStep(process, step)
+	companyId := context.QueryParam("companyId")
+	process := p.processService.GetById(companyId, processId)
+	if process.ProcessId == "" {
+		return common.GenerateSuccessResponse(context, nil, nil, "Process not found!")
+	}
+	footmarks := p.footmarkService.GetByProcessIdAndStep(processId, step)
 	return common.GenerateSuccessResponse(context, v1.ProcessFootmark{}.GetFootMarks(footmarks), nil, "")
 }
 

@@ -238,32 +238,11 @@ func (p processLifeCycleRepository) Get() []v1.ProcessLifeCycleEvent {
 	return data
 }
 func (p processLifeCycleRepository) Store(events []v1.ProcessLifeCycleEvent) {
-	stepNameMap:=make(map[string]bool)
-	for i, each := range events {
-		events[i].UpdatedAt = each.CreatedAt
-		stepNameMap[each.Step]=true
-	}
 	coll := p.manager.Db.Collection(ProcessLifeCycleCollection)
 	var pipeline *v1.Pipeline
 	if len(events) > 0 {
 		if events[0].StepType == enums.BUILD {
 			pipeline = events[0].Pipeline
-		}
-	}
-	claim:=0
-	if len(events)>0{
-		existingEventsByProcessId:=p.GetByProcessId(events[0].ProcessId)
-		for _, each := range existingEventsByProcessId {
-			if len(each.Next)!=len(stepNameMap){
-				continue
-			}
-			for _,name:=range each.Next{
-				if _,ok:=stepNameMap[name];ok{
-					claim=each.Claim
-					continue
-				}
-				break
-			}
 		}
 	}
 
@@ -279,7 +258,7 @@ func (p processLifeCycleRepository) Store(events []v1.ProcessLifeCycleEvent) {
 				log.Println(err.Error())
 			}
 		} else {
-			if existing.Claim<claim{
+			if existing.Claim!=0 && each.Status==enums.PAUSED{
 				existing.Claim=existing.Claim+1
 			}
 			existing.ClaimedAt = time.Now().UTC()

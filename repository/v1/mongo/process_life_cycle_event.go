@@ -258,7 +258,7 @@ func (p processLifeCycleRepository) Store(events []v1.ProcessLifeCycleEvent) {
 				log.Println(err.Error())
 			}
 		} else {
-			if existing.Claim!=0 && each.Status==enums.PAUSED{
+			if each.Status==enums.PAUSED{
 				existing.Claim=existing.Claim+1
 			}
 			existing.ClaimedAt = time.Now().UTC()

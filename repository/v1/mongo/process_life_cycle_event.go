@@ -94,17 +94,17 @@ func (p processLifeCycleRepository) UpdateStatusesByTime(time time.Time) error {
 }
 
 func (p processLifeCycleRepository) UpdateClaim(companyId, processId, step, status string) error {
-	processes := p.GetByProcessId(processId)
+	process := p.GetByProcessIdAndStep(processId,step)
 	filter := bson.M{}
-	for i := range processes {
-		if processes[i].Pipeline.MetaData.CompanyId != companyId {
+	//for i := range processes {
+		if process.Pipeline.MetaData.CompanyId != companyId {
 			return errors.New("Unauthorized!")
 		}
-		processes[i].Claim = processes[i].Claim + 1
-		processes[i].UpdatedAt = time.Now().UTC()
-		processes[i].ClaimedAt = time.Now().UTC()
-		if processes[i].Step == step {
-			processes[i].Status = enums.PROCESS_STATUS(status)
+		process.Claim = process.Claim + 1
+		process.UpdatedAt = time.Now().UTC()
+	    process.ClaimedAt = time.Now().UTC()
+		if process.Step == step {
+			process.Status = enums.PROCESS_STATUS(status)
 			filter = bson.M{
 				"$and": []bson.M{
 					{"process_id": processId},
@@ -115,13 +115,13 @@ func (p processLifeCycleRepository) UpdateClaim(companyId, processId, step, stat
 			filter = bson.M{
 				"$and": []bson.M{
 					{"process_id": processId},
-					{"step": processes[i].Step},
+					{"step": process.Step},
 				},
 			}
 
 		}
 		update := bson.M{
-			"$set": processes[i],
+			"$set": process,
 		}
 		upsert := true
 		after := options.After
@@ -135,7 +135,7 @@ func (p processLifeCycleRepository) UpdateClaim(companyId, processId, step, stat
 			log.Println("[ERROR]", err.Err())
 			return err.Err()
 		}
-	}
+	//}
 	return nil
 }
 

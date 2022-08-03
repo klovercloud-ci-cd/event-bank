@@ -17,6 +17,7 @@ type Step struct {
 	ArgData     map[string]string            `json:"arg_data"  yaml:"arg_data"`
 	EnvData     map[string]string            `json:"env_data"  yaml:"env_data"`
 	Descriptors *[]unstructured.Unstructured `json:"descriptors,omitempty" yaml:"descriptors,omitempty"`
+	Claim       int                          `json:"claim" yaml:"claim"`
 }
 
 // Validate validates pipeline steps.

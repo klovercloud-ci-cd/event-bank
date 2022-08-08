@@ -2,7 +2,6 @@ package mongo
 
 import (
 	"context"
-	"errors"
 	v1 "github.com/klovercloud-ci-cd/event-bank/core/v1"
 	"github.com/klovercloud-ci-cd/event-bank/core/v1/repository"
 	"github.com/klovercloud-ci-cd/event-bank/enums"
@@ -94,48 +93,34 @@ func (p processLifeCycleRepository) UpdateStatusesByTime(time time.Time) error {
 }
 
 func (p processLifeCycleRepository) UpdateClaim(companyId, processId, step, status string) error {
-	process := p.GetByProcessIdAndStep(processId,step)
+	process := p.GetByProcessIdAndStep(processId, step)
 	filter := bson.M{}
-	//for i := range processes {
-		if process.Pipeline.MetaData.CompanyId != companyId {
-			return errors.New("Unauthorized!")
-		}
-		process.Claim = process.Claim + 1
-		process.UpdatedAt = time.Now().UTC()
-	    process.ClaimedAt = time.Now().UTC()
-		if process.Step == step {
-			process.Status = enums.PROCESS_STATUS(status)
-			filter = bson.M{
-				"$and": []bson.M{
-					{"process_id": processId},
-					{"step": step},
-				},
-			}
-		} else {
-			filter = bson.M{
-				"$and": []bson.M{
-					{"process_id": processId},
-					{"step": process.Step},
-				},
-			}
-
-		}
-		update := bson.M{
-			"$set": process,
-		}
-		upsert := true
-		after := options.After
-		opt := options.FindOneAndUpdateOptions{
-			ReturnDocument: &after,
-			Upsert:         &upsert,
-		}
-		coll := p.manager.Db.Collection(ProcessLifeCycleCollection)
-		err := coll.FindOneAndUpdate(p.manager.Ctx, filter, update, &opt)
-		if err.Err() != nil {
-			log.Println("[ERROR]", err.Err())
-			return err.Err()
-		}
-	//}
+	process.Claim = process.Claim + 1
+	process.UpdatedAt = time.Now().UTC()
+	process.ClaimedAt = time.Now().UTC()
+	process.Status = enums.PROCESS_STATUS(status)
+	filter = bson.M{
+		"$and": []bson.M{
+			{"process_id": processId},
+			{"step": step},
+			{"pipeline._metadata.company_id": companyId},
+		},
+	}
+	update := bson.M{
+		"$set": process,
+	}
+	upsert := true
+	after := options.After
+	opt := options.FindOneAndUpdateOptions{
+		ReturnDocument: &after,
+		Upsert:         &upsert,
+	}
+	coll := p.manager.Db.Collection(ProcessLifeCycleCollection)
+	err := coll.FindOneAndUpdate(p.manager.Ctx, filter, update, &opt)
+	if err.Err() != nil {
+		log.Println("[ERROR]", err.Err())
+		return err.Err()
+	}
 	return nil
 }
 
@@ -258,8 +243,8 @@ func (p processLifeCycleRepository) Store(events []v1.ProcessLifeCycleEvent) {
 				log.Println(err.Error())
 			}
 		} else {
-			if each.Status==enums.PAUSED{
-				existing.Claim=existing.Claim+1
+			if each.Status == enums.PAUSED {
+				existing.Claim = existing.Claim + 1
 			}
 			existing.ClaimedAt = time.Now().UTC()
 			existing.UpdatedAt = time.Now().UTC()

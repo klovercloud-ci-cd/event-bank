@@ -94,9 +94,8 @@ func (p processLifeCycleEventService) UpdateClaim(companyId, processId, step, st
 		} else {
 			return p.repo.UpdateClaim(companyId, processId, step, status)
 		}
-
 	}
-	return nil
+	return p.repo.UpdateClaim(companyId, processId, step, status)
 }
 
 func (p processLifeCycleEventService) GetByProcessId(processId string) []v1.ProcessLifeCycleEvent {

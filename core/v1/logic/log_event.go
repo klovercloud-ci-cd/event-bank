@@ -25,11 +25,12 @@ func (l logEventService) Store(log v1.LogEvent) {
 		l.repo.Store(log)
 	}
 	if log.Footmark != "" {
-		if l.processFootmarkService.GetFootmarkByProcessIdAndStepAndFootmark(log.ProcessId, log.Step, log.Footmark) == nil {
+		if l.processFootmarkService.GetFootmarkByProcessIdAndStepAndFootmark(log.ProcessId, log.Step, log.Footmark, log.Claim) == nil {
 			l.processFootmarkService.Store(v1.ProcessFootmark{
 				ProcessId: log.ProcessId,
 				Step:      log.Step,
 				Footmark:  log.Footmark,
+				Claim:     log.Claim,
 				Time:      time.Now().UTC(),
 			})
 		}

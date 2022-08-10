@@ -71,12 +71,13 @@ func (l processFootmarkRepository) GetByProcessId(processId string) []v1.Process
 	return results
 }
 
-func (l processFootmarkRepository) GetFootmarkByProcessIdAndStepAndFootmark(processId, step, footmark string) *v1.ProcessFootmark {
+func (l processFootmarkRepository) GetFootmarkByProcessIdAndStepAndFootmark(processId, step, footmark string, claim int) *v1.ProcessFootmark {
 	query := bson.M{
 		"$and": []bson.M{
 			{"process_id": processId},
 			{"step": step},
 			{"footmark": footmark},
+			{"claim": claim},
 		},
 	}
 	coll := l.manager.Db.Collection(ProcessFootmarkCollection)
@@ -96,7 +97,7 @@ func (l processFootmarkRepository) GetFootmarkByProcessIdAndStepAndFootmark(proc
 	return nil
 }
 func (l processFootmarkRepository) Store(data v1.ProcessFootmark) {
-	existing := l.GetFootmarkByProcessIdAndStepAndFootmark(data.ProcessId, data.Step, data.Footmark)
+	existing := l.GetFootmarkByProcessIdAndStepAndFootmark(data.ProcessId, data.Step, data.Footmark, data.Claim)
 	if existing != nil {
 		return
 	}

@@ -20,11 +20,12 @@ type processFootmarkRepository struct {
 	timeout time.Duration
 }
 
-func (l processFootmarkRepository) GetByProcessIdAndStep(processId, step string) []v1.ProcessFootmark {
+func (l processFootmarkRepository) GetByProcessIdAndStepAndClaim(processId, step string, claim int) []v1.ProcessFootmark {
 	query := bson.M{
 		"$and": []bson.M{
 			{"process_id": processId},
 			{"step": step},
+			{"claim": claim},
 		},
 	}
 	opts := options.Find()

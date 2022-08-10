@@ -14,8 +14,8 @@ func (p processFootmarkService) GetFootmarkByProcessIdAndStepAndFootmark(process
 	return p.repo.GetFootmarkByProcessIdAndStepAndFootmark(processId, step, footmark, claim)
 }
 
-func (p processFootmarkService) GetByProcessIdAndStep(processId, step string) []v1.ProcessFootmark {
-	return p.repo.GetByProcessIdAndStep(processId, step)
+func (p processFootmarkService) GetByProcessIdAndStepAndClaim(processId, step string, claim int) []v1.ProcessFootmark {
+	return p.repo.GetByProcessIdAndStepAndClaim(processId, step, claim)
 }
 
 func (p processFootmarkService) Store(processFootmark v1.ProcessFootmark) {

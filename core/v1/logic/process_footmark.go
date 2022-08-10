@@ -10,8 +10,8 @@ type processFootmarkService struct {
 	repo repository.ProcessFootmarkRepository
 }
 
-func (p processFootmarkService) GetFootmarkByProcessIdAndStepAndFootmark(processId, step, footmark string) *v1.ProcessFootmark {
-	return p.repo.GetFootmarkByProcessIdAndStepAndFootmark(processId, step, footmark)
+func (p processFootmarkService) GetFootmarkByProcessIdAndStepAndFootmark(processId, step, footmark string, claim int) *v1.ProcessFootmark {
+	return p.repo.GetFootmarkByProcessIdAndStepAndFootmark(processId, step, footmark, claim)
 }
 
 func (p processFootmarkService) GetByProcessIdAndStep(processId, step string) []v1.ProcessFootmark {

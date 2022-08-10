@@ -8,7 +8,7 @@ import (
 type processFootmarkRepository struct {
 }
 
-func (l processFootmarkRepository) GetFootmarkByProcessIdAndStepAndFootmark(processId, step, footmark string) *v1.ProcessFootmark {
+func (l processFootmarkRepository) GetFootmarkByProcessIdAndStepAndFootmark(processId, step, footmark string, claim int) *v1.ProcessFootmark {
 	//TODO implement me
 	panic("implement me")
 }

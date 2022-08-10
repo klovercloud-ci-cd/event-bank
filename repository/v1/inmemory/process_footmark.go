@@ -13,7 +13,7 @@ func (l processFootmarkRepository) GetFootmarkByProcessIdAndStepAndFootmark(proc
 	panic("implement me")
 }
 
-func (l processFootmarkRepository) GetByProcessIdAndStep(processId, step string) []v1.ProcessFootmark {
+func (l processFootmarkRepository) GetByProcessIdAndStepAndClaim(processId, step string, claim int) []v1.ProcessFootmark {
 	return nil
 }
 

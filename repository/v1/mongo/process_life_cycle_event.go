@@ -318,7 +318,10 @@ func (p processLifeCycleRepository) GetByProcessIdAndStep(processId, step string
 
 	temp := new(v1.ProcessLifeCycleEvent)
 	coll := p.manager.Db.Collection(ProcessLifeCycleCollection)
-	result := coll.FindOne(p.manager.Ctx, query)
+	findOptions := options.FindOneOptions{
+		Sort: bson.M{"claim": -1},
+	}
+	result := coll.FindOne(p.manager.Ctx, query, &findOptions)
 	err := result.Decode(&temp)
 	if err != nil {
 		log.Println("[ERROR]", err)

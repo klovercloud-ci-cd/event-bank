@@ -56,7 +56,7 @@ func GetProcessStatusMapFromEvents(events []v1.ProcessLifeCycleEvent) map[string
 			if each.Status == enums.FAILED {
 				processStatusMap[each.ProcessId] = each.Status
 			} else if val != enums.FAILED {
-				if val == enums.PAUSED && each.Status == enums.ACTIVE {
+				if val == enums.QUEUED && each.Status == enums.ACTIVE {
 					processStatusMap[each.ProcessId] = enums.ACTIVE
 				} else if val == enums.COMPLETED && (each.Status == enums.NON_INITIALIZED || each.Status == enums.QUEUED) {
 					processStatusMap[each.ProcessId] = enums.PAUSED

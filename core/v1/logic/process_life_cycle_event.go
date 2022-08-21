@@ -102,7 +102,7 @@ func (p processLifeCycleEventService) GetByProcessId(processId string) []v1.Proc
 	return p.repo.GetByProcessId(processId)
 }
 
-func (p processLifeCycleEventService) PullNonInitializedAndAutoTriggerEnabledEventsByStepType(count int64, stepType string) []v1.ProcessLifeCycleEvent {
+func (p processLifeCycleEventService) PullQueuedAndAutoTriggerEnabledEventsByStepType(count int64, stepType string) []v1.ProcessLifeCycleEvent {
 	return p.repo.PullNonInitializedAndAutoTriggerEnabledEventsByStepType(count, stepType)
 }
 

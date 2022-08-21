@@ -130,7 +130,7 @@ func (p processLifeCycleRepository) PullNonInitializedAndAutoTriggerEnabledEvent
 	if stepType == string(enums.BUILD) {
 		query = bson.M{
 			"$and": []bson.M{
-				{"status": enums.NON_INITIALIZED},
+				{"status": enums.QUEUED},
 				{"trigger": enums.AUTO},
 				{"step_type": stepType},
 			},

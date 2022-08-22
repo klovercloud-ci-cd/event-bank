@@ -126,23 +126,13 @@ func (p processLifeCycleRepository) UpdateClaim(companyId, processId, step, stat
 
 func (p processLifeCycleRepository) PullNonInitializedAndAutoTriggerEnabledEventsByStepType(count int64, stepType string) []v1.ProcessLifeCycleEvent {
 	var data []v1.ProcessLifeCycleEvent
-	var query bson.M
-	if stepType == string(enums.BUILD) {
-		query = bson.M{
-			"$and": []bson.M{
-				{"status": enums.NON_INITIALIZED},
-				{"trigger": enums.AUTO},
-				{"step_type": stepType},
-			},
-		}
-	} else {
-		query = bson.M{
-			"$and": []bson.M{
-				{"status": enums.PAUSED},
-				{"trigger": enums.AUTO},
-				{"step_type": stepType},
-			},
-		}
+
+	query := bson.M{
+		"$and": []bson.M{
+			{"status": enums.QUEUED},
+			{"trigger": enums.AUTO},
+			{"step_type": stepType},
+		},
 	}
 
 	coll := p.manager.Db.Collection(ProcessLifeCycleCollection)
@@ -174,7 +164,7 @@ func (p processLifeCycleRepository) PullPausedAndAutoTriggerEnabledResourcesByAg
 	query := bson.M{
 		"$and": []bson.M{
 			{"agent": agent},
-			{"status": enums.PAUSED},
+			{"status": enums.QUEUED},
 			{"trigger": enums.AUTO},
 			{"step_type": enums.DEPLOY},
 		},
@@ -243,7 +233,7 @@ func (p processLifeCycleRepository) Store(events []v1.ProcessLifeCycleEvent) {
 				log.Println(err.Error())
 			}
 		} else {
-			if each.Status == enums.PAUSED {
+			if each.Status == enums.QUEUED {
 				existing.Claim = existing.Claim + 1
 			}
 			existing.ClaimedAt = time.Now().UTC()

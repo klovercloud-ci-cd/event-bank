@@ -59,7 +59,7 @@ func (p processLifeCycleEventApi) Pull(context echo.Context) error {
 	count, _ := strconv.ParseInt(context.QueryParam("count"), 10, 64)
 	steptype := context.QueryParam("step_type")
 	if steptype != "" {
-		return common.GenerateSuccessResponse(context, p.processLifeCycleEventService.PullNonInitializedAndAutoTriggerEnabledEventsByStepType(count, steptype), nil, "")
+		return common.GenerateSuccessResponse(context, p.processLifeCycleEventService.PullQueuedAndAutoTriggerEnabledEventsByStepType(count, steptype), nil, "")
 	}
 	return common.GenerateSuccessResponse(context, p.processLifeCycleEventService.PullPausedAndAutoTriggerEnabledResourcesByAgentName(count, agentName), nil, "")
 }

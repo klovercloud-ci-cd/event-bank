@@ -26,7 +26,9 @@ func (p pipelineService) GetStatusCount(companyId string, fromDate, toDate time.
 			running++
 		} else if each == enums.PAUSED {
 			paused++
-		} else if each == enums.NON_INITIALIZED {
+		} else if each == enums.QUEUED {
+			nonInitialized++
+		}else if each == enums.NON_INITIALIZED {
 			nonInitialized++
 		}
 	}
@@ -54,11 +56,13 @@ func GetProcessStatusMapFromEvents(events []v1.ProcessLifeCycleEvent) map[string
 			if each.Status == enums.FAILED {
 				processStatusMap[each.ProcessId] = each.Status
 			} else if val != enums.FAILED {
-				if val == enums.PAUSED && each.Status == enums.ACTIVE {
+				if val == enums.QUEUED && each.Status == enums.ACTIVE {
 					processStatusMap[each.ProcessId] = enums.ACTIVE
-				} else if val == enums.COMPLETED && each.Status == enums.NON_INITIALIZED {
+				} else if val == enums.COMPLETED && (each.Status == enums.NON_INITIALIZED || each.Status == enums.QUEUED) {
 					processStatusMap[each.ProcessId] = enums.PAUSED
 				} else if (val == enums.NON_INITIALIZED || val == enums.COMPLETED) && (each.Status != enums.NON_INITIALIZED && each.Status != enums.COMPLETED) {
+					processStatusMap[each.ProcessId] = each.Status
+				}else if (val == enums.QUEUED || val == enums.COMPLETED) && (each.Status != enums.QUEUED && each.Status != enums.COMPLETED) {
 					processStatusMap[each.ProcessId] = each.Status
 				}
 			}
